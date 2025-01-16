@@ -267,8 +267,8 @@ export default function Questions() {
         </button>
       )}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
             <h2 className="text-xl mb-4">Edit Question</h2>
             <input
               type="text"
