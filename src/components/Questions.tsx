@@ -25,6 +25,10 @@ export default function Questions() {
   const [subject, setSubject] = useState("");
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // State for form inputs
   const [newQuestion, setNewQuestion] = useState({
@@ -38,13 +42,31 @@ export default function Questions() {
     setOpenedAnswer((prev) => (prev === id ? null : id));
   };
 
-  const fetchQuestions = async () => {
+  // Debounce search input (Wait 500ms before updating)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch Questions API
+  const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
     setLoading(true);
     try {
-      const response = await myAxios.get(`/question/${id}`);
-      setQuestions(response.data.data.allQuestions);
-      setChapter(response.data.data.chapter.name);
-      setSubject(response.data.data.chapter.Subject.name);
+      const response = await myAxios.get(
+        `/question/${id}?page=${pageNumber}&search=${searchQuery}`
+      );
+      const data = response.data.data;
+      if (pageNumber === 1) {
+        setQuestions(data.allQuestions); // Reset for new search
+      } else {
+        setQuestions((prev) => [...prev, ...data.allQuestions]); // Append for pagination
+      }
+      setChapter(data.chapter.name);
+      setSubject(data.chapter.Subject.name);
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.log(error);
     } finally {
@@ -52,9 +74,20 @@ export default function Questions() {
     }
   };
 
+  // Fetch when component mounts or debounced search changes
   useEffect(() => {
-    fetchQuestions();
-  }, []);
+    setPage(1); // Reset to first page on new search
+    fetchQuestions(1, debouncedSearch);
+  }, [debouncedSearch]);
+
+  // Load More Questions
+  const handleLoadMore = () => {
+    if (page < totalPages) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchQuestions(nextPage, debouncedSearch);
+    }
+  };
 
   const handleSaveQuestion = async () => {
     const checkAuth = CheckAuth();
@@ -93,18 +126,26 @@ export default function Questions() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between w-full">
-        <p className="text-3xl pb-1 border-b w-full">
+      <div className="flex flex-col justify-between w-full border-b">
+        <p className="text-3xl pb-1 w-full">
           {subject ? subject : "Subject"} - {chapter ? chapter : "Chapter"} -
           Questions
         </p>
-        <div className="flex gap-4 items-center justify-end">
-          <FaPlus
-            size={20}
-            className=""
-            onClick={() => setShowForm(!showForm)}
+        <div className="flex gap-4 items-center justify-between mb-2 mt-3">
+          <input
+            className="px-3 py-2 border focus:outline-none w-full rounded-md bg-gray-300 dark:bg-gray-800"
+            placeholder="search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-          <Theme />
+          <div className="flex gap-4 items-center">
+            <FaPlus
+              size={20}
+              className=""
+              onClick={() => setShowForm(!showForm)}
+            />
+            <Theme />
+          </div>
         </div>
       </div>
 
@@ -188,6 +229,16 @@ export default function Questions() {
             </div>
           ))}
       </div>
+
+      {/* Load More Button */}
+      {page < totalPages && (
+        <button
+          onClick={handleLoadMore}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          Load More
+        </button>
+      )}
     </>
   );
 }
