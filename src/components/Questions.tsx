@@ -93,13 +93,17 @@ export default function Questions() {
 
   return (
     <>
-      <div className="flex justify-between w-full">
+      <div className="flex flex-col md:flex-row justify-between w-full">
         <p className="text-3xl pb-1 border-b w-full">
           {subject ? subject : "Subject"} - {chapter ? chapter : "Chapter"} -
           Questions
         </p>
-        <div className="flex gap-4 items-center">
-          <FaPlus onClick={() => setShowForm(!showForm)} />
+        <div className="flex gap-4 items-center justify-end">
+          <FaPlus
+            size={20}
+            className=""
+            onClick={() => setShowForm(!showForm)}
+          />
           <Theme />
         </div>
       </div>
@@ -124,7 +128,7 @@ export default function Questions() {
             placeholder="Enter answer"
             className="p-2 w-full border rounded-md mb-2"
           />
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center flex-wrap">
             <input
               type="text"
               value={newQuestion.year}
@@ -145,7 +149,7 @@ export default function Questions() {
             />
             <button
               onClick={handleSaveQuestion}
-              className="px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md border"
             >
               Save Question
             </button>
