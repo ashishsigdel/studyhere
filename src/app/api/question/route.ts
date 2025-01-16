@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { question, answer, chapterId, year } = body;
+    const { question, answer, chapterId, year, marks } = body;
 
     if (!question) {
       return NextResponse.json(
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
       chapterId,
       answer,
       year,
+      marks,
     });
 
     return NextResponse.json({

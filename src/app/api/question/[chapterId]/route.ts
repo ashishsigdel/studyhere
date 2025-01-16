@@ -1,4 +1,5 @@
 import Chapter from "@/models/chapter";
+import Subject from "@/models/subject";
 import { NextRequest, NextResponse } from "next/server";
 import syncDatabase from "@/config/database";
 import Question from "@/models/question";
@@ -22,6 +23,11 @@ export async function GET(
     const chapter = await Chapter.findOne({
       where: {
         id: chapterId,
+      },
+      attributes: ["id", "name"],
+      include: {
+        model: Subject,
+        attributes: ["id", "name"],
       },
     });
 
@@ -72,6 +78,7 @@ export async function GET(
     return NextResponse.json({
       messsage: "Questions fetch.",
       data: {
+        chapter: chapter,
         allQuestions,
         total: count,
         currentPage: page,

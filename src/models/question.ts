@@ -40,5 +40,10 @@ class Question extends Model {
     type: DataType.STRING(100),
   })
   year!: string;
+
+  @Column({
+    type: DataType.STRING(10),
+  })
+  marks!: string;
 }
 export default Question;

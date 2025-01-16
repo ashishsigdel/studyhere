@@ -3,11 +3,12 @@ import { myAxios } from "@/utils/apiHanlde";
 import { CheckAuth } from "@/utils/checkAuth";
 import Theme from "@/utils/Theme";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Chapters() {
+  const pathname = usePathname();
   const params = useParams<{ subjectId: string }>();
   const id = params.subjectId;
 
@@ -92,7 +93,7 @@ export default function Chapters() {
               className="flex gap-2 items-center mt-1 border-b p-3"
             >
               <span>{index + 1}. </span>
-              <Link href={`/${chapter.id}`} className="">
+              <Link href={`${pathname}/${chapter.id}`} className="">
                 {chapter.name}
               </Link>
             </div>
