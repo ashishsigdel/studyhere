@@ -28,7 +28,7 @@ export default async function syncDatabase() {
   try {
     await sequelize.authenticate();
     console.log("Database connected successfully.");
-    await sequelize.sync({ force: false, alter: false });
+    await sequelize.sync({ force: false, alter: true });
     console.log("All models synchronized.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);

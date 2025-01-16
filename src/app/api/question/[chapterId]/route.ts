@@ -28,6 +28,7 @@ export async function GET(
       include: {
         model: Subject,
         attributes: ["id", "name"],
+        as: "subject",
       },
     });
 

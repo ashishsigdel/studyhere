@@ -65,7 +65,7 @@ export default function Questions() {
         setQuestions((prev) => [...prev, ...data.allQuestions]); // Append for pagination
       }
       setChapter(data.chapter.name);
-      setSubject(data.chapter.Subject.name);
+      setSubject(data.chapter.subject.name);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.log(error);

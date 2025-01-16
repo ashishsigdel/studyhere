@@ -6,5 +6,5 @@ export function applyAssociations() {
   Subject.hasMany(Chapter, { as: "chapters", foreignKey: "subjectId" });
 
   // Many-to-One: Chapter belongs to Subject
-  Chapter.belongsTo(Subject, { foreignKey: "subjectId" });
+  Chapter.belongsTo(Subject, { as: "subject", foreignKey: "subjectId" });
 }
