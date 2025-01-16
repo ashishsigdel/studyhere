@@ -71,7 +71,7 @@ export async function GET(
 
     const { count, rows: allQuestions } = await Question.findAndCountAll({
       where: whereCondition,
-      order: [["id", "DESC"]],
+      // order: [["id", "DESC"]],
       limit,
       offset,
     });
