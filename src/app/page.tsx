@@ -1,4 +1,4 @@
-import Subjects from "./components/Subjects";
+import Subjects from "../components/Subjects";
 import Theme from "@/utils/Theme";
 
 export default function Home() {

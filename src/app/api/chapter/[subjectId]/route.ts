@@ -39,7 +39,10 @@ export async function GET(
 
     return NextResponse.json({
       messsage: "Chapters fetch.",
-      data: allChapters,
+      data: {
+        subject: subject.name,
+        chapters: allChapters,
+      },
     });
   } catch (error: any) {
     return NextResponse.json(
