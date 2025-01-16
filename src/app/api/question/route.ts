@@ -55,3 +55,46 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { question, chapterId, answer, year, marks } = body;
+
+    const url = new URL(req.url);
+    const id = parseInt(url.searchParams.get("id") || "");
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Question ID is required!" },
+        { status: 400 }
+      );
+    }
+
+    const existingQuestion = await Question.findByPk(id);
+    if (!existingQuestion) {
+      return NextResponse.json(
+        { message: "Question not found!" },
+        { status: 404 }
+      );
+    }
+
+    await existingQuestion.update({
+      question: body.question ?? existingQuestion.question,
+      chapterId: body.chapterId ?? existingQuestion.chapterId,
+      answer: body.answer ?? existingQuestion.answer,
+      year: body.year ?? existingQuestion.year,
+      marks: body.marks ?? existingQuestion.marks,
+    });
+
+    return NextResponse.json({
+      message: "Question updated successfully!",
+      data: existingQuestion,
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error?.message || "Something went wrong!", error },
+      { status: 400 }
+    );
+  }
+}

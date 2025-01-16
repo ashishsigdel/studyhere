@@ -29,6 +29,8 @@ export default function Questions() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [editQuestion, setEditQuestion] = useState<any>(null);
 
   // State for form inputs
   const [newQuestion, setNewQuestion] = useState({
@@ -124,6 +126,30 @@ export default function Questions() {
     }
   };
 
+  const handleDoubleClick = (question: any) => {
+    setEditQuestion(question);
+    setShowModal(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editQuestion) return;
+    const checkAuth = CheckAuth();
+    if (!checkAuth) {
+      toast.error("Unauthorized");
+      return;
+    }
+    try {
+      await myAxios.put(`/question?id=${editQuestion.id}`, editQuestion);
+      setQuestions((prev) =>
+        prev.map((q) => (q.id === editQuestion.id ? editQuestion : q))
+      );
+      toast.success("Question updated successfully");
+      setShowModal(false);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col justify-between w-full border-b">
@@ -208,6 +234,7 @@ export default function Questions() {
             <div
               key={question.id}
               onClick={() => toggleAnswer(question.id)}
+              onDoubleClick={() => handleDoubleClick(question)}
               className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200 hover:dark:bg-slate-900"
             >
               <div className="flex items-center gap-2">
@@ -238,6 +265,61 @@ export default function Questions() {
         >
           Load More
         </button>
+      )}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
+            <h2 className="text-xl mb-4">Edit Question</h2>
+            <input
+              type="text"
+              value={editQuestion.question}
+              onChange={(e) =>
+                setEditQuestion({ ...editQuestion, question: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            <textarea
+              value={editQuestion.answer || ""}
+              onChange={(e) =>
+                setEditQuestion({ ...editQuestion, answer: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Answer"
+            />
+            <input
+              type="text"
+              value={editQuestion.year || ""}
+              onChange={(e) =>
+                setEditQuestion({ ...editQuestion, year: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Year"
+            />
+            <input
+              type="text"
+              value={editQuestion.marks || ""}
+              onChange={(e) =>
+                setEditQuestion({ ...editQuestion, marks: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Marks"
+            />
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
