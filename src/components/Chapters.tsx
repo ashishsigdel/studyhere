@@ -65,7 +65,7 @@ export default function Chapters() {
     <>
       <div className="flex justify-between w-full">
         <p className="text-3xl pb-1 border-b w-full">
-          {subject} - All Chapters
+          <Link href={`/`}>{subject ? subject : "Subject"}</Link> - All Chapters
         </p>
         <Theme />
       </div>

@@ -2,13 +2,15 @@
 import { myAxios } from "@/utils/apiHanlde";
 import { CheckAuth } from "@/utils/checkAuth";
 import Theme from "@/utils/Theme";
-import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Questions() {
+  const router = useRouter();
   const params = useParams<{ chapterId: string }>();
   const id = params.chapterId;
 
@@ -154,8 +156,11 @@ export default function Questions() {
     <>
       <div className="flex flex-col justify-between w-full border-b">
         <p className="text-3xl pb-1 w-full">
-          {subject ? subject : "Subject"} - {chapter ? chapter : "Chapter"} -
-          Questions
+          <Link href={`/`}>{subject ? subject : "Subject"}</Link> -{" "}
+          <span className="cursor-pointer" onClick={() => router.back()}>
+            {chapter ? chapter : "Chapter"}
+          </span>{" "}
+          - Questions
         </p>
         <div className="flex gap-4 items-center justify-between mb-2 mt-3">
           <input
