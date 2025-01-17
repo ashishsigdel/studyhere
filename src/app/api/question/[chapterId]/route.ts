@@ -3,7 +3,7 @@ import Subject from "@/models/subject";
 import { NextRequest, NextResponse } from "next/server";
 import syncDatabase from "@/config/database";
 import Question from "@/models/question";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 syncDatabase();
 
 export async function GET(
@@ -71,7 +71,12 @@ export async function GET(
 
     const { count, rows: allQuestions } = await Question.findAndCountAll({
       where: whereCondition,
-      // order: [["id", "DESC"]],
+      order: [
+        [
+          Sequelize.literal("CAST(SUBSTRING_INDEX(year, ' ', 1) AS UNSIGNED)"),
+          "DESC",
+        ],
+      ],
       limit,
       offset,
     });
