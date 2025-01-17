@@ -239,7 +239,7 @@ export default function Questions() {
             className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
             onClick={() => toggleAnswer(question.id)}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <span className="font-medium text-gray-600 dark:text-gray-300">
                 {index + 1}.
               </span>
