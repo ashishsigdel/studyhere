@@ -236,23 +236,23 @@ export default function Questions() {
         {questions.map((question, index) => (
           <div
             key={question.id}
-            onClick={() =>
-              setOpenedAnswer(openedAnswer === question.id ? null : question.id)
-            }
-            className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-900"
+            className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
+            onClick={() => toggleAnswer(question.id)}
           >
             <div className="flex items-center gap-2">
               <span className="font-medium text-gray-600 dark:text-gray-300">
                 {index + 1}.
               </span>
-              {question.question}
+              <div onDoubleClick={() => handleDoubleClick(question)}>
+                {question.question}
+              </div>
             </div>
             <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
               {question?.year && <span>[{question.year}]</span>}
               {question?.marks && <span>[{question.marks} marks]</span>}
             </div>
             {openedAnswer === question.id && (
-              <div className="mt-2 p-3 bg-gray-200 dark:bg-gray-800 rounded">
+              <div className="mt-2 p-3">
                 <strong>Answer:</strong>{" "}
                 {question.answer || "No answer available."}
               </div>
