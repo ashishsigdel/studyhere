@@ -180,62 +180,6 @@ export default function Questions() {
         </div>
       </div>
 
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-            <h2 className="text-xl mb-4">Add Question</h2>
-            <textarea
-              value={newQuestion.question}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, question: e.target.value })
-              }
-              placeholder="Question"
-              className="w-full p-2 border rounded-md mb-2"
-            />
-            <textarea
-              value={newQuestion.answer}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, answer: e.target.value })
-              }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Answer"
-            />
-            <input
-              type="text"
-              value={newQuestion.year}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, year: e.target.value })
-              }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Year"
-            />
-            <input
-              type="text"
-              value={newQuestion.marks}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, marks: e.target.value })
-              }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Marks"
-            />
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setShowForm(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveQuestion}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Display Questions */}
       <InfiniteScroll
         dataLength={questions.length}
@@ -322,6 +266,61 @@ export default function Questions() {
               </button>
               <button
                 onClick={handleSaveEdit}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+            <h2 className="text-xl mb-4">Add Question</h2>
+            <textarea
+              value={newQuestion.question}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, question: e.target.value })
+              }
+              placeholder="Question"
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            <textarea
+              value={newQuestion.answer}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, answer: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Answer"
+            />
+            <input
+              type="text"
+              value={newQuestion.year}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, year: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Year"
+            />
+            <input
+              type="text"
+              value={newQuestion.marks}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, marks: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Marks"
+            />
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveQuestion}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md"
               >
                 Save
