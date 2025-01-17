@@ -59,7 +59,7 @@ export default function Questions() {
     setLoading(true);
     try {
       const response = await myAxios.get(
-        `/question/${id}?page=${pageNumber}&limit=10&search=${searchQuery}`
+        `/question/${id}?page=${pageNumber}&limit=15&search=${searchQuery}`
       );
       const data = response.data.data;
       if (pageNumber === 1) {
