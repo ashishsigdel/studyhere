@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Questions() {
   const params = useParams<{ chapterId: string }>();
@@ -58,7 +59,7 @@ export default function Questions() {
     setLoading(true);
     try {
       const response = await myAxios.get(
-        `/question/${id}?page=${pageNumber}&search=${searchQuery}`
+        `/question/${id}?page=${pageNumber}&limit=10&search=${searchQuery}`
       );
       const data = response.data.data;
       if (pageNumber === 1) {
@@ -82,8 +83,7 @@ export default function Questions() {
     fetchQuestions(1, debouncedSearch);
   }, [debouncedSearch]);
 
-  // Load More Questions
-  const handleLoadMore = () => {
+  const fetchMoreQuestions = () => {
     if (page < totalPages) {
       const nextPage = page + 1;
       setPage(nextPage);
@@ -225,47 +225,42 @@ export default function Questions() {
       )}
 
       {/* Display Questions */}
-      <div>
-        {loading && <>Loading...</>}
-        {!loading && questions.length === 0 && <>No questions available.</>}
+      <InfiniteScroll
+        dataLength={questions.length}
+        next={fetchMoreQuestions}
+        hasMore={page < totalPages}
+        loader={<p className="text-center">Loading...</p>}
+      >
+        {questions.length === 0 && !loading && <p>No questions available.</p>}
 
-        {questions.length > 0 &&
-          questions.map((question, index) => (
-            <div
-              key={question.id}
-              onClick={() => toggleAnswer(question.id)}
-              onDoubleClick={() => handleDoubleClick(question)}
-              className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200 hover:dark:bg-slate-900"
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-600 dark:text-gray-300">
-                  {index + 1}.
-                </span>
-                {question.question}
-              </div>
-              <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
-                {question?.year && <span>[{question.year}]</span>}
-                {question?.marks && <span>[{question.marks} marks]</span>}
-              </div>
-              {openedAnswer === question.id && (
-                <div className="mt-2 p-3 bg-gray-200 dark:bg-gray-800 rounded">
-                  <strong>Answer:</strong>{" "}
-                  {question?.answer ?? "No answer available."}
-                </div>
-              )}
+        {questions.map((question, index) => (
+          <div
+            key={question.id}
+            onClick={() =>
+              setOpenedAnswer(openedAnswer === question.id ? null : question.id)
+            }
+            className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-900"
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-600 dark:text-gray-300">
+                {index + 1}.
+              </span>
+              {question.question}
             </div>
-          ))}
-      </div>
+            <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
+              {question?.year && <span>[{question.year}]</span>}
+              {question?.marks && <span>[{question.marks} marks]</span>}
+            </div>
+            {openedAnswer === question.id && (
+              <div className="mt-2 p-3 bg-gray-200 dark:bg-gray-800 rounded">
+                <strong>Answer:</strong>{" "}
+                {question.answer || "No answer available."}
+              </div>
+            )}
+          </div>
+        ))}
+      </InfiniteScroll>
 
-      {/* Load More Button */}
-      {page < totalPages && (
-        <button
-          onClick={handleLoadMore}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-        >
-          Load More
-        </button>
-      )}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
