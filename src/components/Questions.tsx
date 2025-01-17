@@ -205,7 +205,7 @@ export default function Questions() {
                 onClick={() => toggleAnswer(question.id)}
               >
                 <div
-                  className="prose dark:prose-invert max-w-none"
+                  className="prose dark:prose-invert max-w-none table-auto"
                   dangerouslySetInnerHTML={{ __html: question.question }}
                 />
               </div>
@@ -218,7 +218,7 @@ export default function Questions() {
               <div className="mt-2 p-3">
                 <strong>Answer:</strong>{" "}
                 <div
-                  className="prose dark:prose-invert max-w-none mt-2"
+                  className="prose dark:prose-invert max-w-none table-auto"
                   dangerouslySetInnerHTML={{
                     __html: question.answer || "No answer available.",
                   }}
