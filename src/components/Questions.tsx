@@ -255,7 +255,10 @@ export default function Questions() {
               <span className="font-medium text-gray-600 dark:text-gray-300">
                 {index + 1}.
               </span>
-              <div onDoubleClick={() => handleDoubleClick(question)}>
+              <div
+                onDoubleClick={() => handleDoubleClick(question)}
+                style={{ whiteSpace: "break-spaces" }}
+              >
                 {question.question}
               </div>
             </div>
