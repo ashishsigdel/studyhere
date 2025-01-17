@@ -35,6 +35,9 @@ export default function Questions() {
   const [totalPages, setTotalPages] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [editQuestion, setEditQuestion] = useState<any>(null);
+  const [modelFormChoose, setModelFormChoose] = useState<"question" | "answer">(
+    "question"
+  );
 
   // State for form inputs
   const [newQuestion, setNewQuestion] = useState({
@@ -130,6 +133,7 @@ export default function Questions() {
   };
 
   const handleDoubleClick = (question: any) => {
+    setModelFormChoose("question");
     setEditQuestion(question);
     setShowModal(true);
   };
@@ -150,6 +154,14 @@ export default function Questions() {
       setShowModal(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const switchForm = () => {
+    if (modelFormChoose === "answer") {
+      setModelFormChoose("question");
+    } else {
+      setModelFormChoose("answer");
     }
   };
 
@@ -232,19 +244,32 @@ export default function Questions() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
           <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-            <h2 className="text-xl mb-4">Edit Question</h2>
-            <JoditForm
-              text={editQuestion.question}
-              setText={(newContent: string) =>
-                setEditQuestion({ ...editQuestion, question: newContent })
-              }
-            />
-            <JoditForm
-              text={editQuestion.answer}
-              setText={(newContent: string) =>
-                setEditQuestion({ ...editQuestion, answer: newContent })
-              }
-            />
+            <div className="flex gap-2 items-center mb-4">
+              <h2 className="text-xl">Edit Question</h2>
+              <span
+                className="p-2 rounded-md cursor-pointer border"
+                onClick={switchForm}
+              >
+                Write {modelFormChoose === "answer" ? "Question" : "Answer"}
+              </span>
+            </div>
+            {modelFormChoose === "question" && (
+              <JoditForm
+                text={editQuestion.question}
+                setText={(newContent: string) =>
+                  setEditQuestion({ ...editQuestion, question: newContent })
+                }
+              />
+            )}
+
+            {modelFormChoose === "answer" && (
+              <JoditForm
+                text={editQuestion.answer}
+                setText={(newContent: string) =>
+                  setEditQuestion({ ...editQuestion, answer: newContent })
+                }
+              />
+            )}
 
             <input
               type="text"
@@ -284,22 +309,36 @@ export default function Questions() {
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
           <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-            <h2 className="text-xl mb-4">Add Question</h2>
+            <div className="flex gap-2 items-center mb-4">
+              <h2 className="text-xl">Add Question</h2>
+              <span
+                className="p-2 rounded-md cursor-pointer border"
+                onClick={switchForm}
+              >
+                Write {modelFormChoose === "answer" ? "Question" : "Answer"}
+              </span>
+            </div>
 
-            <JoditForm
-              text={newQuestion.question}
-              setText={(newContent: string) =>
-                setNewQuestion({ ...newQuestion, question: newContent })
-              }
-              placeholder="Enter new question"
-            />
-            <JoditForm
-              text={newQuestion.answer}
-              setText={(newContent: string) =>
-                setNewQuestion({ ...newQuestion, answer: newContent })
-              }
-              placeholder={"Enter answer"}
-            />
+            {modelFormChoose === "question" && (
+              <JoditForm
+                text={newQuestion.question}
+                setText={(newContent: string) =>
+                  setNewQuestion({ ...newQuestion, question: newContent })
+                }
+                placeholder="Enter new question"
+              />
+            )}
+
+            {modelFormChoose === "answer" && (
+              <JoditForm
+                text={newQuestion.answer}
+                setText={(newContent: string) =>
+                  setNewQuestion({ ...newQuestion, answer: newContent })
+                }
+                placeholder={"Enter answer"}
+              />
+            )}
+
             <input
               type="text"
               value={newQuestion.year}

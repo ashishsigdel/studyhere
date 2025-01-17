@@ -22,8 +22,8 @@ export default function JoditForm({
       theme: theme === "light" ? "" : "dark",
       readonly: false,
       placeholder: placeholder ? placeholder : "Start Typing...",
-      minHeight: 200,
-      maxHeight: 200,
+      minHeight: 300,
+      maxHeight: 400,
       buttons:
         "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview",
       buttonsMD:
