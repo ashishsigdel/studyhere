@@ -16,7 +16,7 @@ export default function CustomThemeProvider({
 
   if (!mounted) return null;
   return (
-    <ThemeProvider attribute="class" enableSystem={true} defaultTheme="system">
+    <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
       {children}
     </ThemeProvider>
   );
