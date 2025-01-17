@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
+import JoditForm from "./JoditForm";
 
 export default function Questions() {
   const router = useRouter();
@@ -192,18 +193,21 @@ export default function Questions() {
         {questions.map((question, index) => (
           <div
             key={question.id}
-            className="flex flex-col gap-1 mt-2 border-b p-3 cursor-pointer hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
-            onClick={() => toggleAnswer(question.id)}
+            onDoubleClick={() => handleDoubleClick(question)}
+            className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
           >
             <div className="flex items-start gap-2">
               <span className="font-medium text-gray-600 dark:text-gray-300">
                 {index + 1}.
               </span>
               <div
-                onDoubleClick={() => handleDoubleClick(question)}
-                style={{ whiteSpace: "break-spaces" }}
+                className="w-full cursor-pointer"
+                onClick={() => toggleAnswer(question.id)}
               >
-                {question.question}
+                <div
+                  className="prose dark:prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: question.question }}
+                />
               </div>
             </div>
             <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
@@ -213,7 +217,12 @@ export default function Questions() {
             {openedAnswer === question.id && (
               <div className="mt-2 p-3">
                 <strong>Answer:</strong>{" "}
-                {question.answer || "No answer available."}
+                <div
+                  className="prose dark:prose-invert max-w-none mt-2"
+                  dangerouslySetInnerHTML={{
+                    __html: question.answer || "No answer available.",
+                  }}
+                />
               </div>
             )}
           </div>
@@ -222,23 +231,21 @@ export default function Questions() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
             <h2 className="text-xl mb-4">Edit Question</h2>
-            <textarea
-              value={editQuestion.question}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, question: e.target.value })
+            <JoditForm
+              text={editQuestion.question}
+              setText={(newContent: string) =>
+                setEditQuestion({ ...editQuestion, question: newContent })
               }
-              className="w-full p-2 border rounded-md mb-2"
             />
-            <textarea
-              value={editQuestion.answer || ""}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, answer: e.target.value })
+            <JoditForm
+              text={editQuestion.answer}
+              setText={(newContent: string) =>
+                setEditQuestion({ ...editQuestion, answer: newContent })
               }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Answer"
             />
+
             <input
               type="text"
               value={editQuestion.year || ""}
@@ -276,23 +283,22 @@ export default function Questions() {
       )}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
             <h2 className="text-xl mb-4">Add Question</h2>
-            <textarea
-              value={newQuestion.question}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, question: e.target.value })
+
+            <JoditForm
+              text={newQuestion.question}
+              setText={(newContent: string) =>
+                setNewQuestion({ ...newQuestion, question: newContent })
               }
-              placeholder="Question"
-              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Enter new question"
             />
-            <textarea
-              value={newQuestion.answer}
-              onChange={(e) =>
-                setNewQuestion({ ...newQuestion, answer: e.target.value })
+            <JoditForm
+              text={newQuestion.answer}
+              setText={(newContent: string) =>
+                setNewQuestion({ ...newQuestion, answer: newContent })
               }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Answer"
+              placeholder={"Enter answer"}
             />
             <input
               type="text"

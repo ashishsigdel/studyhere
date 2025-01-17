@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.prose th {
+  background-color: #f3f4f6;
+}
