@@ -181,34 +181,33 @@ export default function Questions() {
       </div>
 
       {showForm && (
-        <div className="mt-4 mb-6 border p-4 rounded-md shadow-sm">
-          <input
-            type="text"
-            value={newQuestion.question}
-            onChange={(e) =>
-              setNewQuestion({ ...newQuestion, question: e.target.value })
-            }
-            placeholder="Enter question"
-            className="p-2 w-full border rounded-md mb-2"
-          />
-          <input
-            type="text"
-            value={newQuestion.answer}
-            onChange={(e) =>
-              setNewQuestion({ ...newQuestion, answer: e.target.value })
-            }
-            placeholder="Enter answer"
-            className="p-2 w-full border rounded-md mb-2"
-          />
-          <div className="flex gap-2 items-center flex-wrap">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+            <h2 className="text-xl mb-4">Add Question</h2>
+            <textarea
+              value={newQuestion.question}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, question: e.target.value })
+              }
+              placeholder="Question"
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            <textarea
+              value={newQuestion.answer}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, answer: e.target.value })
+              }
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Answer"
+            />
             <input
               type="text"
               value={newQuestion.year}
               onChange={(e) =>
                 setNewQuestion({ ...newQuestion, year: e.target.value })
               }
-              placeholder="Year (optional)"
-              className="p-2 border rounded-md "
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Year"
             />
             <input
               type="text"
@@ -216,15 +215,23 @@ export default function Questions() {
               onChange={(e) =>
                 setNewQuestion({ ...newQuestion, marks: e.target.value })
               }
-              placeholder="Marks (optional)"
-              className="p-2 border rounded-md "
+              className="w-full p-2 border rounded-md mb-2"
+              placeholder="Marks"
             />
-            <button
-              onClick={handleSaveQuestion}
-              className="px-4 py-2 rounded-md border"
-            >
-              Save Question
-            </button>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveQuestion}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -270,8 +277,7 @@ export default function Questions() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
             <h2 className="text-xl mb-4">Edit Question</h2>
-            <input
-              type="text"
+            <textarea
               value={editQuestion.question}
               onChange={(e) =>
                 setEditQuestion({ ...editQuestion, question: e.target.value })
