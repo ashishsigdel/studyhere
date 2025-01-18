@@ -1,6 +1,7 @@
 "use client";
 import { myAxios } from "@/utils/apiHanlde";
 import { CheckAuth } from "@/utils/checkAuth";
+import Spinner from "@/utils/Spinner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -66,7 +67,7 @@ export default function Subjects() {
           Save
         </button>
       </div>
-      {loading && <>Loading...</>}
+      {loading && <Spinner color="#222" />}
       {!loading && subjects.length === 0 && <>No subject</>}
       {subjects &&
         subjects.length > 0 &&

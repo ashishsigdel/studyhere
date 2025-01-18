@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Spinner from "@/utils/Spinner";
 
 export default function Chapters() {
   const pathname = usePathname();
@@ -83,7 +84,7 @@ export default function Chapters() {
             Save
           </button>
         </div>
-        {loading && <>Loading...</>}
+        {loading && <Spinner color="#222" />}
         {!loading && chapters.length === 0 && <>No chapters</>}
         {chapters &&
           chapters.length > 0 &&

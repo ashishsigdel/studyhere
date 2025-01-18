@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import JoditForm from "./JoditForm";
+import Spinner from "@/utils/Spinner";
 
 export default function Questions() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function Questions() {
     }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
   const [chapter, setChapter] = useState("");
   const [subject, setSubject] = useState("");
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
@@ -109,6 +112,7 @@ export default function Questions() {
       return;
     }
 
+    setLoadingAdd(true);
     try {
       const response = await myAxios.post(`/question`, {
         chapterId: id,
@@ -129,6 +133,8 @@ export default function Questions() {
       });
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoadingAdd(false);
     }
   };
 
@@ -145,6 +151,7 @@ export default function Questions() {
       toast.error("Unauthorized");
       return;
     }
+    setLoadingEdit(true);
     try {
       await myAxios.put(`/question?id=${editQuestion.id}`, editQuestion);
       setQuestions((prev) =>
@@ -154,6 +161,8 @@ export default function Questions() {
       setShowModal(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoadingEdit(false);
     }
   };
 
@@ -176,12 +185,15 @@ export default function Questions() {
           - Questions
         </p>
         <div className="flex gap-4 items-center justify-between mb-2 mt-3">
-          <input
-            className="px-3 py-2 border focus:outline-none w-full rounded-md bg-gray-300 dark:bg-gray-800"
-            placeholder="search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="flex items-center w-full px-3 py-2 border rounded-md bg-gray-300 dark:bg-gray-800 gap-2">
+            <input
+              className="focus:outline-none w-full bg-transparent"
+              placeholder="search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {loading && <Spinner color="#222" />}
+          </div>
           <div className="flex gap-4 items-center">
             <FaPlus
               size={20}
@@ -193,12 +205,16 @@ export default function Questions() {
         </div>
       </div>
 
-      {/* Display Questions */}
+      {loading && questions.length === 0 && (
+        <div className="p-2">
+          <Spinner color="#222" />
+        </div>
+      )}
       <InfiniteScroll
         dataLength={questions.length}
         next={fetchMoreQuestions}
         hasMore={page < totalPages}
-        loader={<p className="text-center">Loading...</p>}
+        loader={<Spinner color="#222" />}
       >
         {questions.length === 0 && !loading && <p>No questions available.</p>}
 
@@ -298,9 +314,10 @@ export default function Questions() {
               </button>
               <button
                 onClick={handleSaveEdit}
+                disabled={loadingEdit}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md"
               >
-                Save
+                {loadingEdit ? <Spinner /> : "Save"}
               </button>
             </div>
           </div>
@@ -366,9 +383,10 @@ export default function Questions() {
               </button>
               <button
                 onClick={handleSaveQuestion}
+                disabled={loadingAdd}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md"
               >
-                Save
+                {loadingAdd ? <Spinner /> : "Add"}
               </button>
             </div>
           </div>
