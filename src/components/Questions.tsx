@@ -206,7 +206,7 @@ export default function Questions() {
           <div
             key={question.id}
             onDoubleClick={() => handleDoubleClick(question)}
-            className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
+            className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40 overflow-x-scroll"
           >
             <div className="flex items-start gap-2">
               <span className="font-medium text-gray-600 dark:text-gray-300">
