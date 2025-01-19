@@ -1,4 +1,4 @@
-import Chapters from "@/components/Chapters";
+import { Chapters } from "@/components/chapter";
 import { Metadata } from "next";
 import React from "react";
 
