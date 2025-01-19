@@ -10,6 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import BreadCrumb from "./BreadCrumb";
+import SearchBar from "./SearchBar";
 
 export default function Questions() {
   const router = useRouter();
@@ -178,27 +179,13 @@ export default function Questions() {
     <>
       <div className="flex flex-col justify-between w-full border-b">
         <BreadCrumb subject={subject} chapter={chapter} />
-        <div className="flex gap-4 items-center justify-between mb-2 mt-3">
-          <div className="flex items-center w-full px-3 py-2 border rounded-md bg-gray-300 dark:bg-gray-800 gap-2">
-            <input
-              className="focus:outline-none w-full bg-transparent"
-              placeholder="search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {loading && <Spinner color="#222" />}
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:scale-105 p-2 rounded-full transition-all duration-300">
-              <FaPlus
-                size={20}
-                className=""
-                onClick={() => setShowForm(!showForm)}
-              />
-            </div>
-            <Theme />
-          </div>
-        </div>
+        <SearchBar
+          search={search}
+          loading={loading}
+          setShowForm={setShowForm}
+          showForm={showForm}
+          setSearch={setSearch}
+        />
       </div>
 
       {loading && questions.length === 0 && (
