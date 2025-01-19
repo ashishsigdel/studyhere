@@ -2,7 +2,6 @@
 import { myAxios } from "@/utils/apiHanlde";
 import { CheckAuth } from "@/utils/checkAuth";
 import Theme from "@/utils/Theme";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -10,7 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
-import Topbar from "./Topbar";
+import BreadCrumb from "./BreadCrumb";
 
 export default function Questions() {
   const router = useRouter();
@@ -178,7 +177,7 @@ export default function Questions() {
   return (
     <>
       <div className="flex flex-col justify-between w-full border-b">
-        <Topbar subject={subject} chapter={chapter} />
+        <BreadCrumb subject={subject} chapter={chapter} />
         <div className="flex gap-4 items-center justify-between mb-2 mt-3">
           <div className="flex items-center w-full px-3 py-2 border rounded-md bg-gray-300 dark:bg-gray-800 gap-2">
             <input
