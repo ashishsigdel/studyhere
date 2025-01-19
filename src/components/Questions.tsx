@@ -195,11 +195,13 @@ export default function Questions() {
             {loading && <Spinner color="#222" />}
           </div>
           <div className="flex gap-4 items-center">
-            <FaPlus
-              size={20}
-              className=""
-              onClick={() => setShowForm(!showForm)}
-            />
+            <div className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:scale-105 p-2 rounded-full transition-all duration-300">
+              <FaPlus
+                size={20}
+                className=""
+                onClick={() => setShowForm(!showForm)}
+              />
+            </div>
             <Theme />
           </div>
         </div>
