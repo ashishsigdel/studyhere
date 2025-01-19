@@ -56,7 +56,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         {key && (
           <button
             type="button"
-            className="p-2.5 transition-all duration-200 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+            className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
             onClick={toggleForm}
             aria-label="Add new item"
           >

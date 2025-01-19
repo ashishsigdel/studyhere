@@ -11,6 +11,8 @@ import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import BreadCrumb from "./BreadCrumb";
 import SearchBar from "./SearchBar";
+import QuestionFields from "./QuestionFields";
+import EditModal from "./EditModal";
 
 export default function Questions() {
   const router = useRouter();
@@ -193,118 +195,27 @@ export default function Questions() {
           <Spinner color="#222" />
         </div>
       )}
-      <InfiniteScroll
-        dataLength={questions.length}
-        next={fetchMoreQuestions}
-        hasMore={page < totalPages}
-        loader={<Spinner color="#222" />}
-      >
-        {questions.length === 0 && !loading && <p>No questions available.</p>}
-
-        {questions.map((question, index) => (
-          <div
-            key={question.id}
-            onDoubleClick={() => handleDoubleClick(question)}
-            className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40 overflow-x-scroll"
-          >
-            <div className="flex items-start gap-2">
-              <span className="font-medium text-gray-600 dark:text-gray-300">
-                {index + 1}.
-              </span>
-              <div
-                className="w-full cursor-pointer"
-                onClick={() => toggleAnswer(question.id)}
-              >
-                <div
-                  className="prose dark:prose-invert max-w-none table-auto"
-                  dangerouslySetInnerHTML={{ __html: question.question }}
-                />
-              </div>
-            </div>
-            <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
-              {question?.year && <span>[{question.year}]</span>}
-              {question?.marks && <span>[{question.marks} marks]</span>}
-            </div>
-            {openedAnswer === question.id && (
-              <div className="mt-2 p-3">
-                <strong>Answer:</strong>{" "}
-                <div
-                  className="prose dark:prose-invert max-w-none table-auto"
-                  dangerouslySetInnerHTML={{
-                    __html: question.answer || "No answer available.",
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        ))}
-      </InfiniteScroll>
+      <QuestionFields
+        fetchMoreQuestions={fetchMoreQuestions}
+        handleDoubleClick={handleDoubleClick}
+        loading={loading}
+        openedAnswer={openedAnswer}
+        page={page}
+        questions={questions}
+        toggleAnswer={toggleAnswer}
+        totalPages={totalPages}
+      />
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
-          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-            <div className="flex gap-2 items-center mb-4">
-              <h2 className="text-xl">Edit Question</h2>
-              <span
-                className="p-2 rounded-md cursor-pointer border"
-                onClick={switchForm}
-              >
-                Write {modelFormChoose === "answer" ? "Question" : "Answer"}
-              </span>
-            </div>
-            {modelFormChoose === "question" && (
-              <JoditForm
-                text={editQuestion.question}
-                setText={(newContent: string) =>
-                  setEditQuestion({ ...editQuestion, question: newContent })
-                }
-              />
-            )}
-
-            {modelFormChoose === "answer" && (
-              <JoditForm
-                text={editQuestion.answer}
-                setText={(newContent: string) =>
-                  setEditQuestion({ ...editQuestion, answer: newContent })
-                }
-              />
-            )}
-
-            <input
-              type="text"
-              value={editQuestion.year || ""}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, year: e.target.value })
-              }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Year"
-            />
-            <input
-              type="text"
-              value={editQuestion.marks || ""}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, marks: e.target.value })
-              }
-              className="w-full p-2 border rounded-md mb-2"
-              placeholder="Marks"
-            />
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveEdit}
-                disabled={loadingEdit}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                {loadingEdit ? <Spinner /> : "Save"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <EditModal
+          switchForm={switchForm}
+          modelFormChoose={modelFormChoose}
+          editQuestion={editQuestion}
+          setEditQuestion={setEditQuestion}
+          setShowModal={setShowModal}
+          handleSaveEdit={handleSaveEdit}
+          loadingEdit={loadingEdit}
+        />
       )}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
