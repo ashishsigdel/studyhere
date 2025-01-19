@@ -15,6 +15,10 @@ export default function Subjects() {
   >([]);
   const [loading, setLoading] = useState(false);
   const [subject, setSubject] = useState("");
+  const [recentChapters, setRecentChapters] = useState<
+    { name: string; url: string }[]
+  >([]);
+
   const fetchSubjects = async () => {
     setLoading(true);
     try {
@@ -29,6 +33,11 @@ export default function Subjects() {
 
   useEffect(() => {
     fetchSubjects();
+
+    const storedChapters = JSON.parse(
+      localStorage.getItem("recentChapters") || "[]"
+    );
+    setRecentChapters(storedChapters);
   }, []);
 
   const handleSaveSubject = async () => {
@@ -45,7 +54,6 @@ export default function Subjects() {
         setSubject("");
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Something went wrong");
-      } finally {
       }
     } else {
       toast.error("Unauthorized");
@@ -67,10 +75,28 @@ export default function Subjects() {
           Save
         </button>
       </div>
+
+      {/* 🔹 Recently Viewed Chapters Section */}
+      {recentChapters.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-lg font-bold">Recently Viewed Chapters</h2>
+          <div className="mt-2">
+            {recentChapters.map((chapter, index) => (
+              <div key={index} className="p-2 border-b">
+                <Link href={chapter.url} className="">
+                  {chapter.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {loading && <Spinner color="#222" />}
-      {!loading && subjects.length === 0 && <>No subject</>}
-      {subjects &&
-        subjects.length > 0 &&
+      {!loading && subjects.length === 0 && <>No subjects available</>}
+
+      <h2 className="text-lg font-bold">All Subjects</h2>
+      {subjects.length > 0 &&
         subjects.map((subject, index) => (
           <div
             key={subject.id}

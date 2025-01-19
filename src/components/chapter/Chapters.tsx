@@ -63,6 +63,26 @@ export default function Chapters() {
     }
   };
 
+  const handleChapterClick = (chapterName: string, chapterId: number) => {
+    const storageKey = "recentChapters";
+    const chapterUrl = `${pathname}/${chapterId}`;
+
+    let recentChapters = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    // Remove if already exists
+    recentChapters = recentChapters.filter((ch: any) => ch.url !== chapterUrl);
+
+    // Add new chapter at the beginning
+    recentChapters.unshift({ name: chapterName, url: chapterUrl });
+
+    if (recentChapters.length > 3) {
+      recentChapters = recentChapters.slice(0, 3);
+    }
+
+    // Save updated list in localStorage
+    localStorage.setItem(storageKey, JSON.stringify(recentChapters));
+  };
+
   return (
     <>
       <div className="flex justify-between w-full">
@@ -92,7 +112,11 @@ export default function Chapters() {
               className="flex gap-2 items-center mt-1 border-b p-3"
             >
               <span>{index + 1}. </span>
-              <Link href={`${pathname}/${chapter.id}`} className="">
+              <Link
+                href={`${pathname}/${chapter.id}`}
+                className=""
+                onClick={() => handleChapterClick(chapter.name, chapter.id)}
+              >
                 {chapter.name}
               </Link>
             </div>
