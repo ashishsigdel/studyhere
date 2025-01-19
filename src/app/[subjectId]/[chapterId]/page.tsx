@@ -1,4 +1,4 @@
-import Questions from "@/components/Questions";
+import { Questions } from "@/components/question";
 import { Metadata } from "next";
 import React from "react";
 
