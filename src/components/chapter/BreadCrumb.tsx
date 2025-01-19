@@ -18,8 +18,7 @@ export default function Breadcrumb({ subject }: Props) {
         <li className="flex items-center min-w-0">
           <Link
             href="/"
-            className="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 
-            transition-colors duration-200 shadow-sm dark:shadow-gray-900 text-gray-800 dark:text-gray-200
+            className="px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600  text-gray-700 dark:text-gray-200
             truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px] block"
             title={subject || "Home"}
           >
