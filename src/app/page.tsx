@@ -11,7 +11,7 @@ export default function Home() {
                 truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px] block"
             title="Questions"
           >
-            Subjects
+            Home
           </span>
         </p>
         <Theme />
