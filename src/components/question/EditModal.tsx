@@ -45,7 +45,7 @@ export default function EditModal({
         {modelFormChoose === "answer" && (
           <>
             <div
-              className="prose dark:prose-invert max-w-none table-auto mb-2"
+              className="prose dark:prose-invert max-w-none table-auto mb-2 text-xs"
               dangerouslySetInnerHTML={{
                 __html: editQuestion.question,
               }}

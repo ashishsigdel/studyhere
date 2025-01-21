@@ -42,7 +42,7 @@ export default function QuestionFields({
         <div
           key={question.id}
           onDoubleClick={() => handleDoubleClick(question)}
-          className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40 overflow-x-scroll"
+          className="flex flex-col gap-1 mt-2 border-b p-3 hover:bg-gray-200/40 dark:hover:bg-slate-900/40"
         >
           <div className="flex items-start gap-2">
             <span className="font-medium text-gray-600 dark:text-gray-300">
@@ -52,10 +52,10 @@ export default function QuestionFields({
               className="w-full cursor-pointer"
               onClick={() => toggleAnswer(question.id)}
             >
-              <div
-                className="prose dark:prose-invert max-w-none table-auto"
-                dangerouslySetInnerHTML={{ __html: question.question }}
-              />
+              {/* ✅ Wrap content in a scrollable div */}
+              <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
+                <div dangerouslySetInnerHTML={{ __html: question.question }} />
+              </div>
             </div>
           </div>
           <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
@@ -65,12 +65,14 @@ export default function QuestionFields({
           {openedAnswer === question.id && (
             <div className="mt-2 p-3">
               <strong>Answer:</strong>{" "}
-              <div
-                className="prose dark:prose-invert max-w-none table-auto"
-                dangerouslySetInnerHTML={{
-                  __html: question.answer || "No answer available.",
-                }}
-              />
+              {/* ✅ Wrap answer content in a scrollable div */}
+              <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: question.answer || "No answer available.",
+                  }}
+                />
+              </div>
             </div>
           )}
         </div>
