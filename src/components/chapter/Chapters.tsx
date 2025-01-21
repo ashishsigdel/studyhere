@@ -63,7 +63,11 @@ export default function Chapters() {
     }
   };
 
-  const handleChapterClick = (chapterName: string, chapterId: number) => {
+  const handleChapterClick = (
+    subjectName: string,
+    chapterName: string,
+    chapterId: number
+  ) => {
     const storageKey = "recentChapters";
     const chapterUrl = `${pathname}/${chapterId}`;
 
@@ -73,10 +77,14 @@ export default function Chapters() {
     recentChapters = recentChapters.filter((ch: any) => ch.url !== chapterUrl);
 
     // Add new chapter at the beginning
-    recentChapters.unshift({ name: chapterName, url: chapterUrl });
+    recentChapters.unshift({
+      name: chapterName,
+      url: chapterUrl,
+      subject: subjectName,
+    });
 
-    if (recentChapters.length > 3) {
-      recentChapters = recentChapters.slice(0, 3);
+    if (recentChapters.length > 4) {
+      recentChapters = recentChapters.slice(0, 4);
     }
 
     // Save updated list in localStorage
@@ -115,7 +123,9 @@ export default function Chapters() {
               <Link
                 href={`${pathname}/${chapter.id}`}
                 className=""
-                onClick={() => handleChapterClick(chapter.name, chapter.id)}
+                onClick={() =>
+                  handleChapterClick(subject, chapter.name, chapter.id)
+                }
               >
                 {chapter.name}
               </Link>

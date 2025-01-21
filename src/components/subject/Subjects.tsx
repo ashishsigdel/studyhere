@@ -21,9 +21,10 @@ export default function Subjects() {
   const [loading, setLoading] = useState(false);
   const [subject, setSubject] = useState("");
   const [recentChapters, setRecentChapters] = useState<
-    { name: string; url: string }[]
+    { name: string; url: string; subject: string }[]
   >([]);
   const [showForm, setShowForm] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
 
   const fetchSubjects = async () => {
     setLoading(true);
@@ -53,6 +54,7 @@ export default function Subjects() {
       return;
     }
     if (checkAuth) {
+      setLoadingAdd(true);
       try {
         const response = await myAxios.post("/subject", {
           name: subject,
@@ -62,8 +64,11 @@ export default function Subjects() {
 
         toast.success("Subject created");
         setSubject("");
+        setShowForm(false);
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Something went wrong");
+      } finally {
+        setLoadingAdd(false);
       }
     } else {
       toast.error("Unauthorized");
@@ -73,64 +78,57 @@ export default function Subjects() {
   return (
     <>
       <TopBar showForm={showForm} setShowForm={setShowForm} />
+      <div className="mt-10">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
+          Featured Books 📚
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {loading && <Spinner color="#222" />}
+          {!loading && subjects.length === 0 && <>No subjects available</>}
+          {subjects.map((subject) => (
+            <Link
+              href={`/${subject.id}`}
+              key={subject.id}
+              className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
+            >
+              <h3 className="absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md">
+                {subject.name}
+              </h3>
 
-      <h2 className="text-2xl font-semibold text-gray-800 mb-5 mt-10">
-        Featured Books 📚
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {subjects.map((subject) => (
-          <Link
-            href={`/${subject.id}`}
-            key={subject.id}
-            className="relative bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
-          >
-            <h3 className="absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md">
-              {subject.name}
-            </h3>
-
-            <Image src={bookcover} alt={subject.name} className="pb-[0.8]" />
-          </Link>
-        ))}
+              <Image src={bookcover} alt={subject.name} className="pb-[0.8]" />
+            </Link>
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-10">
         {/* 🔹 Recently Viewed Chapters Section */}
         {recentChapters.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-lg font-bold">Recently Viewed Chapters</h2>
-            <div className="mt-2">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5 mt-10">
+              Recently Viewed Chapters 📖
+            </h2>
+            <div className="mt-2  grid grid-cols-1 md:grid-cols-2 gap-4">
               {recentChapters.map((chapter, index) => (
-                <div key={index} className="p-2 border-b">
-                  <Link href={chapter.url} className="">
+                <Link
+                  href={chapter.url}
+                  key={index}
+                  className="p-4 rounded-lg shadow-md border  transform transition duration-300 hover:scale-105"
+                >
+                  <h3 className="text-lg font-medium text-gray-700">
                     {chapter.name}
-                  </Link>
-                </div>
+                  </h3>
+                  <p className="text-gray-500">{chapter.subject}</p>
+                </Link>
               ))}
             </div>
           </div>
         )}
-
-        {loading && <Spinner color="#222" />}
-        {!loading && subjects.length === 0 && <>No subjects available</>}
-
-        <h2 className="text-lg font-bold">All Subjects</h2>
-        {subjects.length > 0 &&
-          subjects.map((subject, index) => (
-            <div
-              key={subject.id}
-              className="flex gap-2 items-center mt-1 border-b p-3"
-            >
-              <span>{index + 1}. </span>
-              <Link href={`/${subject.id}`} className="">
-                {subject.name}
-              </Link>
-            </div>
-          ))}
       </div>
       {showForm && (
         <AddModal
           handleSaveSubject={handleSaveSubject}
-          loading={loading}
+          loading={loadingAdd}
           setShowForm={setShowForm}
           subject={subject}
           setSubject={setSubject}
