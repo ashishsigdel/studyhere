@@ -1,7 +1,7 @@
-import Chapter from "@/models/chapter";
-import Subject from "@/models/subject";
+import Chapter from "../../../models/chapter";
+import Subject from "../../../models/subject";
 import { NextRequest, NextResponse } from "next/server";
-import syncDatabase from "@/config/database";
+import syncDatabase from "../../../config/database";
 syncDatabase();
 
 export async function POST(req: NextRequest) {

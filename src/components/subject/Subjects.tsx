@@ -113,11 +113,9 @@ export default function Subjects() {
                 <Link
                   href={chapter.url}
                   key={index}
-                  className="p-4 rounded-lg shadow-md border  transform transition duration-300 hover:scale-105"
+                  className="p-4 rounded-lg shadow-md border border-black/10 dark:border-white/30 transform transition duration-300 hover:scale-105"
                 >
-                  <h3 className="text-lg font-medium text-gray-700">
-                    {chapter.name}
-                  </h3>
+                  <h3 className="text-lg font-semibold">{chapter.name}</h3>
                   <p className="text-gray-500">{chapter.subject}</p>
                 </Link>
               ))}

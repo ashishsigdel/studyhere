@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Spinner from "@/utils/Spinner";
 import Breadcrumb from "./BreadCrumb";
+import AddModal from "./AddModal";
 
 export default function Chapters() {
   const pathname = usePathname();
@@ -21,8 +22,10 @@ export default function Chapters() {
     }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
   const [chapter, setChapter] = useState("");
   const [subject, setSubject] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   const fetchChapters = async () => {
     setLoading(true);
@@ -43,7 +46,12 @@ export default function Chapters() {
 
   const handleSaveChapter = async () => {
     const checkAuth = CheckAuth();
+    if (!chapter) {
+      toast.error("Chapter required!");
+      return;
+    }
     if (checkAuth && id) {
+      setLoadingAdd(true);
       try {
         const response = await myAxios.post(`/chapter`, {
           name: chapter,
@@ -57,6 +65,7 @@ export default function Chapters() {
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Something went wrong");
       } finally {
+        setLoadingAdd(false);
       }
     } else {
       toast.error("Unauthorized");
@@ -94,22 +103,13 @@ export default function Chapters() {
   return (
     <>
       <div className="flex justify-between w-full">
-        <Breadcrumb subject={subject} />
+        <Breadcrumb
+          subject={subject}
+          showForm={showForm}
+          setShowForm={setShowForm}
+        />
       </div>
-      <div className="flex flex-col">
-        <div className="mt-4 mb-10">
-          <h1>Add new chapter</h1>
-          <input
-            type="text"
-            value={chapter}
-            onChange={(e) => setChapter(e.target.value)}
-            placeholder="Enter chapter name"
-            className="p-3 mr-3"
-          />
-          <button onClick={handleSaveChapter} className="p-3 border rounded-md">
-            Save
-          </button>
-        </div>
+      <div className="flex flex-col mt-10">
         {loading && <Spinner color="#222" />}
         {!loading && chapters.length === 0 && <>No chapters</>}
         {chapters &&
@@ -132,6 +132,15 @@ export default function Chapters() {
             </div>
           ))}
       </div>
+      {showForm && (
+        <AddModal
+          handleSaveChapter={handleSaveChapter}
+          loading={loadingAdd}
+          setShowForm={setShowForm}
+          chapter={chapter}
+          setChapter={setChapter}
+        />
+      )}
     </>
   );
 }

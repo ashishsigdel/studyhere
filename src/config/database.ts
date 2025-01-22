@@ -1,8 +1,9 @@
+import { Sequelize } from "sequelize-typescript";
+import { applyAssociations } from "./association";
 import Chapter from "@/models/chapter";
 import Question from "@/models/question";
 import Subject from "@/models/subject";
-import { Sequelize } from "sequelize-typescript";
-import { applyAssociations } from "./association";
+import User from "@/models/user";
 
 const sequelize: any = new Sequelize({
   host: process.env.DB_HOST,
@@ -19,7 +20,7 @@ const sequelize: any = new Sequelize({
   },
   logging: false,
   benchmark: true,
-  models: [Subject, Chapter, Question],
+  models: [Subject, Chapter, Question, User],
 });
 
 applyAssociations();

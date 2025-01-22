@@ -36,7 +36,9 @@ export default function QuestionFields({
       hasMore={page < totalPages}
       loader={<Spinner color="#222" />}
     >
-      {questions.length === 0 && !loading && <p>No questions available.</p>}
+      {questions.length === 0 && !loading && (
+        <p className="my-10">No questions available.</p>
+      )}
 
       {questions.map((question, index) => (
         <div
