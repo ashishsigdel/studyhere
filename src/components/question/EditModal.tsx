@@ -1,5 +1,5 @@
 import React from "react";
-import JoditForm from "@/components/JoditForm";
+import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 
 type Props = {
