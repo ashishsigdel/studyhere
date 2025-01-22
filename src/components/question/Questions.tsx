@@ -1,13 +1,9 @@
 "use client";
 import { myAxios } from "@/utils/apiHanlde";
 import { CheckAuth } from "@/utils/checkAuth";
-import Theme from "@/utils/Theme";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaPlus } from "react-icons/fa";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import BreadCrumb from "./BreadCrumb";
 import SearchBar from "./SearchBar";

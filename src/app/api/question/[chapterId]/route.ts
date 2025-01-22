@@ -1,8 +1,8 @@
-import Chapter from "@/models/chapter";
-import Subject from "@/models/subject";
+import Chapter from "../../../../models/chapter";
+import Subject from "../../../../models/subject";
 import { NextRequest, NextResponse } from "next/server";
-import syncDatabase from "@/config/database";
-import Question from "@/models/question";
+import syncDatabase from "../../../../config/database";
+import Question from "../../../../models/question";
 import { Op, Sequelize } from "sequelize";
 syncDatabase();
 

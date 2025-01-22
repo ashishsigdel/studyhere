@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Subject from "@/models/subject";
-import syncDatabase from "@/config/database";
+import Subject from "../../../models/subject";
+import syncDatabase from "../../../config/database";
 syncDatabase();
 
 export async function GET(req: NextRequest) {
