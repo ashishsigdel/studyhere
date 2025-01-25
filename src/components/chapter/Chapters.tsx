@@ -15,34 +15,57 @@ export default function Chapters() {
   const params = useParams<{ subjectId: string }>();
   const id = params.subjectId;
 
-  const [chapters, setChapters] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
+  const [chapters, setChapters] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [chapter, setChapter] = useState("");
   const [subject, setSubject] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const cachedData = localStorage.getItem(`chapters_${id}`);
+    if (cachedData) {
+      const { chapters, subject } = JSON.parse(cachedData);
+      setChapters(chapters);
+      setSubject(subject);
+    }
+
+    if (isOnline) {
+      fetchChapters();
+    }
+  }, [id, isOnline]); // Runs when subjectId or online status changes
 
   const fetchChapters = async () => {
+    if (!isOnline) return;
+
     setLoading(true);
     try {
       const response = await myAxios.get(`/chapter/${id}`);
       setChapters(response.data.data.chapters);
       setSubject(response.data.data.subject);
+
+      localStorage.setItem(
+        `chapters_${id}`,
+        JSON.stringify(response.data.data)
+      );
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching chapters:", error);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchChapters();
-  }, []);
 
   const handleSaveChapter = async () => {
     const checkAuth = CheckAuth();
@@ -58,7 +81,13 @@ export default function Chapters() {
           subjectId: id,
         });
 
-        setChapters((prevChapters) => [...prevChapters, response.data.data]);
+        const newChapters = [...chapters, response.data.data];
+        setChapters(newChapters);
+
+        localStorage.setItem(
+          `chapters_${id}`,
+          JSON.stringify({ chapters: newChapters, subject })
+        );
 
         toast.success("Chapter created");
         setChapter("");
@@ -82,10 +111,7 @@ export default function Chapters() {
 
     let recentChapters = JSON.parse(localStorage.getItem(storageKey) || "[]");
 
-    // Remove if already exists
     recentChapters = recentChapters.filter((ch: any) => ch.url !== chapterUrl);
-
-    // Add new chapter at the beginning
     recentChapters.unshift({
       name: chapterName,
       url: chapterUrl,
@@ -96,12 +122,16 @@ export default function Chapters() {
       recentChapters = recentChapters.slice(0, 4);
     }
 
-    // Save updated list in localStorage
     localStorage.setItem(storageKey, JSON.stringify(recentChapters));
   };
 
   return (
     <>
+      {!isOnline && (
+        <div className="bg-red-500 text-white text-center py-2">
+          You are offline. Data may not be up to date.
+        </div>
+      )}
       <div className="flex justify-between w-full">
         <Breadcrumb
           subject={subject}
@@ -112,8 +142,7 @@ export default function Chapters() {
       <div className="flex flex-col mt-10">
         {loading && <Spinner color="#222" />}
         {!loading && chapters.length === 0 && <>No chapters</>}
-        {chapters &&
-          chapters.length > 0 &&
+        {chapters.length > 0 &&
           chapters.map((chapter, index) => (
             <div
               key={chapter.id}
@@ -122,7 +151,6 @@ export default function Chapters() {
               <span>{index + 1}. </span>
               <Link
                 href={`${pathname}/${chapter.id}`}
-                className=""
                 onClick={() =>
                   handleChapterClick(subject, chapter.name, chapter.id)
                 }
