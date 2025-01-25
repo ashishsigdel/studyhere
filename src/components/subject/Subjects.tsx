@@ -12,12 +12,7 @@ import Image from "next/image";
 import bookcover from "@/assets/bookcover.png";
 
 export default function Subjects() {
-  const [subjects, setSubjects] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
+  const [subjects, setSubjects] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [subject, setSubject] = useState("");
   const [recentChapters, setRecentChapters] = useState<
@@ -25,26 +20,61 @@ export default function Subjects() {
   >([]);
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const fetchSubjects = async () => {
     setLoading(true);
     try {
-      const response = await myAxios.get("/subject");
-      setSubjects(response.data.data);
+      // 1️⃣ Check localStorage first (for offline access)
+      const cachedSubjects = localStorage.getItem("subjects");
+      if (cachedSubjects) {
+        setSubjects(JSON.parse(cachedSubjects));
+      }
+
+      // 2️⃣ If online, fetch fresh data
+      if (navigator.onLine) {
+        const response = await myAxios.get("/subject");
+        setSubjects(response.data.data);
+
+        // 3️⃣ Save to localStorage
+        localStorage.setItem("subjects", JSON.stringify(response.data.data));
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching subjects:", error);
+      toast.error("Failed to fetch subjects. Check your network.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Handle network changes (Online/Offline)
   useEffect(() => {
-    fetchSubjects();
+    const handleOnline = () => {
+      setIsOnline(true);
+      toast.success("You're back online!");
+      fetchSubjects(); // Refresh data when back online
+    };
 
+    const handleOffline = () => {
+      setIsOnline(false);
+      toast.error("You are offline. Using cached data.");
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    fetchSubjects(); // Initial fetch
+
+    // Load recent chapters from cache
     const storedChapters = JSON.parse(
       localStorage.getItem("recentChapters") || "[]"
     );
     setRecentChapters(storedChapters);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
   }, []);
 
   const handleSaveSubject = async () => {
@@ -78,12 +108,20 @@ export default function Subjects() {
   return (
     <>
       <TopBar showForm={showForm} setShowForm={setShowForm} />
+
+      {/* 🔹 Show Network Status */}
+      {!isOnline && (
+        <div className="bg-red-500 text-white text-center py-2">
+          You are offline. Data may not be up to date.
+        </div>
+      )}
+
       <div className="mt-10">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
           Featured Books 📚
         </h2>
+        {loading && <Spinner color="#222" />}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {loading && <Spinner color="#222" />}
           {!loading && subjects.length === 0 && <>No subjects available</>}
           {subjects.map((subject) => (
             <Link

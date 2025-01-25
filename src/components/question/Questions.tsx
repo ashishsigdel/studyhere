@@ -63,22 +63,50 @@ export default function Questions() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Fetch Questions API
+  // Fetch Questions API with offline caching
   const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
     setLoading(true);
+    const cacheKey = `questions_${id}_${searchQuery}`;
+
+    // If offline, load from cache
+    if (!navigator.onLine) {
+      const cachedData = localStorage.getItem(cacheKey);
+      if (cachedData) {
+        const { questions, chapter, subject, totalPages } =
+          JSON.parse(cachedData);
+        setQuestions(questions);
+        setChapter(chapter);
+        setSubject(subject);
+        setTotalPages(totalPages);
+      }
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await myAxios.get(
         `/question/${id}?page=${pageNumber}&limit=15&search=${searchQuery}`
       );
       const data = response.data.data;
       if (pageNumber === 1) {
-        setQuestions(data.allQuestions); // Reset for new search
+        setQuestions(data.allQuestions);
       } else {
-        setQuestions((prev) => [...prev, ...data.allQuestions]); // Append for pagination
+        setQuestions((prev) => [...prev, ...data.allQuestions]);
       }
       setChapter(data.chapter.name);
       setSubject(data.chapter.subject.name);
       setTotalPages(data.totalPages);
+
+      // Cache the response
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({
+          questions: data.allQuestions,
+          chapter: data.chapter.name,
+          subject: data.chapter.subject.name,
+          totalPages: data.totalPages,
+        })
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -88,7 +116,7 @@ export default function Questions() {
 
   // Fetch when component mounts or debounced search changes
   useEffect(() => {
-    setPage(1); // Reset to first page on new search
+    setPage(1);
     fetchQuestions(1, debouncedSearch);
   }, [debouncedSearch]);
 
@@ -104,6 +132,10 @@ export default function Questions() {
     const checkAuth = CheckAuth();
     if (!checkAuth) {
       toast.error("Unauthorized");
+      return;
+    }
+    if (!navigator.onLine) {
+      toast.error("You are offline!");
       return;
     }
 
@@ -131,6 +163,15 @@ export default function Questions() {
         year: newQuestion.year,
         marks: "",
       });
+
+      // Update cache
+      const cacheKey = `questions_${id}_${debouncedSearch}`;
+      const cachedData = localStorage.getItem(cacheKey);
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        parsedData.questions.push(response.data.data);
+        localStorage.setItem(cacheKey, JSON.stringify(parsedData));
+      }
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -151,6 +192,10 @@ export default function Questions() {
       toast.error("Unauthorized");
       return;
     }
+    if (!navigator.onLine) {
+      toast.error("You are offline!");
+      return;
+    }
     setLoadingEdit(true);
     try {
       await myAxios.put(`/question?id=${editQuestion.id}`, editQuestion);
@@ -159,6 +204,17 @@ export default function Questions() {
       );
       toast.success("Question updated successfully");
       setShowModal(false);
+
+      // Update cache
+      const cacheKey = `questions_${id}_${debouncedSearch}`;
+      const cachedData = localStorage.getItem(cacheKey);
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        parsedData.questions = parsedData.questions.map((q: any) =>
+          q.id === editQuestion.id ? editQuestion : q
+        );
+        localStorage.setItem(cacheKey, JSON.stringify(parsedData));
+      }
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
