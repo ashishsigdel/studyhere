@@ -1,5 +1,3 @@
-/** @type {import('next').NextConfig} */
-
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
@@ -47,6 +45,13 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // This will ignore all TypeScript errors during build
+  },
+  webpack(config: any) {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": require("path").resolve(__dirname, "src"),
+    };
+    return config;
   },
 };
 
