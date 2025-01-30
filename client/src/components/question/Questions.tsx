@@ -118,7 +118,7 @@ export default function Questions() {
   useEffect(() => {
     setPage(1);
     fetchQuestions(1, debouncedSearch);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, fetchQuestions]);
 
   const fetchMoreQuestions = () => {
     if (page < totalPages) {

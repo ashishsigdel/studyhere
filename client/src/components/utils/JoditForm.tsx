@@ -38,7 +38,7 @@ export default function JoditForm({
       statusbar: false,
       toolbarAdaptive: false,
     }),
-    []
+    [placeholder, theme]
   );
 
   return (

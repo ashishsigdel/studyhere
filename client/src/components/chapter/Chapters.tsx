@@ -34,19 +34,6 @@ export default function Chapters() {
     };
   }, []);
 
-  useEffect(() => {
-    const cachedData = localStorage.getItem(`chapters_${id}`);
-    if (cachedData) {
-      const { chapters, subject } = JSON.parse(cachedData);
-      setChapters(chapters);
-      setSubject(subject);
-    }
-
-    if (isOnline) {
-      fetchChapters();
-    }
-  }, [id, isOnline]); // Runs when subjectId or online status changes
-
   const fetchChapters = async () => {
     if (!isOnline) return;
 
@@ -66,6 +53,19 @@ export default function Chapters() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const cachedData = localStorage.getItem(`chapters_${id}`);
+    if (cachedData) {
+      const { chapters, subject } = JSON.parse(cachedData);
+      setChapters(chapters);
+      setSubject(subject);
+    }
+
+    if (isOnline) {
+      fetchChapters();
+    }
+  }, [id, isOnline, fetchChapters]);
 
   const handleSaveChapter = async () => {
     const checkAuth = CheckAuth();
