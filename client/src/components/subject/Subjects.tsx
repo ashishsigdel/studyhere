@@ -1,5 +1,5 @@
 "use client";
-import { myAxios } from "@/utils/apiHanlde";
+import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
 import Spinner from "@/utils/Spinner";
 import Link from "next/link";
@@ -23,12 +23,17 @@ export default function Subjects() {
   const [isOnline, setIsOnline] = useState(true);
 
   const fetchSubjects = async () => {
-    setLoading(true);
     try {
       // 1️⃣ Check localStorage first (for offline access)
-      const cachedSubjects = localStorage.getItem("subjects");
-      if (cachedSubjects) {
-        setSubjects(JSON.parse(cachedSubjects));
+      try {
+        const cachedSubjects = localStorage.getItem("subjects");
+        if (cachedSubjects) {
+          setSubjects(JSON.parse(cachedSubjects));
+        } else {
+          setLoading(true);
+        }
+      } catch (error) {
+        setLoading(true);
       }
 
       // 2️⃣ If online, fetch fresh data
@@ -86,7 +91,7 @@ export default function Subjects() {
     if (checkAuth) {
       setLoadingAdd(true);
       try {
-        const response = await myAxios.post("/subject", {
+        const response = await myAxios.post("/subject/create", {
           name: subject,
         });
 

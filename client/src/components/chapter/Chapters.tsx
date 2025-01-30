@@ -1,5 +1,5 @@
 "use client";
-import { myAxios } from "@/utils/apiHanlde";
+import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
 import Theme from "@/utils/Theme";
 import Link from "next/link";
@@ -36,8 +36,6 @@ export default function Chapters() {
 
   const fetchChapters = async () => {
     if (!isOnline) return;
-
-    setLoading(true);
     try {
       const response = await myAxios.get(`/chapter/${id}`);
       setChapters(response.data.data.chapters);
@@ -55,17 +53,23 @@ export default function Chapters() {
   };
 
   useEffect(() => {
-    const cachedData = localStorage.getItem(`chapters_${id}`);
-    if (cachedData) {
-      const { chapters, subject } = JSON.parse(cachedData);
-      setChapters(chapters);
-      setSubject(subject);
+    try {
+      const cachedData = localStorage.getItem(`chapters_${id}`);
+      if (cachedData) {
+        const { chapters, subject } = JSON.parse(cachedData);
+        setChapters(chapters);
+        setSubject(subject);
+      } else {
+        setLoading(true);
+      }
+    } catch (error) {
+      setLoading(true);
     }
 
     if (isOnline) {
       fetchChapters();
     }
-  }, [id, isOnline, fetchChapters]);
+  }, []);
 
   const handleSaveChapter = async () => {
     const checkAuth = CheckAuth();
@@ -76,9 +80,8 @@ export default function Chapters() {
     if (checkAuth && id) {
       setLoadingAdd(true);
       try {
-        const response = await myAxios.post(`/chapter`, {
+        const response = await myAxios.post(`/chapter/create/${id}`, {
           name: chapter,
-          subjectId: id,
         });
 
         const newChapters = [...chapters, response.data.data];
