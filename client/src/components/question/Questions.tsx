@@ -1,5 +1,5 @@
 "use client";
-import { myAxios } from "@/utils/apiHanlde";
+import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -65,21 +65,25 @@ export default function Questions() {
 
   // Fetch Questions API with offline caching
   const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
-    setLoading(true);
     const cacheKey = `questions_${id}_${searchQuery}`;
 
     // If offline, load from cache
     if (!navigator.onLine) {
-      const cachedData = localStorage.getItem(cacheKey);
-      if (cachedData) {
-        const { questions, chapter, subject, totalPages } =
-          JSON.parse(cachedData);
-        setQuestions(questions);
-        setChapter(chapter);
-        setSubject(subject);
-        setTotalPages(totalPages);
+      try {
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+          const { questions, chapter, subject, totalPages } =
+            JSON.parse(cachedData);
+          setQuestions(questions);
+          setChapter(chapter);
+          setSubject(subject);
+          setTotalPages(totalPages);
+        } else {
+          setLoading(true);
+        }
+      } catch (error) {
+        setLoading(true);
       }
-      setLoading(false);
       return;
     }
 
@@ -118,7 +122,7 @@ export default function Questions() {
   useEffect(() => {
     setPage(1);
     fetchQuestions(1, debouncedSearch);
-  }, [debouncedSearch, fetchQuestions]);
+  }, [debouncedSearch]);
 
   const fetchMoreQuestions = () => {
     if (page < totalPages) {
@@ -146,8 +150,7 @@ export default function Questions() {
 
     setLoadingAdd(true);
     try {
-      const response = await myAxios.post(`/question`, {
-        chapterId: id,
+      const response = await myAxios.post(`/question/create/${id}`, {
         question: newQuestion.question,
         answer: newQuestion.answer,
         year: newQuestion.year,
@@ -198,7 +201,7 @@ export default function Questions() {
     }
     setLoadingEdit(true);
     try {
-      await myAxios.put(`/question?id=${editQuestion.id}`, editQuestion);
+      await myAxios.put(`/question/update/${editQuestion.id}`, editQuestion);
       setQuestions((prev) =>
         prev.map((q) => (q.id === editQuestion.id ? editQuestion : q))
       );
