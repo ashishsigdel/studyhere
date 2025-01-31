@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { generateTokens } from "../utils/generateTokens";
 import User from "../models/user";
-import { getAuthToken, getCookieToken } from "../utils/jwtUtils";
 
 declare module "express" {
   export interface Request {
@@ -15,13 +14,13 @@ declare module "express" {
 export const authMiddleware = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = getCookieToken(req) || getAuthToken(req);
+      let accessToken = req.cookies?.accessToken;
 
       if (!accessToken) {
         return next(
           new ApiError({
             status: 401,
-            message: "Access token not found.",
+            message: "Missing access token",
           })
         );
       }
@@ -52,13 +51,13 @@ export const authMiddleware = asyncHandler(
           accessError.name === "TokenExpiredError" ||
           accessError.name === "JsonWebTokenError"
         ) {
-          const refreshToken = getCookieToken(req) || getAuthToken(req);
+          let refreshToken = req.cookies?.refreshToken;
 
           if (!refreshToken) {
             return next(
               new ApiError({
                 status: 401,
-                message: "Refresh Token not found.",
+                message: "Missing refresh token",
               })
             );
           }
