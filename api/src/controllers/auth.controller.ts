@@ -32,16 +32,14 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+    secure: true,
+    maxAge: 30 * 60 * 60 * 24 * 1000,
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 360 * 24 * 60 * 60 * 1000, // 360 days
+    secure: true,
+    maxAge: 365 * 60 * 60 * 24 * 1000,
   });
 
   const { password, ...userWithoutPassword } = user.toJSON();
@@ -56,8 +54,11 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
 export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
   });
 
   return new ApiResponse({

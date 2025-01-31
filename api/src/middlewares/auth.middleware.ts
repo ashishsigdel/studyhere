@@ -15,13 +15,12 @@ export const authMiddleware = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let accessToken = req.cookies?.accessToken;
-      let refreshToken = req.cookies?.refreshToken;
 
-      if (!accessToken && !refreshToken) {
+      if (!accessToken) {
         return next(
           new ApiError({
             status: 401,
-            message: "Missing token",
+            message: "Missing access token",
           })
         );
       }
@@ -52,6 +51,16 @@ export const authMiddleware = asyncHandler(
           accessError.name === "TokenExpiredError" ||
           accessError.name === "JsonWebTokenError"
         ) {
+          let refreshToken = req.cookies?.refreshToken;
+
+          if (!refreshToken) {
+            return next(
+              new ApiError({
+                status: 401,
+                message: "Missing refresh token",
+              })
+            );
+          }
           try {
             const decoded: any = jwt.verify(
               refreshToken,
@@ -62,11 +71,9 @@ export const authMiddleware = asyncHandler(
               decoded.userId
             );
 
-            res.cookie("accessToken", accessToken, {
+            res.cookie("accessToken", newAccessToken, {
               httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "strict",
-              maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+              secure: true,
             });
 
             const user = await User.findOne({
