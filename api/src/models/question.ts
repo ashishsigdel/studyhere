@@ -6,6 +6,7 @@ import {
   Table,
 } from "sequelize-typescript";
 import Chapter from "./chapter";
+import User from "./user";
 @Table({
   tableName: "Questions",
   timestamps: true,
@@ -45,5 +46,15 @@ class Question extends Model {
     type: DataType.STRING(10),
   })
   marks!: string;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: true,
+    references: { model: "users", key: "id" },
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  })
+  createdBy!: number;
 }
 export default Question;

@@ -94,7 +94,7 @@ export const fetchQuestions = asyncHandler(
 
 export const createQustion = asyncHandler(
   async (req: Request, res: Response) => {
-    const { question, answer, year, marks } = req.body;
+    const { question, answer, year, marks, createdBy } = req.body;
 
     if (!question) {
       throw new ApiError({
@@ -131,6 +131,7 @@ export const createQustion = asyncHandler(
       answer,
       year,
       marks,
+      createdBy,
     });
 
     return new ApiResponse({

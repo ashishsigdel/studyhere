@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
@@ -18,8 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gray-100 dark:bg-slate-950 text-slate-950 dark:text-gray-100">
         <CustomThemeProvider>
+          <Header />
           {children}
-          <Toaster />
+          <Toaster position="bottom-center" reverseOrder={true} />
         </CustomThemeProvider>
       </body>
     </html>

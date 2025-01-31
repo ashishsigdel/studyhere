@@ -1,5 +1,5 @@
 export const CheckAuth = () => {
-  const storedKey = localStorage.getItem("authKey");
+  const user = localStorage.getItem("user");
 
-  return storedKey === process.env.NEXT_PUBLIC_AUTHKEY;
+  return user ? true : false;
 };
