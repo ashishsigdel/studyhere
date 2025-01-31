@@ -33,12 +33,14 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: true,
+    sameSite: "none" as const,
     maxAge: 30 * 60 * 60 * 24 * 1000,
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
+    sameSite: "none" as const,
     maxAge: 365 * 60 * 60 * 24 * 1000,
   });
 

@@ -74,6 +74,8 @@ export const authMiddleware = asyncHandler(
             res.cookie("accessToken", newAccessToken, {
               httpOnly: true,
               secure: true,
+              sameSite: "none" as const,
+              maxAge: 30 * 60 * 60 * 24 * 1000,
             });
 
             const user = await User.findOne({
