@@ -7,6 +7,7 @@ const myAxios = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 myAxios.interceptors.response.use(
@@ -16,16 +17,9 @@ myAxios.interceptors.response.use(
 
     if (error.response?.status === 401) {
       originalRequest._retry = true;
-
-      try {
-        await myAxios.post("/auth/refresh");
-
-        // Retry the original request with the new token
-        return myAxios(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed. Logging out.");
-        window.location.href = "/login";
-      }
+      const pathname = window.location.pathname;
+      const currentUrl = encodeURIComponent(pathname);
+      window.location.href = `/login?redirect=${currentUrl}`;
     }
 
     return Promise.reject(error);
