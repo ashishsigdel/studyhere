@@ -1,3 +1,4 @@
+@import url("https://fonts.cdnfonts.com/css/typo-round");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,4 +16,10 @@
 
 .prose th {
   background-color: #f3f4f6;
+}
+
+.customfont-typoround {
+  font-family: "Typo Round Regular Demo", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }

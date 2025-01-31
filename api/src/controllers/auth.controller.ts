@@ -46,3 +46,17 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
     data: { user: userWithoutPassword },
   }).send(res);
 });
+
+export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    expires: new Date(0),
+  });
+
+  return new ApiResponse({
+    status: 200,
+    message: "Logged out successfully",
+  }).send(res);
+});

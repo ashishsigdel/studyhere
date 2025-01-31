@@ -43,6 +43,14 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https", // Accepts only secure images
+        hostname: "**", // Wildcard to allow all hosts
+      },
+    ],
+  },
   typescript: {
     ignoreBuildErrors: true, // This will ignore all TypeScript errors during build
   },
