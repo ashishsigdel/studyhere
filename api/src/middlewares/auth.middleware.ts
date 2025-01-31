@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { generateTokens } from "../utils/generateTokens";
 import User from "../models/user";
+import { getAuthToken, getCookieToken } from "../utils/jwtUtils";
 
 declare module "express" {
   export interface Request {
@@ -14,14 +15,13 @@ declare module "express" {
 export const authMiddleware = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let accessToken = req.cookies?.accessToken;
-      let refreshToken = req.cookies?.refreshToken;
+      const accessToken = getCookieToken(req) || getAuthToken(req);
 
-      if (!accessToken && !refreshToken) {
+      if (!accessToken) {
         return next(
           new ApiError({
             status: 401,
-            message: "Missing token",
+            message: "Access token not found.",
           })
         );
       }
@@ -52,6 +52,16 @@ export const authMiddleware = asyncHandler(
           accessError.name === "TokenExpiredError" ||
           accessError.name === "JsonWebTokenError"
         ) {
+          const refreshToken = getCookieToken(req) || getAuthToken(req);
+
+          if (!refreshToken) {
+            return next(
+              new ApiError({
+                status: 401,
+                message: "Refresh Token not found.",
+              })
+            );
+          }
           try {
             const decoded: any = jwt.verify(
               refreshToken,
