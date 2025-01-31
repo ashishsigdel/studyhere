@@ -32,16 +32,12 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 360 * 24 * 60 * 60 * 1000, // 360 days
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   });
 
   const { password, ...userWithoutPassword } = user.toJSON();
