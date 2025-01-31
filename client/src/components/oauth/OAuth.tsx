@@ -8,36 +8,27 @@ import {
 } from "firebase/auth";
 import { app } from "@/config/firebase";
 import toast from "react-hot-toast";
-import { myAxios } from "@/utils/apiHanlde";
+import { myAxios } from "@/services/apiServices";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function OAuth() {
-  const handleOauthGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const auth = getAuth(app);
-      const result = await signInWithPopup(auth, provider);
-      const response = await myAxios.post("/auth", {
-        fullName: result.user.displayName,
-        email: result.user.email,
-        profilePic: result.user.photoURL,
-      });
-      console.log(response);
-    } catch (error: any) {
-      toast.error(error?.message || "Something went wrong!");
-    }
-  };
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
+  const redirectUrl = decodeURIComponent(redirect);
 
-  const handleOauthGitHub = async () => {
+  const handleOAuthLogin = async (provider: any) => {
     try {
-      const provider = new GithubAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const response = await myAxios.post("/auth", {
+      const response = await myAxios.post("/auth/user", {
         fullName: result.user.displayName,
         email: result.user.email,
         profilePic: result.user.photoURL,
       });
-      console.log(response);
+      const user = JSON.stringify(response.data.data.user);
+      localStorage.setItem("user", user);
+      router.push(redirectUrl);
     } catch (error: any) {
       toast.error(error?.message || "Something went wrong!");
     }
@@ -50,7 +41,7 @@ export default function OAuth() {
         type="button"
         className="px-4 py-2.5 rounded-lg flex items-center gap-4 cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
         aria-label="Continue with google"
-        onClick={handleOauthGoogle}
+        onClick={() => handleOAuthLogin(new GoogleAuthProvider())}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +74,7 @@ export default function OAuth() {
         type="button"
         className="px-4 py-2.5 rounded-lg flex items-center gap-4 cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
         aria-label="Continue with github"
-        onClick={handleOauthGitHub}
+        onClick={() => handleOAuthLogin(new GithubAuthProvider())}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

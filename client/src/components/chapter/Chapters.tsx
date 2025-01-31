@@ -135,6 +135,7 @@ export default function Chapters() {
           You are offline. Data may not be up to date.
         </div>
       )}
+
       <div className="flex justify-between w-full">
         <Breadcrumb
           subject={subject}
