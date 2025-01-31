@@ -16,7 +16,7 @@ function isAllowedOrigin(origin: any) {
   if (!origin) return false;
   const allowedPatterns = [
     /^https:\/\/([\w-]+\.)?studyhere\.vercel\.app$/,
-    /^http:\/\/([\w-]+\.)?localhost:3000$/,
+    /^http:\/\/([\w-]+\.)?localhost:5100$/,
   ];
 
   return allowedPatterns.some((pattern) => pattern.test(origin));

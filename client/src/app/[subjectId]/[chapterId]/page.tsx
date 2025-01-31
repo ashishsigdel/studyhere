@@ -1,4 +1,5 @@
 import { Questions } from "@/components/question";
+import RequireAuth from "@/utils/RequireAuth";
 import { Metadata } from "next";
 import React from "react";
 
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function page() {
   return (
-    <div className="p-5 mx-auto max-w-7xl">
-      <Questions />
-    </div>
+    <RequireAuth>
+      <div className="p-5 mx-auto max-w-7xl">
+        <Questions />
+      </div>
+    </RequireAuth>
   );
 }
