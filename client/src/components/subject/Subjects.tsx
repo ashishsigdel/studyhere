@@ -20,11 +20,9 @@ export default function Subjects() {
   >([]);
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
 
   const fetchSubjects = async () => {
     try {
-      // 1️⃣ Check localStorage first (for offline access)
       try {
         const cachedSubjects = localStorage.getItem("subjects");
         if (cachedSubjects) {
@@ -36,50 +34,25 @@ export default function Subjects() {
         setLoading(true);
       }
 
-      // 2️⃣ If online, fetch fresh data
       if (navigator.onLine) {
         const response = await myAxios.get("/subject");
         setSubjects(response.data.data);
 
-        // 3️⃣ Save to localStorage
         localStorage.setItem("subjects", JSON.stringify(response.data.data));
       }
     } catch (error) {
-      console.log("Error fetching subjects:", error);
-      toast.error("Failed to fetch subjects. Check your network.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Handle network changes (Online/Offline)
   useEffect(() => {
-    const handleOnline = () => {
-      setIsOnline(true);
-      toast.success("You're back online!");
-      fetchSubjects(); // Refresh data when back online
-    };
+    fetchSubjects();
 
-    const handleOffline = () => {
-      setIsOnline(false);
-      toast.error("You are offline. Using cached data.");
-    };
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    fetchSubjects(); // Initial fetch
-
-    // Load recent chapters from cache
     const storedChapters = JSON.parse(
       localStorage.getItem("recentChapters") || "[]"
     );
     setRecentChapters(storedChapters);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
   }, []);
 
   const handleSaveSubject = async () => {
@@ -91,15 +64,17 @@ export default function Subjects() {
     if (checkAuth) {
       setLoadingAdd(true);
       try {
-        const response = await myAxios.post("/subject/create", {
-          name: subject,
-        });
+        if (!navigator.onLine) {
+          const response = await myAxios.post("/subject/create", {
+            name: subject,
+          });
 
-        setSubjects((prevSubjects) => [...prevSubjects, response.data.data]);
+          setSubjects((prevSubjects) => [...prevSubjects, response.data.data]);
 
-        toast.success("Subject created");
-        setSubject("");
-        setShowForm(false);
+          toast.success("Subject created");
+          setSubject("");
+          setShowForm(false);
+        }
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Something went wrong");
       } finally {
@@ -113,13 +88,6 @@ export default function Subjects() {
   return (
     <>
       <TopBar showForm={showForm} setShowForm={setShowForm} />
-
-      {/* 🔹 Show Network Status */}
-      {!isOnline && (
-        <div className="bg-red-500 text-white text-center py-2">
-          You are offline. Data may not be up to date.
-        </div>
-      )}
 
       <div className="mt-10">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
@@ -138,7 +106,12 @@ export default function Subjects() {
                 {subject.name}
               </h3>
 
-              <Image src={bookcover} alt={subject.name} className="pb-[0.8]" />
+              <Image
+                src={bookcover}
+                alt={subject.name}
+                className="pb-[0.8]"
+                priority
+              />
             </Link>
           ))}
         </div>
