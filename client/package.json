@@ -12,6 +12,7 @@
     "@ducanh2912/next-pwa": "^10.2.9",
     "axios": "^1.7.9",
     "cookie": "^1.0.2",
+    "crypto-js": "^4.2.0",
     "firebase": "^11.2.0",
     "jodit-react": "^4.1.2",
     "jsonwebtoken": "^9.0.2",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/crypto-js": "^4.2.2",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/react": "^19",

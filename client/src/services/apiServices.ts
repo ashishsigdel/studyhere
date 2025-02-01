@@ -1,56 +1,81 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-export const baseAPIUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
+export const baseUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}`;
 
-const myAxios = axios.create({
-  baseURL: baseAPIUrl,
+const myAxios: AxiosInstance = axios.create({
+  baseURL: baseUrl,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
   },
-  withCredentials: true,
-  timeout: 10000, // Add timeout
 });
 
-// Add request interceptor to handle CORS preflight
-myAxios.interceptors.request.use(
-  (config) => {
-    // Ensure credentials are always included
-    config.withCredentials = true;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const refreshAccessToken = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken") || "";
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/refresh-token`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    );
 
-// Modify your response interceptor to be more robust
+    const newAccessToken: string = response.data.data.accessToken;
+
+    const encryptedAccessToken: string = newAccessToken;
+    localStorage.setItem("accessToken", encryptedAccessToken);
+
+    return newAccessToken;
+  } catch (error: any) {
+    console.log(error);
+
+    // const pathname = window.location.pathname;
+    // const searchParams = window.location.search;
+    // const currentUrl = encodeURIComponent(pathname + searchParams);
+
+    // // Redirect to login
+    // window.location.href = `/login?redirect=${currentUrl}`;
+  }
+};
+
 myAxios.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   async (error) => {
-    const originalRequest = error.config;
+    // this url will not be checked for refresh token
+    const byPassUrls = ["/auth/user", "/auth/refresh-token"];
 
-    // Prevent infinite loops
-    if (originalRequest._retry) {
-      return Promise.reject(error);
+    if (error.config && byPassUrls.includes(error.config.url)) {
+      throw error;
     }
 
-    if (error.response?.status === 401) {
-      originalRequest._retry = true;
+    if (error.response && error.response.status === 401) {
+      const newAccessToken: any = await refreshAccessToken();
 
-      // Store the current URL for redirect after login
-      const pathname = window.location.pathname;
-      const searchParams = window.location.search;
-      const currentUrl = encodeURIComponent(pathname + searchParams);
-
-      // Redirect to login
-      window.location.href = `/login?redirect=${currentUrl}`;
-      return Promise.reject(error);
+      const originalRequest: any = error.config;
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+      return myAxios(originalRequest);
     }
-
-    // Handle other errors
-    return Promise.reject(error);
+    throw error;
   }
 );
 
+myAxios.interceptors.request.use((config) => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    const decryptedToken = accessToken;
+    config.headers.Authorization = `Bearer ${decryptedToken}`;
+  }
+  return config;
+});
+
+// create a incerceptor to see the request
+// myAxios.interceptors.request.use((config) => {
+//   console.log("Request was sent with this config:", config);
+//   return config;
+// });
 export { myAxios };

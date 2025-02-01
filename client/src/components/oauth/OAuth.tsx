@@ -30,11 +30,14 @@ export default function OAuth() {
       });
       const user = JSON.stringify(response.data.data.user);
       localStorage.setItem("user", user);
+      localStorage.setItem("accessToken", response.data.data.accessToken);
       window.dispatchEvent(new Event("user-update"));
       toast.success("Logged in successfully!");
       router.push(redirectUrl);
     } catch (error: any) {
-      toast.error(error?.message || "Something went wrong!");
+      console.log(error);
+
+      toast.error(error?.response?.data.message || "Something went wrong!");
     }
   };
 
