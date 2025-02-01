@@ -136,7 +136,7 @@ export default function Chapters() {
         </div>
       )}
 
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full border-b border-gray-300 dark:border-gray-600">
         <Breadcrumb
           subject={subject}
           showForm={showForm}
@@ -150,7 +150,7 @@ export default function Chapters() {
           chapters.map((chapter, index) => (
             <div
               key={chapter.id}
-              className="flex gap-2 items-center mt-1 border-b p-3"
+              className="flex gap-2 items-center mt-1 border-b border-gray-200 dark:border-gray-700 p-3"
             >
               <span>{index + 1}. </span>
               <Link

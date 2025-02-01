@@ -23,11 +23,11 @@ export default function AddModal({
 }: Props) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 ">
-      <div className="bg-white dark:bg-gray-950 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-black/10 dark:border-white/10">
+      <div className="bg-white dark:bg-gray-950 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-gray-300 dark:border-gray-600">
         <div className="flex gap-2 items-center mb-4">
           <h2 className="text-xl">Add Question</h2>
           <span
-            className="p-2 rounded-md cursor-pointer border"
+            className="p-2 rounded-md cursor-pointer border border-gray-200 dark:border-gray-700"
             onClick={switchForm}
           >
             Write {modelFormChoose === "answer" ? "Question" : "Answer"}
@@ -60,7 +60,7 @@ export default function AddModal({
           onChange={(e) =>
             setNewQuestion({ ...newQuestion, year: e.target.value })
           }
-          className="w-full p-2 border rounded-md mb-2"
+          className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-md mb-2"
           placeholder="Year"
         />
         <input
@@ -69,7 +69,7 @@ export default function AddModal({
           onChange={(e) =>
             setNewQuestion({ ...newQuestion, marks: e.target.value })
           }
-          className="w-full p-2 border rounded-md mb-2"
+          className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-md mb-2"
           placeholder="Marks"
         />
         <div className="flex justify-end gap-4">
