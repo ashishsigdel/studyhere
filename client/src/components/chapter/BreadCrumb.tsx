@@ -13,20 +13,9 @@ type Props = {
 };
 
 export default function Breadcrumb({ subject, showForm, setShowForm }: Props) {
-  const router = useRouter();
-
-  const [key, setKey] = useState("");
-
   const toggleForm = () => {
     setShowForm(!showForm);
   };
-
-  useEffect(() => {
-    const storedKey = localStorage.getItem("authKey");
-    if (storedKey) {
-      setKey(storedKey);
-    }
-  }, []);
 
   return (
     <nav className="w-full py-4 justify-between flex items-center">
@@ -61,18 +50,14 @@ export default function Breadcrumb({ subject, showForm, setShowForm }: Props) {
         )}
       </ol>
       <div className="flex items-center gap-3">
-        {key && (
-          <button
-            type="button"
-            className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
-            onClick={toggleForm}
-            aria-label="Add new item"
-          >
-            <FaPlus size={20} />
-          </button>
-        )}
-
-        <Theme />
+        <button
+          type="button"
+          className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+          onClick={toggleForm}
+          aria-label="Add new item"
+        >
+          <FaPlus size={20} />
+        </button>
       </div>
     </nav>
   );

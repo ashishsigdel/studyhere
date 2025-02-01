@@ -235,7 +235,7 @@ export default function Questions() {
 
   return (
     <>
-      <div className="flex flex-col justify-between w-full border-b">
+      <div className="flex flex-col justify-between w-full border-b border-gray-300 dark:border-gray-600">
         <BreadCrumb subject={subject} chapter={chapter} />
         <SearchBar
           search={search}
