@@ -30,14 +30,12 @@ const refreshAccessToken = async () => {
 
     return newAccessToken;
   } catch (error: any) {
-    console.log(error);
+    const pathname = window.location.pathname;
+    const searchParams = window.location.search;
+    const currentUrl = encodeURIComponent(pathname + searchParams);
 
-    // const pathname = window.location.pathname;
-    // const searchParams = window.location.search;
-    // const currentUrl = encodeURIComponent(pathname + searchParams);
-
-    // // Redirect to login
-    // window.location.href = `/login?redirect=${currentUrl}`;
+    // Redirect to login
+    window.location.href = `/login?redirect=${currentUrl}`;
   }
 };
 
