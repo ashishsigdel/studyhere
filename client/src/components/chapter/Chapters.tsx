@@ -21,32 +21,20 @@ export default function Chapters() {
   const [chapter, setChapter] = useState("");
   const [subject, setSubject] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  useEffect(() => {
-    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
-    window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
-
-    return () => {
-      window.removeEventListener("online", updateOnlineStatus);
-      window.removeEventListener("offline", updateOnlineStatus);
-    };
-  }, []);
 
   const fetchChapters = async () => {
-    if (!isOnline) return;
     try {
-      const response = await myAxios.get(`/chapter/${id}`);
-      setChapters(response.data.data.chapters);
-      setSubject(response.data.data.subject);
+      if (navigator.onLine) {
+        const response = await myAxios.get(`/chapter/${id}`);
+        setChapters(response.data.data.chapters);
+        setSubject(response.data.data.subject);
 
-      localStorage.setItem(
-        `chapters_${id}`,
-        JSON.stringify(response.data.data)
-      );
+        localStorage.setItem(
+          `chapters_${id}`,
+          JSON.stringify(response.data.data)
+        );
+      }
     } catch (error) {
-      console.error("Error fetching chapters:", error);
     } finally {
       setLoading(false);
     }
@@ -66,9 +54,7 @@ export default function Chapters() {
       setLoading(true);
     }
 
-    if (isOnline) {
-      fetchChapters();
-    }
+    fetchChapters();
   }, []);
 
   const handleSaveChapter = async () => {
@@ -80,20 +66,22 @@ export default function Chapters() {
     if (checkAuth && id) {
       setLoadingAdd(true);
       try {
-        const response = await myAxios.post(`/chapter/create/${id}`, {
-          name: chapter,
-        });
+        if (navigator.onLine) {
+          const response = await myAxios.post(`/chapter/create/${id}`, {
+            name: chapter,
+          });
 
-        const newChapters = [...chapters, response.data.data];
-        setChapters(newChapters);
+          const newChapters = [...chapters, response.data.data];
+          setChapters(newChapters);
 
-        localStorage.setItem(
-          `chapters_${id}`,
-          JSON.stringify({ chapters: newChapters, subject })
-        );
+          localStorage.setItem(
+            `chapters_${id}`,
+            JSON.stringify({ chapters: newChapters, subject })
+          );
 
-        toast.success("Chapter created");
-        setChapter("");
+          toast.success("Chapter created");
+          setChapter("");
+        }
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Something went wrong");
       } finally {
@@ -130,12 +118,6 @@ export default function Chapters() {
 
   return (
     <>
-      {!isOnline && (
-        <div className="bg-red-500 text-white text-center py-2">
-          You are offline. Data may not be up to date.
-        </div>
-      )}
-
       <div className="flex justify-between w-full border-b border-gray-300 dark:border-gray-600">
         <Breadcrumb
           subject={subject}

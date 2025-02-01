@@ -88,29 +88,31 @@ export default function Questions() {
     }
 
     try {
-      const response = await myAxios.get(
-        `/question/${id}?page=${pageNumber}&limit=15&search=${searchQuery}`
-      );
-      const data = response.data.data;
-      if (pageNumber === 1) {
-        setQuestions(data.allQuestions);
-      } else {
-        setQuestions((prev) => [...prev, ...data.allQuestions]);
-      }
-      setChapter(data.chapter.name);
-      setSubject(data.chapter.subject.name);
-      setTotalPages(data.totalPages);
+      if (navigator.onLine) {
+        const response = await myAxios.get(
+          `/question/${id}?page=${pageNumber}&limit=15&search=${searchQuery}`
+        );
+        const data = response.data.data;
+        if (pageNumber === 1) {
+          setQuestions(data.allQuestions);
+        } else {
+          setQuestions((prev) => [...prev, ...data.allQuestions]);
+        }
+        setChapter(data.chapter.name);
+        setSubject(data.chapter.subject.name);
+        setTotalPages(data.totalPages);
 
-      // Cache the response
-      localStorage.setItem(
-        cacheKey,
-        JSON.stringify({
-          questions: data.allQuestions,
-          chapter: data.chapter.name,
-          subject: data.chapter.subject.name,
-          totalPages: data.totalPages,
-        })
-      );
+        // Cache the response
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            questions: data.allQuestions,
+            chapter: data.chapter.name,
+            subject: data.chapter.subject.name,
+            totalPages: data.totalPages,
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
     } finally {
