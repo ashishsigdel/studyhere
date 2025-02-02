@@ -8,6 +8,7 @@ import Question from "../models/question";
 import Subject from "../models/subject";
 import User from "../models/user";
 import RefreshToken from "../models/refreshToken";
+import Answer from "../models/answer";
 
 const sequelize: any = new Sequelize({
   host: process.env.DB_HOST,
@@ -24,7 +25,7 @@ const sequelize: any = new Sequelize({
   },
   logging: false,
   benchmark: true,
-  models: [Subject, Chapter, Question, User, RefreshToken],
+  models: [Subject, Chapter, Question, User, RefreshToken, Answer],
 });
 
 applyAssociations();
