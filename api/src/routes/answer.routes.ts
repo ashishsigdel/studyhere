@@ -9,7 +9,7 @@ router
   .post(authMiddleware, answerController.addAnswer);
 
 router
-  .route("/update/:answerId")
+  .route("/update/:questionId")
   .put(authMiddleware, answerController.updateAnswer);
 
 router
