@@ -127,6 +127,7 @@ export default function Chapters() {
       </div>
       <div className="flex flex-col mt-10">
         {loading && <Spinner color="#222" />}
+        {!navigator.onLine && chapters.length === 0 && <>You are offline. </>}
         {!loading && chapters.length === 0 && <>No chapters</>}
         {chapters.length > 0 &&
           chapters.map((chapter, index) => (
