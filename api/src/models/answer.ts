@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -41,5 +42,8 @@ class Answer extends Model {
     onDelete: "CASCADE",
   })
   userId!: number;
+
+  @BelongsTo(() => User)
+  user!: User;
 }
 export default Answer;
