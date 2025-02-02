@@ -7,6 +7,7 @@ import ApiError from "../utils/apiError";
 import Chapter from "../models/chapter";
 import { Op, Sequelize } from "sequelize";
 import Question from "../models/question";
+import Answer from "../models/answer";
 
 export const fetchQuestions = asyncHandler(
   async (req: Request, res: Response) => {
