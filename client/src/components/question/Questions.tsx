@@ -10,6 +10,9 @@ import SearchBar from "./SearchBar";
 import QuestionFields from "./QuestionFields";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";
+import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
+
+const DB_STORE_NAME = "questions";
 
 export default function Questions() {
   const router = useRouter();
@@ -70,10 +73,9 @@ export default function Questions() {
     // If offline, load from cache
     if (!navigator.onLine) {
       try {
-        const cachedData = localStorage.getItem(cacheKey);
+        const cachedData = await loadDataFromIndexedDB(DB_STORE_NAME, cacheKey);
         if (cachedData) {
-          const { questions, chapter, subject, totalPages } =
-            JSON.parse(cachedData);
+          const { questions, chapter, subject, totalPages } = cachedData;
           setQuestions(questions);
           setChapter(chapter);
           setSubject(subject);
@@ -102,16 +104,27 @@ export default function Questions() {
         setSubject(data.chapter.subject.name);
         setTotalPages(data.totalPages);
 
-        // Cache the response
-        localStorage.setItem(
-          cacheKey,
-          JSON.stringify({
-            questions: data.allQuestions,
-            chapter: data.chapter.name,
-            subject: data.chapter.subject.name,
-            totalPages: data.totalPages,
-          })
+        // Retrieve existing data from IndexedDB
+        const existingData = await loadDataFromIndexedDB(
+          DB_STORE_NAME,
+          cacheKey
         );
+        // Combine and remove duplicates based on question ID
+        const existingQuestions = existingData?.questions || [];
+        const allQuestions = [...existingQuestions, ...data.allQuestions];
+
+        // Remove duplicate questions using a Map (assumes each question has a unique 'id')
+        const uniqueQuestions = Array.from(
+          new Map(allQuestions.map((q) => [q.id, q])).values()
+        );
+
+        // Save updated unique questions to IndexedDB
+        await saveDataToIndexedDB(DB_STORE_NAME, cacheKey, {
+          questions: uniqueQuestions,
+          chapter: data.chapter.name,
+          subject: data.chapter.subject.name,
+          totalPages: data.totalPages,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -175,7 +188,6 @@ export default function Questions() {
       if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         parsedData.questions.push(response.data.data);
-        localStorage.setItem(cacheKey, JSON.stringify(parsedData));
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
@@ -218,7 +230,6 @@ export default function Questions() {
         parsedData.questions = parsedData.questions.map((q: any) =>
           q.id === editQuestion.id ? editQuestion : q
         );
-        localStorage.setItem(cacheKey, JSON.stringify(parsedData));
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");

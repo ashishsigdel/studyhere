@@ -5,11 +5,13 @@ import Spinner from "@/utils/Spinner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Theme from "@/utils/Theme";
 import TopBar from "./Topbar";
 import AddModal from "./AddModal";
 import Image from "next/image";
 import bookcover from "@/assets/bookcover.png";
+import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
+
+const STORE_NAME = "subjects";
 
 export default function Subjects() {
   const [subjects, setSubjects] = useState<{ id: number; name: string }[]>([]);
@@ -24,9 +26,12 @@ export default function Subjects() {
   const fetchSubjects = async () => {
     try {
       try {
-        const cachedSubjects = localStorage.getItem("subjects");
+        const cachedSubjects = await loadDataFromIndexedDB(
+          STORE_NAME,
+          "subjects"
+        );
         if (cachedSubjects) {
-          setSubjects(JSON.parse(cachedSubjects));
+          setSubjects(cachedSubjects);
         } else {
           setLoading(true);
         }
@@ -38,7 +43,7 @@ export default function Subjects() {
         const response = await myAxios.get("/subject");
         setSubjects(response.data.data);
 
-        localStorage.setItem("subjects", JSON.stringify(response.data.data));
+        await saveDataToIndexedDB(STORE_NAME, "subjects", response.data.data);
       }
     } catch (error) {
     } finally {
