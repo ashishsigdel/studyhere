@@ -170,7 +170,7 @@ export default function QuestionFields({
               )}
             </div>
             <div className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer">
-              See Other's Answer
+              See Other&apos;s Answer
             </div>
           </div>
         </div>
