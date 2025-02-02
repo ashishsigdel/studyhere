@@ -109,6 +109,7 @@ export default function Questions() {
           DB_STORE_NAME,
           cacheKey
         );
+
         // Combine and remove duplicates based on question ID
         const existingQuestions = existingData?.questions || [];
         const allQuestions = [...existingQuestions, ...data.allQuestions];
