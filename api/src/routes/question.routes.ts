@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route("/create/:chapterId").post(questionController.createQustion);
 
-router.route("/update/:id").put(questionController.updateQustion);
+router.route("/update/:questionId").put(questionController.updateQustion);
 
 router
   .route("/:chapterId")

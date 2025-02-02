@@ -67,16 +67,20 @@ export const addAnswer = asyncHandler(
 );
 export const updateAnswer = asyncHandler(
   async (req: CustomRequest, res: Response) => {
-    const { answerId } = req.params;
+    const { questionId } = req.params;
 
-    if (!answerId) {
+    if (!questionId) {
       throw new ApiError({
         status: 400,
         message: "Cannot update answer!",
       });
     }
 
-    const existAnswer = await Answer.findByPk(answerId);
+    const existAnswer = await Answer.findOne({
+      where: {
+        questionId,
+      },
+    });
 
     if (!existAnswer) {
       throw new ApiError({

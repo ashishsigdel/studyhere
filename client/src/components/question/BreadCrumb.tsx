@@ -25,7 +25,7 @@ export default function Breadcrumb({ subject, chapter }: Props) {
   };
 
   return (
-    <nav className="w-full py-3">
+    <nav className="w-full py-4">
       <ol className="flex items-center gap-2 text-lg flex-wrap min-[320px]:flex-nowrap">
         <li className="flex items-center min-w-0">
           <Link
