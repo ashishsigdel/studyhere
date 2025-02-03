@@ -156,7 +156,10 @@ export const getAnswersByQuestionId = asyncHandler(
     return new ApiResponse({
       status: 200,
       message: "All Answers fetched!",
-      data: answers,
+      data: {
+        question: existQuestion,
+        answers,
+      },
     }).send(res);
   }
 );
