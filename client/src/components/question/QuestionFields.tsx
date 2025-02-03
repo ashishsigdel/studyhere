@@ -7,6 +7,7 @@ import { myAxios } from "@/services/apiServices";
 import { JoditForm } from "../utils";
 import Image from "next/image";
 import defaultPic from "@/assets/pictures/defaultpic.jpg";
+import Link from "next/link";
 
 type Props = {
   questions: {
@@ -45,7 +46,7 @@ export default function QuestionFields({
 
   const [openEditor, setOpenEditor] = useState(false);
   const handleAnswerEdit = async (id: number) => {
-    if (answers[id]?.user?.id === userL.id) {
+    if (answers[id]?.user?.id === userL?.id) {
       setAnswer(answers[id]?.answer);
     }
     setOpenEditor(true);
@@ -131,7 +132,7 @@ export default function QuestionFields({
                     onClick={() =>
                       saveAnswer(
                         answers[question.id] &&
-                          answers[question.id]?.user?.id === userL.id
+                          answers[question.id]?.user?.id === userL?.id
                           ? "update"
                           : "add",
                         question.id
@@ -143,7 +144,7 @@ export default function QuestionFields({
                     {saving ? "Saving" : "Save"}
                   </div>
                 ) : answers[question.id] &&
-                  answers[question.id].user.id === userL?.id ? (
+                  answers[question.id]?.user?.id === userL?.id ? (
                   <div
                     onClick={() => handleAnswerEdit(question.id)}
                     className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
@@ -184,7 +185,7 @@ export default function QuestionFields({
                     }}
                   />
                   {answers[question.id]?.answer &&
-                    answers[question.id]?.user.id !== userL.id && (
+                    answers[question.id]?.user?.id !== userL?.id && (
                       <div className="flex items-center my-3 gap-3">
                         <Image
                           src={
@@ -203,9 +204,12 @@ export default function QuestionFields({
                 </div>
               )}
             </div>
-            <div className="mx-3 mt-5 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer">
+            <Link
+              href={`/question/${question.id}`}
+              className="mx-3 mt-5 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
+            >
               See Other&apos;s Answer
-            </div>
+            </Link>
           </div>
         </div>
       ))}
