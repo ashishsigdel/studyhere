@@ -39,7 +39,7 @@ export default function useQuestions() {
   );
   const [openedAnswerIds, setOpenedAnswerIds] = useState<number[]>([]);
   const [loadingAnswer, setLoadingAnswer] = useState(false);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [answers, setAnswers] = useState<Record<number, {}>>({});
 
   // State for form inputs
   const [newQuestion, setNewQuestion] = useState({
@@ -66,7 +66,7 @@ export default function useQuestions() {
       const response = await myAxios.get(`/answer/get/${id}`);
       setAnswers((prev) => ({
         ...prev,
-        [id]: response?.data?.data?.answer,
+        [id]: response?.data?.data,
       }));
     } catch (error: any) {
       toast.error(error?.response?.data.message || "Something went wrong!");

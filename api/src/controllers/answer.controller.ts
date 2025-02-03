@@ -76,9 +76,12 @@ export const updateAnswer = asyncHandler(
       });
     }
 
+    const user = req.user;
+
     const existAnswer = await Answer.findOne({
       where: {
         questionId,
+        userId: user?.id,
       },
     });
 
@@ -97,8 +100,6 @@ export const updateAnswer = asyncHandler(
         message: "Answer is required!",
       });
     }
-
-    const user = req.user;
 
     if (existAnswer.userId !== user?.id) {
       throw new ApiError({
@@ -184,7 +185,22 @@ export const getYourAnswersByQuestionId = asyncHandler(
     let answer = await Answer.findOne({
       where: { questionId, userId: currentUserId },
       attributes: ["id", "answer", "createdAt"],
+      include: {
+        model: User,
+        attributes: ["id", "fullName", "profilePic"],
+      },
     });
+
+    if (!answer) {
+      answer = await Answer.findOne({
+        where: { questionId },
+        attributes: ["id", "answer", "createdAt"],
+        include: {
+          model: User,
+          attributes: ["id", "fullName", "profilePic"],
+        },
+      });
+    }
 
     return new ApiResponse({
       status: 200,
