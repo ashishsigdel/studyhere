@@ -6,14 +6,6 @@ import defaultPic from "@/assets/pictures/defaultpic.jpg";
 
 export default function Question() {
   const { question, answers, loading } = useQuestionPage();
-  const [userL, setUserL] = useState<any>({});
-
-  useEffect(() => {
-    const userlogged = localStorage.getItem("user");
-    if (userlogged) {
-      setUserL(JSON.parse(userlogged));
-    }
-  }, []);
 
   if (loading) {
     return (
