@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "@/utils/Spinner";
 import { FaEdit, FaPlus, FaSave } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { JoditForm } from "../utils";
+import Image from "next/image";
+import defaultPic from "@/assets/pictures/defaultpic.jpg";
 
 type Props = {
   questions: {
@@ -37,12 +39,15 @@ export default function QuestionFields({
   loadingAnswer,
   answers,
 }: Props) {
+  const [userL, setUserL] = useState<any>({});
   const [answer, setAnswer] = useState("");
   const [saving, setSaving] = useState(false);
 
   const [openEditor, setOpenEditor] = useState(false);
   const handleAnswerEdit = async (id: number) => {
-    setAnswer(answers[id]);
+    if (answers[id]?.user?.id === userL.id) {
+      setAnswer(answers[id]?.answer);
+    }
     setOpenEditor(true);
   };
 
@@ -68,6 +73,13 @@ export default function QuestionFields({
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    const userlogged = localStorage.getItem("user");
+    if (userlogged) {
+      setUserL(JSON.parse(userlogged));
+    }
+  }, []);
   return (
     <InfiniteScroll
       dataLength={questions.length}
@@ -118,7 +130,10 @@ export default function QuestionFields({
                   <div
                     onClick={() =>
                       saveAnswer(
-                        answers[question.id] ? "update" : "add",
+                        answers[question.id] &&
+                          answers[question.id]?.user?.id === userL.id
+                          ? "update"
+                          : "add",
                         question.id
                       )
                     }
@@ -127,7 +142,8 @@ export default function QuestionFields({
                     <FaSave className="" size={16} />
                     {saving ? "Saving" : "Save"}
                   </div>
-                ) : answers[question.id] ? (
+                ) : answers[question.id] &&
+                  answers[question.id].user.id === userL?.id ? (
                   <div
                     onClick={() => handleAnswerEdit(question.id)}
                     className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
@@ -163,13 +179,31 @@ export default function QuestionFields({
                 <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: answers[question.id] || "No answer available.",
+                      __html:
+                        answers[question.id]?.answer || "No answer available.",
                     }}
                   />
+                  {answers[question.id]?.answer &&
+                    answers[question.id]?.user.id !== userL.id && (
+                      <div className="flex items-center my-3 gap-3">
+                        <Image
+                          src={
+                            answers[question.id]?.user?.profilePic
+                              ? answers[question.id]?.user?.profilePic
+                              : defaultPic
+                          }
+                          alt="profilePic"
+                          width={40}
+                          height={40}
+                          className="w-8 h-8 rounded-full"
+                        />
+                        {answers[question.id]?.user?.fullName}
+                      </div>
+                    )}
                 </div>
               )}
             </div>
-            <div className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer">
+            <div className="mx-3 mt-5 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer">
               See Other&apos;s Answer
             </div>
           </div>
