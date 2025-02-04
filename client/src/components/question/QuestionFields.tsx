@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "@/utils/Spinner";
-import { FaEdit, FaPlus, FaSave } from "react-icons/fa";
+import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { JoditForm } from "../utils";
@@ -41,33 +41,67 @@ export default function QuestionFields({
   answers,
 }: Props) {
   const [userL, setUserL] = useState<any>({});
-  const [answer, setAnswer] = useState("");
+  const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(
+    {}
+  );
   const [saving, setSaving] = useState(false);
+  const [openEditors, setOpenEditors] = useState<{ [key: number]: boolean }>(
+    {}
+  );
 
-  const [openEditor, setOpenEditor] = useState(false);
   const handleAnswerEdit = async (id: number) => {
-    if (answers[id]?.user?.id === userL?.id) {
-      setAnswer(answers[id]?.answer);
-    }
-    setOpenEditor(true);
+    // Clear any existing answer states first
+    setAnswerStates((prev) => ({
+      ...prev,
+      [id]:
+        answers[id]?.answer?.user?.id === userL?.id
+          ? answers[id]?.answer?.answer
+          : "",
+    }));
+
+    setOpenEditors((prev) => ({
+      ...prev,
+      [id]: true,
+    }));
+  };
+
+  const handleCancel = (id: number) => {
+    setOpenEditors((prev) => ({
+      ...prev,
+      [id]: false,
+    }));
+
+    // Clear the specific answer state
+    setAnswerStates((prev) => {
+      const newStates = { ...prev };
+      delete newStates[id];
+      return newStates;
+    });
   };
 
   const saveAnswer = async (type: string, id: number) => {
+    if (!answerStates[id]?.trim()) {
+      toast.error("Answer cannot be empty!");
+      return;
+    }
+
     setSaving(true);
     try {
       if (type === "add") {
-        await myAxios.post(`/answer/add/${id}`, {
-          answer,
-        });
-        setOpenEditor(false);
-        toast.success("Refresh page to see changes.");
+        await myAxios.post(`/answer/add/${id}`, { answer: answerStates[id] });
       } else {
-        await myAxios.put(`/answer/update/${id}`, {
-          answer,
-        });
-        setOpenEditor(false);
-        toast.success("Refresh page to see changes.");
+        await myAxios.put(`/answer/update/${id}`, { answer: answerStates[id] });
       }
+      toast.success("Answer saved successfully!");
+      setOpenEditors((prev) => ({
+        ...prev,
+        [id]: false,
+      }));
+      setAnswerStates((prev) => {
+        const newStates = { ...prev };
+        delete newStates[id];
+        return newStates;
+      });
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     } finally {
@@ -80,7 +114,12 @@ export default function QuestionFields({
     if (userlogged) {
       setUserL(JSON.parse(userlogged));
     }
+    return () => {
+      setAnswerStates({});
+      setOpenEditors({});
+    };
   }, []);
+
   return (
     <InfiniteScroll
       dataLength={questions.length}
@@ -96,7 +135,7 @@ export default function QuestionFields({
         <div
           key={question.id}
           onDoubleClick={() => handleDoubleClick(question)}
-          className="flex flex-col gap-1 mt-2 border-b border-gray-200 dark:border-gray-700 p-3 "
+          className="flex flex-col gap-1 mt-2 border-b border-gray-200 dark:border-gray-700 p-3"
         >
           <div className="flex items-start gap-2">
             <span className="font-medium text-gray-600 dark:text-gray-300">
@@ -124,27 +163,34 @@ export default function QuestionFields({
                 : "max-h-0 opacity-0 pb-0"
             }`}
           >
-            <div className="mt-2 p-3 ">
+            <div className="mt-2 p-3">
               <div className="flex justify-between gap-3 items-center">
                 <strong>Answer:</strong>
-                {openEditor ? (
-                  <div
-                    onClick={() =>
-                      saveAnswer(
-                        answers[question.id] &&
-                          answers[question.id]?.user?.id === userL?.id
-                          ? "update"
-                          : "add",
-                        question.id
-                      )
-                    }
-                    className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-                  >
-                    <FaSave className="" size={16} />
-                    {saving ? "Saving" : "Save"}
+                {openEditors[question.id] ? (
+                  <div className="flex gap-2">
+                    <div
+                      onClick={() =>
+                        saveAnswer(
+                          answers[question.id]?.answer?.user?.id === userL?.id
+                            ? "update"
+                            : "add",
+                          question.id
+                        )
+                      }
+                      className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+                    >
+                      <FaSave className="" size={16} />
+                      {saving ? "Saving" : "Save"}
+                    </div>
+                    <div
+                      onClick={() => handleCancel(question.id)}
+                      className="flex gap-2 items-center cursor-pointer bg-red-200 dark:bg-red-900 px-2 py-1.5 rounded-md text-sm"
+                    >
+                      <FaTimes className="" size={16} />
+                      Cancel
+                    </div>
                   </div>
-                ) : answers[question.id] &&
-                  answers[question.id]?.user?.id === userL?.id ? (
+                ) : answers[question.id]?.answer?.user?.id === userL?.id ? (
                   <div
                     onClick={() => handleAnswerEdit(question.id)}
                     className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
@@ -162,11 +208,16 @@ export default function QuestionFields({
                   </div>
                 )}
               </div>
-              {openEditor ? (
+              {openEditors[question.id] ? (
                 <div className="mt-3">
                   <JoditForm
-                    text={answer}
-                    setText={setAnswer}
+                    text={answerStates[question.id] || ""}
+                    setText={(text: string) =>
+                      setAnswerStates((prev) => ({
+                        ...prev,
+                        [question.id]: text,
+                      }))
+                    }
                     placeholder={"Enter answer"}
                   />
                 </div>
@@ -181,16 +232,17 @@ export default function QuestionFields({
                   <div
                     dangerouslySetInnerHTML={{
                       __html:
-                        answers[question.id]?.answer || "No answer available.",
+                        answers[question.id]?.answer?.answer ||
+                        "No answer available.",
                     }}
                   />
-                  {answers[question.id]?.answer &&
-                    answers[question.id]?.user?.id !== userL?.id && (
+                  {answers[question.id]?.answer?.answer &&
+                    answers[question.id]?.answer?.user?.id !== userL?.id && (
                       <div className="flex items-center my-3 gap-3">
                         <Image
                           src={
-                            answers[question.id]?.user?.profilePic
-                              ? answers[question.id]?.user?.profilePic
+                            answers[question.id]?.answer?.user?.profilePic
+                              ? answers[question.id]?.answer?.user?.profilePic
                               : defaultPic
                           }
                           alt="profilePic"
@@ -198,24 +250,25 @@ export default function QuestionFields({
                           height={40}
                           className="w-8 h-8 rounded-full"
                         />
-                        {answers[question.id]?.user?.fullName}
+                        {answers[question.id]?.answer?.user?.fullName}
                       </div>
                     )}
                 </div>
               )}
             </div>
-            <Link
-              href={`/question/${question.id}`}
-              className="mx-3 mt-5 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
-            >
-              See Other&apos;s Answer
-            </Link>
+            {answers[question.id]?.otherAnswersCount > 0 && (
+              <div className="mt-5">
+                <Link
+                  href={`/question/${question.id}`}
+                  className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
+                >
+                  {answers[question.id]?.otherAnswersCount} more answer avaiable
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       ))}
     </InfiniteScroll>
   );
-}
-
-{
 }

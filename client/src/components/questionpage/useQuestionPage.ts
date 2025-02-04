@@ -29,5 +29,6 @@ export default function useQuestionPage() {
     question,
     loading,
     answers,
+    setAnswers,
   };
 }
