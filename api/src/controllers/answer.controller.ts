@@ -5,6 +5,7 @@ import Question from "../models/question";
 import ApiError from "../utils/apiError";
 import User from "../models/user";
 import ApiResponse from "../utils/apiResponse";
+import { literal, Op } from "sequelize";
 
 interface CustomRequest extends Request {
   user?: InstanceType<typeof User>;
@@ -116,10 +117,11 @@ export const updateAnswer = asyncHandler(
     }).send(res);
   }
 );
+
 export const getAnswersByQuestionId = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const { questionId } = req.params;
-    const currentUserId = req.user?.id; // Assuming user info is in req.user
+    const currentUserId = req.user?.id;
 
     if (!questionId) {
       throw new ApiError({
@@ -129,7 +131,6 @@ export const getAnswersByQuestionId = asyncHandler(
     }
 
     const existQuestion = await Question.findByPk(questionId);
-
     if (!existQuestion) {
       throw new ApiError({
         status: 404,
@@ -137,9 +138,34 @@ export const getAnswersByQuestionId = asyncHandler(
       });
     }
 
+    // Fetch answers with additional computed fields for likes
     let answers = await Answer.findAll({
       where: { questionId },
-      attributes: ["id", "answer", "createdAt"],
+      attributes: [
+        "id",
+        "answer",
+        "createdAt",
+        "likes",
+        [
+          literal(`
+            CASE 
+              WHEN likes IS NULL THEN 0 
+              ELSE (LENGTH(likes) - LENGTH(REPLACE(likes, '%', '')) + 1)
+            END
+          `),
+          "likeCount",
+        ],
+        [
+          literal(`
+            CASE 
+              WHEN likes IS NULL THEN false
+              WHEN likes LIKE '%${currentUserId}%' THEN true
+              ELSE false
+            END
+          `),
+          "isLikedByUser",
+        ],
+      ],
       include: [
         {
           model: User,
@@ -148,17 +174,39 @@ export const getAnswersByQuestionId = asyncHandler(
       ],
     });
 
-    // Move the current user's answer to the top
-    if (currentUserId) {
-      answers = answers.sort((a, b) => (a.userId === currentUserId ? -1 : 1));
-    }
+    // Convert to plain objects to modify
+    let plainAnswers = answers.map((answer) => {
+      const plainAnswer = answer.get({ plain: true });
+      return {
+        ...plainAnswer,
+        totalLikes: plainAnswer.likeCount || 0,
+        isLiked: plainAnswer.isLikedByUser || false,
+      };
+    });
+
+    // Custom sorting function
+    plainAnswers.sort((a, b) => {
+      // First priority: Current user's answer
+      if (a.user.id === currentUserId && b.user.id !== currentUserId) return -1;
+      if (b.user.id === currentUserId && a.user.id !== currentUserId) return 1;
+
+      // Second priority: Number of likes
+      return b.totalLikes - a.totalLikes;
+    });
 
     return new ApiResponse({
       status: 200,
       message: "All Answers fetched!",
       data: {
         question: existQuestion,
-        answers,
+        answers: plainAnswers.map((answer) => ({
+          id: answer.id,
+          answer: answer.answer,
+          createdAt: answer.createdAt,
+          totalLikes: answer.totalLikes,
+          isLiked: answer.isLiked,
+          user: answer.user,
+        })),
       },
     }).send(res);
   }
@@ -177,7 +225,6 @@ export const getYourAnswersByQuestionId = asyncHandler(
     }
 
     const existQuestion = await Question.findByPk(questionId);
-
     if (!existQuestion) {
       throw new ApiError({
         status: 404,
@@ -185,6 +232,7 @@ export const getYourAnswersByQuestionId = asyncHandler(
       });
     }
 
+    // First try to find user's answer
     let answer = await Answer.findOne({
       where: { questionId, userId: currentUserId },
       attributes: ["id", "answer", "createdAt"],
@@ -202,13 +250,94 @@ export const getYourAnswersByQuestionId = asyncHandler(
           model: User,
           attributes: ["id", "fullName", "profilePic"],
         },
+        order: [
+          [
+            literal(`
+            CASE 
+              WHEN likes IS NULL THEN 0 
+              ELSE (LENGTH(likes) - LENGTH(REPLACE(likes, '%', '')) + 1)
+            END
+          `),
+            "DESC",
+          ],
+        ],
       });
+    }
+
+    // Get total count of other answers
+    const totalAnswers = await Answer.count({
+      where: {
+        questionId,
+        ...(answer && { id: { [Op.ne]: answer.id } }),
+      },
+    });
+
+    // Convert to plain object and add computed fields
+    let formattedAnswer = null;
+    if (answer) {
+      const plainAnswer = answer.get({ plain: true });
+      formattedAnswer = {
+        id: plainAnswer.id,
+        answer: plainAnswer.answer,
+        createdAt: plainAnswer.createdAt,
+        user: plainAnswer.user,
+      };
     }
 
     return new ApiResponse({
       status: 200,
       message: "Answer fetched!",
-      data: answer,
+      data: {
+        answer: formattedAnswer,
+        otherAnswersCount: totalAnswers,
+      },
+    }).send(res);
+  }
+);
+
+// Add this utility function to help manage likes
+export const toggleLike = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const { answerId } = req.params;
+    const currentUserId = req.user?.id;
+
+    if (!answerId || !currentUserId) {
+      throw new ApiError({
+        status: 400,
+        message: "Answer ID and user authentication required!",
+      });
+    }
+
+    const answer = await Answer.findByPk(answerId);
+    if (!answer) {
+      throw new ApiError({
+        status: 404,
+        message: "Answer not found!",
+      });
+    }
+
+    let likes = answer.likes ? answer.likes.split("%").filter((id) => id) : [];
+    const userIdStr = currentUserId.toString();
+
+    if (likes.includes(userIdStr)) {
+      // Unlike: Remove user ID
+      likes = likes.filter((id) => id !== userIdStr);
+    } else {
+      // Like: Add user ID
+      likes.push(userIdStr);
+    }
+
+    // Update likes
+    answer.likes = likes.join("%");
+    await answer.save();
+
+    return new ApiResponse({
+      status: 200,
+      message: "Like status updated!",
+      data: {
+        isLiked: likes.includes(userIdStr),
+        totalLikes: likes.length,
+      },
     }).send(res);
   }
 );

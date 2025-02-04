@@ -20,4 +20,8 @@ router
   .route("/get-all/:questionId")
   .get(authMiddleware, answerController.getAnswersByQuestionId);
 
+router
+  .route("/like/:answerId")
+  .put(authMiddleware, answerController.toggleLike);
+
 export default router;
