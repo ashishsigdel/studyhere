@@ -43,6 +43,11 @@ class Answer extends Model {
   })
   userId!: number;
 
+  @Column({
+    type: DataType.TEXT,
+  })
+  likes!: string;
+
   @BelongsTo(() => User)
   user!: User;
 }
