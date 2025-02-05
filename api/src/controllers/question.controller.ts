@@ -7,6 +7,12 @@ import ApiError from "../utils/apiError";
 import Chapter from "../models/chapter";
 import { Op, Sequelize } from "sequelize";
 import Question from "../models/question";
+import User from "../models/user";
+import Answer from "../models/answer";
+
+interface CustomRequest extends Request {
+  user?: InstanceType<typeof User>;
+}
 
 export const fetchQuestions = asyncHandler(
   async (req: Request, res: Response) => {
@@ -173,6 +179,46 @@ export const updateQustion = asyncHandler(
     return new ApiResponse({
       message: "Question updated successfully!",
       data: existingQuestion,
+    }).send(res);
+  }
+);
+
+export const deleteQuestion = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const { questionId } = req.params;
+    if (!questionId) {
+      throw new ApiError({
+        status: 400,
+        message: "Question ID is required.",
+      });
+    }
+
+    const question = await Question.findByPk(questionId as unknown as string);
+
+    if (!question) {
+      throw new ApiError({
+        status: 404,
+        message: "Question not found.",
+      });
+    }
+
+    if (question.createdBy !== req.user?.id) {
+      throw new ApiError({
+        status: 403,
+        message: "You are not authorized to delete this question.",
+      });
+    }
+
+    await question.destroy();
+
+    await Answer.destroy({
+      where: {
+        questionId: question.id,
+      },
+    });
+
+    return new ApiResponse({
+      message: "Question deleted successfully!",
     }).send(res);
   }
 );

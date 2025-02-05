@@ -168,6 +168,7 @@ export default function useQuestions() {
 
   const handleSaveQuestion = async () => {
     const checkAuth = CheckAuth();
+
     if (!checkAuth) {
       toast.error("Unauthorized");
       return;
@@ -189,6 +190,7 @@ export default function useQuestions() {
         answer: newQuestion.answer,
         year: newQuestion.year,
         marks: newQuestion.marks,
+        createdBy: checkAuth.id,
       });
 
       setQuestions((prev) => [...prev, response.data.data]);

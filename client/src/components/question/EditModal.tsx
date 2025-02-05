@@ -2,6 +2,8 @@ import React from "react";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import { MdClose } from "react-icons/md";
+import toast from "react-hot-toast";
+import { myAxios } from "@/services/apiServices";
 
 type Props = {
   switchForm: any;
@@ -22,6 +24,17 @@ export default function EditModal({
   handleSaveEdit,
   loadingEdit,
 }: Props) {
+  console.log(editQuestion);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await myAxios.delete(`/question/delete/${id}`);
+      setShowModal(false);
+      toast.success("Question deleted. Changes will seen shortly.");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center px-3">
       <div className="bg-gray-300 dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
@@ -85,8 +98,7 @@ export default function EditModal({
         )}
         <div className="flex justify-between gap-4 mt-5">
           <button
-            onClick={handleSaveEdit}
-            disabled={true}
+            onClick={() => handleDelete(editQuestion.id)}
             className="px-4 py-2 bg-red-500 text-white rounded-md"
           >
             {loadingEdit ? <Spinner /> : "Delete"}
