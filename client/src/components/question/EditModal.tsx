@@ -1,6 +1,9 @@
 import React from "react";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
+import { MdClose } from "react-icons/md";
+import toast from "react-hot-toast";
+import { myAxios } from "@/services/apiServices";
 
 type Props = {
   switchForm: any;
@@ -21,17 +24,28 @@ export default function EditModal({
   handleSaveEdit,
   loadingEdit,
 }: Props) {
+  console.log(editQuestion);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await myAxios.delete(`/question/delete/${id}`);
+      setShowModal(false);
+      toast.success("Question deleted. Changes will seen shortly.");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3">
-      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-        <div className="flex gap-2 items-center mb-4">
+    <div className="fixed inset-0 bg-black/70 flex justify-center items-center px-3">
+      <div className="bg-gray-300 dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+        <div className="flex gap-2 items-center mb-4 justify-between">
           <h2 className="text-xl">Edit Question</h2>
-          <span
-            className="p-2 rounded-md cursor-pointer border"
-            onClick={switchForm}
+          <button
+            onClick={() => setShowModal(false)}
+            className="px-4 py-2 hover:scale-105 text-white rounded-md"
           >
-            Write {modelFormChoose === "answer" ? "Question" : "Answer"}
-          </span>
+            <MdClose />
+          </button>
         </div>
         {modelFormChoose === "question" && (
           <JoditForm
@@ -68,7 +82,7 @@ export default function EditModal({
               onChange={(e) =>
                 setEditQuestion({ ...editQuestion, year: e.target.value })
               }
-              className="w-full p-2 border rounded-md mb-2"
+              className="w-full p-2 border border-black/10 dark:border-white/20 rounded-md mb-2"
               placeholder="Year"
             />
             <input
@@ -77,25 +91,33 @@ export default function EditModal({
               onChange={(e) =>
                 setEditQuestion({ ...editQuestion, marks: e.target.value })
               }
-              className="w-full p-2 border rounded-md mb-2"
+              className="w-full p-2 border border-black/10 dark:border-white/20 rounded-md mb-2"
               placeholder="Marks"
             />
           </>
         )}
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-between gap-4 mt-5">
           <button
-            onClick={() => setShowModal(false)}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md"
+            onClick={() => handleDelete(editQuestion.id)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md"
           >
-            Cancel
+            {loadingEdit ? <Spinner /> : "Delete"}
           </button>
-          <button
-            onClick={handleSaveEdit}
-            disabled={loadingEdit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            {loadingEdit ? <Spinner /> : "Save"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleSaveEdit}
+              disabled={loadingEdit}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              {loadingEdit ? <Spinner /> : "Save"}
+            </button>
+            <button
+              onClick={() => setShowModal(false)}
+              className="px-4 py-2 bg-gray-500 text-white rounded-md"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

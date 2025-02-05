@@ -4,9 +4,17 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
-router.route("/create/:chapterId").post(questionController.createQustion);
+router
+  .route("/create/:chapterId")
+  .post(authMiddleware, questionController.createQustion);
 
-router.route("/update/:questionId").put(questionController.updateQustion);
+router
+  .route("/update/:questionId")
+  .put(authMiddleware, questionController.updateQustion);
+
+router
+  .route("/delete/:questionId")
+  .delete(authMiddleware, questionController.deleteQuestion);
 
 router
   .route("/:chapterId")

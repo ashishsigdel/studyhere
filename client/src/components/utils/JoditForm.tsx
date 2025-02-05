@@ -14,41 +14,53 @@ export default function JoditForm({
 }) {
   const { theme } = useTheme();
   const editor = useRef(null);
+  const isDarkMode = theme === "dark";
+
   const config = useMemo(
     () => ({
       uploader: {
         insertImageAsBase64URI: true,
       },
-      theme: theme === "light" ? "" : "dark",
+      theme: isDarkMode ? "dark" : "",
       readonly: false,
-      placeholder: placeholder ? placeholder : "Start Typing...",
+      placeholder: placeholder || "Start Typing...",
       minHeight: 300,
       maxHeight: 400,
       buttons:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview",
+        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
       buttonsMD:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview",
+        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
       buttonsSM:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview",
+        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
       buttonsXS:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview",
+        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
       showCharsCounter: false,
       showWordsCounter: false,
       showXPathInStatusbar: false,
       statusbar: false,
       toolbarAdaptive: false,
+      style: {
+        backgroundColor: isDarkMode ? "#020617" : "#f3f4f6", // Matches bg-gray-100 and dark:bg-slate-950
+        color: isDarkMode ? "#ffffff" : "#000000",
+      },
     }),
     [placeholder, theme]
   );
 
   return (
-    <div className="w-full rounded-lg mb-5">
+    <div
+      className={`w-full rounded-lg mb-5 border ${
+        isDarkMode
+          ? "bg-slate-800  border-white/20"
+          : "bg-gray-200 border-black/10"
+      }`}
+    >
       <JoditEditor
         ref={editor}
         value={text}
         config={config}
         onBlur={(newContent) => setText(newContent)}
-        onChange={(newContent) => {}}
+        onChange={() => {}}
       />
     </div>
   );
