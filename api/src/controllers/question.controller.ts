@@ -143,18 +143,18 @@ export const createQustion = asyncHandler(
 
 export const updateQustion = asyncHandler(
   async (req: Request, res: Response) => {
-    const { question, answer, year, marks, chapterId } = req.body;
+    const { questionId } = req.params;
 
-    const { id } = req.params;
-
-    if (!id) {
+    if (!questionId) {
       throw new ApiError({
         status: 400,
         message: "Question ID is required.",
       });
     }
 
-    const existingQuestion = await Question.findByPk(id as unknown as string);
+    const existingQuestion = await Question.findByPk(
+      questionId as unknown as string
+    );
     if (!existingQuestion) {
       throw new ApiError({
         status: 404,
