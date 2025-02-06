@@ -87,6 +87,7 @@ export default function useQuestions() {
   // Fetch Questions API with offline caching
   const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
     const cacheKey = `questions_${id}_${searchQuery}`;
+    setLoading(true);
 
     // If offline, load from cache
     if (!navigator.onLine) {
@@ -98,11 +99,10 @@ export default function useQuestions() {
           setChapter(chapter);
           setSubject(subject);
           setTotalPages(totalPages);
-        } else {
-          setLoading(true);
+          setLoading(false);
         }
       } catch (error) {
-        setLoading(true);
+        console.log(error);
       }
       return;
     }
