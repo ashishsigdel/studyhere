@@ -4,6 +4,7 @@ import { myAxios } from "@/services/apiServices";
 import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
+import { InstallPWA } from "../installPWA";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
@@ -81,6 +82,15 @@ export default function Profile() {
     };
   }, [dropdownOpen]);
 
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+    setDropdownOpen(false);
+  };
+
   return (
     <div className="relative" ref={dropDownRef}>
       {user ? (
@@ -100,7 +110,7 @@ export default function Profile() {
             <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600 p-1">
               <button
                 className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                onClick={handleLogout}
+                onClick={toggleFullScreen}
               >
                 Full Screen
               </button>
@@ -110,6 +120,7 @@ export default function Profile() {
               >
                 Logout
               </button>
+              <InstallPWA />
             </div>
           )}
         </div>
