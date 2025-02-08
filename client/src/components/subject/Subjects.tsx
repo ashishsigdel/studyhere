@@ -103,7 +103,7 @@ export default function Subjects() {
           {!loading && subjects.length === 0 && <>No subjects available</>}
           {subjects.map((subject) => (
             <Link
-              href={`/${subject.id}`}
+              href={`/questions/${subject.id}`}
               key={subject.id}
               className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
             >
