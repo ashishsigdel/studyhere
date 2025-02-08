@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import Profile from "./Profile";
 import Link from "next/link";
+import Pdf from "./Pdf";
 
 export default function Header() {
   return (
@@ -25,6 +26,7 @@ export default function Header() {
             </div>
           </Link>
           <div className="flex items-center gap-3">
+            <Pdf />
             <Theme />
             <Profile />
           </div>
