@@ -2,12 +2,14 @@
 
 import { myAxios } from "@/services/apiServices";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
+import { InstallPWA } from "../installPWA";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropDownRef = useRef<HTMLDivElement>(null);
 
   const updateUserFromLocalStorage = () => {
     const userData = localStorage.getItem("user");
@@ -62,8 +64,35 @@ export default function Profile() {
     }
   };
 
+  useEffect(() => {
+    function hanldeClickOutside(event: MouseEvent) {
+      if (
+        dropDownRef.current &&
+        !dropDownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", hanldeClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", hanldeClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+    setDropdownOpen(false);
+  };
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropDownRef}>
       {user ? (
         <div>
           {/* Profile Picture */}
@@ -78,13 +107,20 @@ export default function Profile() {
 
           {/* Dropdown Menu */}
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600 p-1">
               <button
-                className="block w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={toggleFullScreen}
+              >
+                Full Screen
+              </button>
+              <button
+                className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={handleLogout}
               >
                 Logout
               </button>
+              <InstallPWA />
             </div>
           )}
         </div>
