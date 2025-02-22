@@ -62,6 +62,7 @@ export default function Subjects() {
 
   const handleSaveSubject = async () => {
     const checkAuth = CheckAuth();
+
     if (!subject) {
       toast.error("Subject required!");
       return;
@@ -69,7 +70,7 @@ export default function Subjects() {
     if (checkAuth) {
       setLoadingAdd(true);
       try {
-        if (!navigator.onLine) {
+        if (navigator.onLine) {
           const response = await myAxios.post("/subject/create", {
             name: subject,
           });
