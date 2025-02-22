@@ -6,6 +6,7 @@ import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
 import { Floating } from "@/components/floatmessages";
 import { Cookies } from "@/components/floatmessages";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <Toaster position="bottom-center" reverseOrder={true} />
           <NetworkStatus />
           <Cookies />
+          <Footer />
         </CustomThemeProvider>
       </body>
     </html>
