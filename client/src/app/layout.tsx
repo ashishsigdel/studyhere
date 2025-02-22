@@ -4,6 +4,8 @@ import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
+import { Floating } from "@/components/floatmessages";
+import { Cookies } from "@/components/floatmessages";
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
@@ -31,6 +33,7 @@ export default function RootLayout({
           {children}
           <Toaster position="bottom-center" reverseOrder={true} />
           <NetworkStatus />
+          <Cookies />
         </CustomThemeProvider>
       </body>
     </html>

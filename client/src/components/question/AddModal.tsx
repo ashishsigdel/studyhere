@@ -26,12 +26,6 @@ export default function AddModal({
       <div className="bg-white dark:bg-gray-950 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-gray-300 dark:border-gray-600">
         <div className="flex gap-2 items-center mb-4">
           <h2 className="text-xl">Add Question</h2>
-          <span
-            className="p-2 rounded-md cursor-pointer border border-gray-200 dark:border-gray-700"
-            onClick={switchForm}
-          >
-            Write {modelFormChoose === "answer" ? "Question" : "Answer"}
-          </span>
         </div>
 
         {modelFormChoose === "question" && (
