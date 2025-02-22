@@ -50,10 +50,14 @@ export default function Pdf() {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (
-        event.key === "." &&
-        !["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName || "")
-      ) {
+      const activeElement = document.activeElement;
+
+      // Check if the active element is an input, textarea, or Jodit editor
+      const isTyping =
+        ["INPUT", "TEXTAREA"].includes(activeElement?.tagName || "") ||
+        activeElement?.closest(".jodit-container"); // Detect Jodit editor
+
+      if (event.key === "." && !isTyping) {
         setSelectPdf((prev) => !prev);
       }
     };
