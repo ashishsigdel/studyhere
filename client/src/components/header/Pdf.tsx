@@ -50,10 +50,14 @@ export default function Pdf() {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (
-        event.key === "." &&
-        !["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName || "")
-      ) {
+      const activeElement = document.activeElement;
+
+      // Check if the active element is an input, textarea, or Jodit editor
+      const isTyping =
+        ["INPUT", "TEXTAREA"].includes(activeElement?.tagName || "") ||
+        activeElement?.closest(".jodit-container"); // Detect Jodit editor
+
+      if (event.key === "." && !isTyping) {
         setSelectPdf((prev) => !prev);
       }
     };
@@ -66,22 +70,21 @@ export default function Pdf() {
 
   const deletePdf = async () => {
     await deleteDataFromIndexedDB(STORE_NAME, "pdf");
-    toast.success("Please refresh page to add new pdf.");
+    setFileURL(null);
   };
   return (
     <>
       {selectPdf && fileURL && (
         <button
           onClick={() => deletePdf()}
-          className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 relative"
+          className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block relative"
         >
-          {<FaFilePdf size={18} />}
-          <FaPlus className="absolute -right-1 bottom-0 p-0.5 bg-black rounded-full" />
+          Add New PDF
         </button>
       )}
       <button
         onClick={() => setSelectPdf(!selectPdf)}
-        className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+        className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block"
       >
         {<FaFilePdf size={20} />}
       </button>
