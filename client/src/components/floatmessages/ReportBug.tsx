@@ -104,9 +104,7 @@ const BugReportForm = ({}) => {
       }
 
       // Show immediate success toast
-      toast.success(
-        "Thank you for your bug report! It will be reviewed shortly."
-      );
+      toast.success("Message sending...");
 
       // Reset form data after showing the success toast
       setFormData({
