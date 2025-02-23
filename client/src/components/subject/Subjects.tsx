@@ -10,6 +10,7 @@ import AddModal from "./AddModal";
 import Image from "next/image";
 import bookcover from "@/assets/bookcover.png";
 import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
+import { FaRegStar, FaStar } from "react-icons/fa";
 
 const STORE_NAME = "subjects";
 
@@ -19,6 +20,9 @@ export default function Subjects() {
   const [subject, setSubject] = useState("");
   const [recentChapters, setRecentChapters] = useState<
     { name: string; url: string; subject: string }[]
+  >([]);
+  const [favSubjects, setFavSubjects] = useState<
+    { id: number; name: string }[]
   >([]);
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
@@ -57,7 +61,11 @@ export default function Subjects() {
     const storedChapters = JSON.parse(
       localStorage.getItem("recentChapters") || "[]"
     );
+    const favoriteSubjects = JSON.parse(
+      localStorage.getItem("favoriteSubjects") || "[]"
+    );
     setRecentChapters(storedChapters);
+    setFavSubjects(favoriteSubjects);
   }, []);
 
   const handleSaveSubject = async () => {
@@ -91,34 +99,103 @@ export default function Subjects() {
     }
   };
 
+  const handleToggleFavorite = (subjectId: number, subjectName: string) => {
+    let updatedFavSubjects = [...favSubjects];
+    const index = updatedFavSubjects.findIndex((sub) => sub.id === subjectId);
+    if (index === -1) {
+      // Add to favorites
+      updatedFavSubjects.push({ id: subjectId, name: subjectName });
+      toast.success(`${subjectName} added to favorites!`);
+    } else {
+      // Remove from favorites
+      updatedFavSubjects.splice(index, 1);
+      toast.success(`${subjectName} removed from favorites.`);
+    }
+    setFavSubjects(updatedFavSubjects);
+    localStorage.setItem(
+      "favoriteSubjects",
+      JSON.stringify(updatedFavSubjects)
+    );
+  };
+
   return (
     <>
       <TopBar showForm={showForm} setShowForm={setShowForm} />
 
       <div className="mt-10">
+        {/* 🔹 Recently Viewed Chapters Section */}
+        {favSubjects.length > 0 && (
+          <>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
+              Favorite Books 📚
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {favSubjects.map((subject) => (
+                <div
+                  key={subject.id}
+                  className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
+                >
+                  <Link href={`/questions/${subject.id}`}>
+                    <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
+                      {subject.name}
+                    </h3>
+                  </Link>
+
+                  <Image
+                    src={bookcover}
+                    alt={subject.name}
+                    className="pb-[0.8]"
+                    priority
+                  />
+                  <button
+                    className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
+                    onClick={() =>
+                      handleToggleFavorite(subject.id, subject.name)
+                    }
+                  >
+                    <FaStar size={24} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="mt-10">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
-          Featured Books 📚
+          Featured Subjects 📚
         </h2>
         {loading && <Spinner color="#222" />}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {!loading && subjects.length === 0 && <>No subjects available</>}
           {subjects.map((subject) => (
-            <Link
-              href={`/questions/${subject.id}`}
+            <div
               key={subject.id}
-              className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
+              className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
             >
-              <h3 className="absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md">
-                {subject.name}
-              </h3>
-
+              <Link href={`/questions/${subject.id}`}>
+                <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
+                  {subject.name}
+                </h3>
+              </Link>
               <Image
                 src={bookcover}
                 alt={subject.name}
                 className="pb-[0.8]"
                 priority
               />
-            </Link>
+              <button
+                className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
+                onClick={() => handleToggleFavorite(subject.id, subject.name)}
+              >
+                {favSubjects.find((fav) => fav.id === subject.id) ? (
+                  <FaStar size={24} />
+                ) : (
+                  <FaRegStar size={24} />
+                )}
+              </button>
+            </div>
           ))}
         </div>
       </div>
