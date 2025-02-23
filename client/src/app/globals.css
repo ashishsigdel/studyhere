@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.container {
+  min-height: calc(100vh - 63px);
+}
+
 .prose table {
   width: 100%;
   border-collapse: collapse;

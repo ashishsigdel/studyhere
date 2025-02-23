@@ -8,19 +8,10 @@ import cors from "cors";
 import sequelize from "./config/dbConfig";
 import APIRoute from "./routes";
 import ApiError from "./utils/apiError";
+import { isAllowedOrigin } from "./utils/allowedOrigins";
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-function isAllowedOrigin(origin: any) {
-  if (!origin) return false;
-  const allowedPatterns = [
-    /^https:\/\/([\w-]+\.)?studyhere\.vercel\.app$/,
-    /^http:\/\/([\w-]+\.)?localhost:5100$/,
-  ];
-
-  return allowedPatterns.some((pattern) => pattern.test(origin));
-}
 
 app.use(
   cors({

@@ -12,8 +12,19 @@ import {
   getDateAfterMinutes,
   verifyToken,
 } from "../utils/jwtUtils";
+import { isAllowedOrigin } from "../utils/allowedOrigins";
+
+const allowedOrigins = ["https://yourdomain.com", "http://localhost:3000"];
 
 export const authUser = asyncHandler(async (req: Request, res: Response) => {
+  const origin = req.headers.origin;
+  if (!origin || !isAllowedOrigin(origin)) {
+    throw new ApiError({
+      status: 403,
+      message: "Unauthorized origin.",
+    });
+  }
+
   const { fullName, email, profilePic } = req.body;
 
   if (!fullName) {
