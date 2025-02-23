@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function page() {
   return (
-    <div className="p-5 mx-auto max-w-7xl">
+    <div className="container p-5 mx-auto max-w-7xl">
       <Chapters />
     </div>
   );

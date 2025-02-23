@@ -32,7 +32,7 @@ export default function Question() {
 
   if (loading) {
     return (
-      <div className="animate-pulse space-y-2">
+      <div className="animate-pulse space-y-2 mt-10 container">
         <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
         <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/4"></div>
         <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
