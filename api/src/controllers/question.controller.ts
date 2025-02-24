@@ -202,7 +202,7 @@ export const deleteQuestion = asyncHandler(
       });
     }
 
-    if (question.createdBy !== req.user?.id) {
+    if (req.user?.role !== "admin" && question.createdBy !== req.user?.id) {
       throw new ApiError({
         status: 403,
         message: "You are not authorized to delete this question.",
