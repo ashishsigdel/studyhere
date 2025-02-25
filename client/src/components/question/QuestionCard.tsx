@@ -47,13 +47,15 @@ export default function QuestionCard({
   handleAnswerEdit,
   setAnswerStates,
 }: Props) {
+  console.log(openedAnswerIds);
+
   return (
     <div
       key={question.id}
       onDoubleClick={() => handleDoubleClick(question)}
       className="flex flex-col gap-1 mt-2 border-b border-gray-200 dark:border-gray-700 p-3 group"
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2 group">
         <span className="font-medium text-gray-600 dark:text-gray-300">
           {index + 1}.
         </span>
@@ -65,10 +67,10 @@ export default function QuestionCard({
             <div dangerouslySetInnerHTML={{ __html: question.question }} />
           </div>
         </div>
-        <div className="relative">
+        <div className="relative inline-block lg:hidden group-hover:inline-block">
           <div
             onClick={() => handleDoubleClick(question)}
-            className="p-1.5 hover:bg-gray-300 hover:dark:bg-gray-700 rounded-full cursor-pointer opacity-0 group-hover:opacity-100"
+            className="p-1 hover:bg-gray-300 hover:dark:bg-gray-700 rounded-full cursor-pointer "
           >
             <HiDotsVertical />
           </div>
@@ -145,7 +147,7 @@ export default function QuestionCard({
                 placeholder={"Enter answer"}
               />
             </div>
-          ) : loadingAnswer ? (
+          ) : loadingAnswer && !answers[question.id] ? (
             <div className="animate-pulse space-y-2">
               <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
               <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/4"></div>
@@ -160,23 +162,22 @@ export default function QuestionCard({
                     "No answer available.",
                 }}
               />
-              {answers[question.id]?.answer?.answer &&
-                answers[question.id]?.answer?.user?.id !== userL?.id && (
-                  <div className="flex items-center my-3 gap-3">
-                    <Image
-                      src={
-                        answers[question.id]?.answer?.user?.profilePic
-                          ? answers[question.id]?.answer?.user?.profilePic
-                          : defaultPic
-                      }
-                      alt="profilePic"
-                      width={40}
-                      height={40}
-                      className="w-8 h-8 rounded-full"
-                    />
-                    {answers[question.id]?.answer?.user?.fullName}
-                  </div>
-                )}
+              {answers[question.id]?.answer?.answer && (
+                <div className="flex items-center my-3 gap-3">
+                  <Image
+                    src={
+                      answers[question.id]?.answer?.user?.profilePic
+                        ? answers[question.id]?.answer?.user?.profilePic
+                        : defaultPic
+                    }
+                    alt="profilePic"
+                    width={40}
+                    height={40}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  {answers[question.id]?.answer?.user?.fullName}
+                </div>
+              )}
             </div>
           )}
         </div>
