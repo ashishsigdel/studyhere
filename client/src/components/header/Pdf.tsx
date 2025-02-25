@@ -57,7 +57,7 @@ export default function Pdf() {
         ["INPUT", "TEXTAREA"].includes(activeElement?.tagName || "") ||
         activeElement?.closest(".jodit-container"); // Detect Jodit editor
 
-      if (event.key === "." && !isTyping) {
+      if (event.key === "x" && !isTyping) {
         setSelectPdf((prev) => !prev);
       }
     };
@@ -90,7 +90,7 @@ export default function Pdf() {
       </button>
 
       <div
-        className={`fixed h-[calc(100dvh-64px)] w-full top-16 left-0 z-[9999] ${
+        className={`fixed h-[calc(100dvh-64px)] w-full top-16 left-0 z-[999] ${
           !selectPdf && "hidden"
         }`}
       >
