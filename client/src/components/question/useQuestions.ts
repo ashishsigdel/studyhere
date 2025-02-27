@@ -110,7 +110,7 @@ export default function useQuestions() {
     try {
       if (navigator.onLine) {
         const response = await myAxios.get(
-          `/question/${id}?page=${pageNumber}&limit=15&search=${searchQuery}`
+          `/question/${id}?page=${pageNumber}&limit=30&search=${searchQuery}`
         );
         const data = response.data.data;
         if (pageNumber === 1) {
