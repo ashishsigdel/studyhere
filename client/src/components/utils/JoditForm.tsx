@@ -18,9 +18,6 @@ export default function JoditForm({
 
   const config = useMemo(
     () => ({
-      uploader: {
-        insertImageAsBase64URI: true,
-      },
       theme: isDarkMode ? "dark" : "",
       readonly: false,
       placeholder: placeholder || "Start Typing...",
