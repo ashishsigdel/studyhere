@@ -4,14 +4,42 @@ import asyncHandler from "../utils/asyncHandler";
 import Subject from "../models/subject";
 import ApiResponse from "../utils/apiResponse";
 import ApiError from "../utils/apiError";
+import { getAuthToken, getCookieToken, verifyToken } from "../utils/jwtUtils";
+import User from "../models/user";
 
 export const getAllSubjects = asyncHandler(
   async (req: Request, res: Response) => {
-    const allSubject = await Subject.findAll();
+    const accessToken = getCookieToken(req) || getAuthToken(req);
+
+    let whereCondition: {
+      isPublic?: boolean;
+    } = {
+      isPublic: true,
+    };
+
+    if (accessToken) {
+      try {
+        const decodedToken = verifyToken({
+          token: accessToken,
+        });
+
+        const user = await User.findOne({
+          where: {
+            id: decodedToken.id,
+          },
+        });
+
+        if (user && user.role === "admin") {
+          whereCondition = {};
+        }
+      } catch (error) {}
+    }
+
+    const allSubject = await Subject.findAll({ where: whereCondition });
 
     return new ApiResponse({
       status: 200,
-      message: "All Subject fetched.",
+      message: "All Subjects fetched.",
       data: allSubject,
     }).send(res);
   }

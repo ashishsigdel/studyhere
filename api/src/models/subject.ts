@@ -13,5 +13,12 @@ class Subject extends Model {
     allowNull: false,
   })
   name!: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+  })
+  isPublic!: boolean;
 }
 export default Subject;
