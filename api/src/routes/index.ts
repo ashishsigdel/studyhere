@@ -6,6 +6,7 @@ import questionRoute from "./question.routes";
 import authRoute from "./auth.routes";
 import answerRoute from "./answer.routes";
 import contactRoute from "./contact.routes";
+import userRoute from "./user.routes";
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use("/question", questionRoute);
 router.use("/auth", authRoute);
 router.use("/answer", answerRoute);
 router.use("/contact", contactRoute);
+router.use("/user", userRoute);
 
 export default router;
