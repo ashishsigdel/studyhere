@@ -22,6 +22,10 @@
   background-color: #f3f4f6;
 }
 
+.prose pre {
+  @apply my-2 bg-[#1c1c1c] text-white pt-[18px] rounded-lg border border-white/15 overflow-x-auto;
+}
+
 .customfont-typoround {
   font-family: "Typo Round Regular Demo", sans-serif;
   font-weight: 600;
