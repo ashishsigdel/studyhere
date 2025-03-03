@@ -10,7 +10,6 @@ export const getAll = asyncHandler(async (req: any, res: Response) => {
 
   const { count, rows: users } = await User.findAndCountAll({
     order: [["id", "DESC"]],
-    attributes: ["id", "fullName", "email", "role", "validEmail"],
     limit,
     offset,
   });
