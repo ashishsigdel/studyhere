@@ -27,18 +27,16 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
 
   const { fullName, email, profilePic } = req.body;
 
-  if (!fullName) {
-    throw new ApiError({
-      status: 400,
-      message: "FullName is required!",
-    });
-  }
-
   if (!email) {
     throw new ApiError({
       status: 400,
       message: "Email is required!",
     });
+  }
+
+  let name = fullName;
+  if (!fullName) {
+    name = email.split("@")[0];
   }
 
   let user = await User.findOne({
