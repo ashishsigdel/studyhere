@@ -69,7 +69,12 @@ app.listen(port, () => {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
 
-    await sequelize.sync({ force: false, alter: true });
+    await sequelize.sync({
+      force: false,
+      alter: {
+        drop: false,
+      },
+    });
     console.log("All models were synchronized successfully.");
   } catch (error) {
     console.log("An error occurred while starting the server:", error);
