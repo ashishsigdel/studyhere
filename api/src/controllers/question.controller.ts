@@ -215,8 +215,8 @@ export const deleteQuestion = asyncHandler(
 
     if (
       req.user?.role !== "admin" &&
-      (existingQuestion.createdBy === null ||
-        existingQuestion.createdBy !== req.user?.id)
+      (question.createdBy === null ||
+        question.createdBy !== req.user?.id)
     ) {
       throw new ApiError({
         status: 403,
