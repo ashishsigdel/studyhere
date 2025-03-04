@@ -148,7 +148,7 @@ export const createQustion = asyncHandler(
 );
 
 export const updateQustion = asyncHandler(
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const { questionId } = req.params;
 
     if (!questionId) {
@@ -165,6 +165,17 @@ export const updateQustion = asyncHandler(
       throw new ApiError({
         status: 404,
         message: "Question not found.",
+      });
+    }
+
+    if (
+      req.user?.role !== "admin" &&
+      (existingQuestion.createdBy === null ||
+        existingQuestion.createdBy !== req.user?.id)
+    ) {
+      throw new ApiError({
+        status: 403,
+        message: "You are not authorized to update this question.",
       });
     }
 
@@ -202,10 +213,14 @@ export const deleteQuestion = asyncHandler(
       });
     }
 
-    if (req.user?.role !== "admin" && question.createdBy !== req.user?.id) {
+    if (
+      req.user?.role !== "admin" &&
+      (existingQuestion.createdBy === null ||
+        existingQuestion.createdBy !== req.user?.id)
+    ) {
       throw new ApiError({
         status: 403,
-        message: "You are not authorized to delete this question.",
+        message: "You are not authorized to update this question.",
       });
     }
 
