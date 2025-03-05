@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaGithub,
+  FaGlobe,
+  FaInstagram,
+  FaTiktok,
+  FaTwitter,
+} from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoLocationSharp } from "react-icons/io5";
 import { MdEmail, MdSettingsPhone } from "react-icons/md";
@@ -77,20 +84,29 @@ const FooterWidgetFive = () => {
             <ul className="items-center flex flex-wrap">
               <li className="pr-[12px]">
                 <a
-                  href="#"
+                  href="https://github.com/ashishsigdel/studyhere.git"
                   className="h-[30px] w-[30px] bg-gray-700 dark:bg-gray-300 rounded-full capitalize flex items-center justify-center text-[15px]"
                 >
-                  <FaFacebook className="text-gray-100 dark:text-gray-700 text-[16px]" />
+                  <FaGithub className="text-gray-100 dark:text-gray-700 text-[16px]" />
                 </a>
               </li>
               <li className="pr-[12px]">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/aasissigdel"
                   className="h-[30px] w-[30px] bg-gray-700 dark:bg-gray-300 rounded-full capitalize flex items-center justify-center text-[15px]"
                 >
-                  <FaTwitter className="text-gray-100 dark:text-gray-700 text-[16px]" />
+                  <FaInstagram className="text-gray-100 dark:text-gray-700 text-[16px]" />
                 </a>
               </li>
+              <li className="pr-[12px]">
+                <a
+                  href="https://ashishsigdel.com.np/projects/14"
+                  className="h-[30px] w-[30px] bg-gray-700 dark:bg-gray-300 rounded-full capitalize flex items-center justify-center text-[15px]"
+                >
+                  <FaGlobe className="text-gray-100 dark:text-gray-700 text-[16px]" />
+                </a>
+              </li>
+              {/* 
               <li className="pr-[12px]">
                 <a
                   href="#"
@@ -99,14 +115,7 @@ const FooterWidgetFive = () => {
                   <FaTiktok className="text-gray-100 dark:text-gray-700 text-[16px]" />
                 </a>
               </li>
-              <li className="pr-[12px]">
-                <a
-                  href="#"
-                  className="h-[30px] w-[30px] bg-gray-700 dark:bg-gray-300 rounded-full capitalize flex items-center justify-center text-[15px]"
-                >
-                  <FaInstagram className="text-gray-100 dark:text-gray-700 text-[16px]" />
-                </a>
-              </li>
+               */}
             </ul>
           </div>
         </div>

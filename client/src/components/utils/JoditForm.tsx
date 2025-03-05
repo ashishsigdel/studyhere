@@ -23,23 +23,12 @@ export default function JoditForm({
       placeholder: placeholder || "Start Typing...",
       minHeight: 300,
       maxHeight: 400,
-      buttons:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
-      buttonsMD:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
-      buttonsSM:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
-      buttonsXS:
-        "bold,italic,underline,ol,superscript,subscript,image,table,symbols,source,preview,fullsize",
-      showCharsCounter: false,
-      showWordsCounter: false,
-      showXPathInStatusbar: false,
       statusbar: false,
-      toolbarAdaptive: false,
       style: {
         backgroundColor: isDarkMode ? "#020617" : "#f3f4f6", // Matches bg-gray-100 and dark:bg-slate-950
         color: isDarkMode ? "#ffffff" : "#000000",
       },
+      disablePlugins: "about",
     }),
     [placeholder, theme]
   );
