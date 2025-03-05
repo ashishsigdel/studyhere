@@ -14,8 +14,6 @@ import {
 } from "../utils/jwtUtils";
 import { isAllowedOrigin } from "../utils/allowedOrigins";
 
-const allowedOrigins = ["https://yourdomain.com", "http://localhost:3000"];
-
 export const authUser = asyncHandler(async (req: Request, res: Response) => {
   const origin = req.headers.origin;
   if (!origin || !isAllowedOrigin(origin)) {
@@ -34,18 +32,15 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 
-  let name = fullName;
-  if (!fullName) {
-    name = email.split("@")[0];
-  }
-
   let user = await User.findOne({
     where: { email },
     attributes: ["id", "email", "fullName", "profilePic", "role"],
   });
 
   if (!user) {
-    user = await User.create({ fullName, email, profilePic });
+    const name = fullName || email.split("@")[0];
+
+    user = await User.create({ fullName: name, email, profilePic });
   }
 
   const refreshToken = generateRefreshToken({
