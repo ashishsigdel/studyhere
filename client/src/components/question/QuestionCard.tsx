@@ -52,7 +52,7 @@ export default function QuestionCard({
   return (
     <div
       key={question.id}
-      onDoubleClick={() => handleDoubleClick(question)}
+      // onDoubleClick={() => handleDoubleClick(question)}
       className="flex flex-col gap-1 mt-2 border-b border-gray-200 dark:border-gray-700 p-3 group"
     >
       <div className="flex items-start gap-2 group">
