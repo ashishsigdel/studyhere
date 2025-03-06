@@ -18,11 +18,11 @@ export default function JoditForm({
 
   const config = useMemo(
     () => ({
+      iframe: true,
       theme: isDarkMode ? "dark" : "",
       readonly: false,
       placeholder: placeholder || "Start Typing...",
       minHeight: 300,
-      maxHeight: 400,
       statusbar: false,
       style: {
         backgroundColor: isDarkMode ? "#020617" : "#f3f4f6", // Matches bg-gray-100 and dark:bg-slate-950
