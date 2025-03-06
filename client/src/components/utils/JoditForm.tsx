@@ -23,6 +23,7 @@ export default function JoditForm({
       readonly: false,
       placeholder: placeholder || "Start Typing...",
       minHeight: 300,
+      maxHeight: 600,
       statusbar: false,
       style: {
         backgroundColor: isDarkMode ? "#020617" : "#f3f4f6", // Matches bg-gray-100 and dark:bg-slate-950
