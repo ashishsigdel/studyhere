@@ -1,0 +1,143 @@
+Prose,
+Table,
+and List Styling .prose {
+  max-width: 100%;
+  line-height: 1.6;
+}
+
+/* Table Styling */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  text-align: left;
+}
+
+.prose th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.prose td {
+  background-color: #ffffff;
+  color: #4a5568;
+}
+
+.prose tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.prose tr:hover {
+  background-color: #f1f5f9;
+  transition: background-color 0.3s ease;
+}
+
+/* List Styling */
+.prose ul,
+.prose ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose ul ul,
+.prose ol ul {
+  list-style-type: circle;
+  margin-bottom: 0;
+}
+
+.prose ul ol,
+.prose ol ol {
+  list-style-type: lower-alpha;
+  margin-bottom: 0;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose li > p {
+  margin-bottom: 0.5rem;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.prose pre {
+  background-color: #1c1c1c;
+  color: #ffffff;
+  padding: 18px;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .prose table {
+    font-size: 14px;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 5px;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1rem;
+  }
+}
+
+.prose h1 {
+  font-size: 32px;
+  line-height: 52px;
+}
+
+.prose h2 {
+  font-size: 28px;
+  line-height: 52px;
+}
+
+.prose h3 {
+  font-size: 24px;
+  line-height: 52px;
+}
+
+.prose h4 {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.prose h5 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.prose h6 {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.prose p {
+  font-size: 16px;
+  line-height: 24px;
+}

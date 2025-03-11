@@ -1,34 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import useQuestionPage from "./useQuestionPage";
-import Image from "next/image";
-import defaultPic from "@/assets/pictures/defaultpic.jpg";
-import { FaThumbsDown, FaThumbsUp } from "react-icons/fa";
-import moment from "moment";
-import toast from "react-hot-toast";
-import { myAxios } from "@/services/apiServices";
+import UserSection from "./UserSection";
 
 export default function Question() {
   const { question, answers, loading, setAnswers } = useQuestionPage();
-
-  const onLike = async (id: number) => {
-    try {
-      const response = await myAxios.put(`/answer/like/${id}`, {});
-      setAnswers((prevAnswers: any) =>
-        prevAnswers.map((answer: any) =>
-          answer.id === id
-            ? {
-                ...answer,
-                totalLikes: response.data.data.totalLikes,
-                isLiked: !answer.isLiked,
-              }
-            : answer
-        )
-      );
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
 
   if (loading) {
     return (
@@ -62,44 +38,7 @@ export default function Question() {
                 }}
               />
               {answer?.answer && (
-                <div className="mt-10 flex items-center justify-between">
-                  <div className="flex items-center my-3 gap-3">
-                    <Image
-                      src={
-                        answer?.user?.profilePic
-                          ? answer?.user?.profilePic
-                          : defaultPic
-                      }
-                      alt="profilePic"
-                      width={20}
-                      height={20}
-                      className="w-8 h-8 rounded-full bg-gray-200"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-bold mr-1 text-xs truncate">
-                        {answer?.user?.fullName || "Anonymous User"}
-                      </span>
-                      <span className="text-gray-500 text-xs">
-                        {moment(answer.createdAt).fromNow()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
-                    <button
-                      type="button"
-                      onClick={() => onLike(answer.id)}
-                      className={`text-gray-400 hover:text-blue-500 ${
-                        answer.isLiked && "!text-blue-500"
-                      }`}
-                    >
-                      <FaThumbsUp className="text-sm" />
-                    </button>
-                    <p className="text-gray-400">
-                      {answer.totalLikes}{" "}
-                      {answer.totalLikes > 1 ? "likes" : "like"}
-                    </p>
-                  </div>
-                </div>
+                <UserSection answer={answer} setAnswers={setAnswers} />
               )}
             </div>
           ))}

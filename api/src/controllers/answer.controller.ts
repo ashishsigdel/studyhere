@@ -138,34 +138,10 @@ export const getAnswersByQuestionId = asyncHandler(
       });
     }
 
-    // Fetch answers with additional computed fields for likes
+    // Fetch answers with computed like count and user-liked status
     let answers = await Answer.findAll({
       where: { questionId },
-      attributes: [
-        "id",
-        "answer",
-        "createdAt",
-        "likes",
-        [
-          literal(`
-            CASE 
-              WHEN likes IS NULL THEN 0 
-              ELSE (LENGTH(likes) - LENGTH(REPLACE(likes, '%', '')) + 1)
-            END
-          `),
-          "likeCount",
-        ],
-        [
-          literal(`
-            CASE 
-              WHEN likes IS NULL THEN false
-              WHEN likes LIKE '%${currentUserId}%' THEN true
-              ELSE false
-            END
-          `),
-          "isLikedByUser",
-        ],
-      ],
+      attributes: ["id", "answer", "createdAt", "likes"],
       include: [
         {
           model: User,
@@ -174,23 +150,26 @@ export const getAnswersByQuestionId = asyncHandler(
       ],
     });
 
-    // Convert to plain objects to modify
+    // Process answers
     let plainAnswers = answers.map((answer) => {
       const plainAnswer = answer.get({ plain: true });
+
+      // Ensure `likes` is properly formatted
+      const likesArray = plainAnswer.likes
+        ? plainAnswer.likes.split("%").filter((id: number) => id)
+        : [];
+
       return {
         ...plainAnswer,
-        totalLikes: plainAnswer.likeCount || 0,
-        isLiked: plainAnswer.isLikedByUser || false,
+        totalLikes: likesArray.length,
+        isLiked: likesArray.includes(currentUserId?.toString()),
       };
     });
 
-    // Custom sorting function
+    // Sorting: Prioritize user's answer, then by likes
     plainAnswers.sort((a, b) => {
-      // First priority: Current user's answer
       if (a.user.id === currentUserId && b.user.id !== currentUserId) return -1;
       if (b.user.id === currentUserId && a.user.id !== currentUserId) return 1;
-
-      // Second priority: Number of likes
       return b.totalLikes - a.totalLikes;
     });
 
@@ -316,6 +295,7 @@ export const toggleLike = asyncHandler(
       });
     }
 
+    // Ensure `likes` is always a valid string
     let likes = answer.likes ? answer.likes.split("%").filter((id) => id) : [];
     const userIdStr = currentUserId.toString();
 
@@ -327,8 +307,8 @@ export const toggleLike = asyncHandler(
       likes.push(userIdStr);
     }
 
-    // Update likes
-    answer.likes = likes.join("%");
+    // Edge case: Ensure empty array is stored as an empty string
+    answer.likes = likes.length ? likes.join("%") : "";
     await answer.save();
 
     return new ApiResponse({

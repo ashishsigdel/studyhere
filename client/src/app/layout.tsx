@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "@/styles/prose.css";
 import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { Header } from "@/components/header";

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { FaEdit, FaPlus, FaSave, FaThumbsUp, FaTimes } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import { JoditForm } from "../utils";
+import moment from "moment";
 
 type Props = {
   question: {
@@ -47,8 +48,6 @@ export default function QuestionCard({
   handleAnswerEdit,
   setAnswerStates,
 }: Props) {
-  console.log(openedAnswerIds);
-
   return (
     <div
       key={question.id}
@@ -85,7 +84,7 @@ export default function QuestionCard({
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           openedAnswerIds.includes(question.id)
-            ? "max-h-fit opacity-100 overflow-y-scroll pb-10"
+            ? "max-h-fit opacity-100 overflow-y-scroll"
             : "max-h-0 opacity-0 pb-0"
         }`}
       >
@@ -163,34 +162,49 @@ export default function QuestionCard({
                 }}
               />
               {answers[question.id]?.answer?.answer && (
-                <div className="flex items-center my-3 gap-3">
-                  <Image
-                    src={
-                      answers[question.id]?.answer?.user?.profilePic
-                        ? answers[question.id]?.answer?.user?.profilePic
-                        : defaultPic
-                    }
-                    alt="profilePic"
-                    width={40}
-                    height={40}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  {answers[question.id]?.answer?.user?.fullName}
+                <div className="mt-10 flex items-center justify-between">
+                  <div className="flex items-center my-3 gap-3">
+                    <Image
+                      src={
+                        answers[question.id]?.answer?.user?.profilePic
+                          ? answers[question.id]?.answer?.user?.profilePic
+                          : defaultPic
+                      }
+                      alt="profilePic"
+                      width={20}
+                      height={20}
+                      className="w-8 h-8 rounded-full bg-gray-200"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-bold mr-1 text-xs truncate">
+                        {answers[question.id]?.answer?.user?.fullName}
+                      </span>
+                      <span className="text-gray-500 text-xs">
+                        {moment(
+                          answers[question.id]?.answer.createdAt
+                        ).fromNow()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5">
+                    <Link
+                      href={`/question/${question.id}`}
+                      className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
+                    >
+                      {answers[question.id]?.otherAnswersCount == 0
+                        ? "View all answer"
+                        : `${
+                            answers[question.id]?.otherAnswersCount
+                          } more answer
+                      avaiable`}
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
           )}
         </div>
-        {answers[question.id]?.otherAnswersCount > 0 && (
-          <div className="mt-5">
-            <Link
-              href={`/question/${question.id}`}
-              className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
-            >
-              {answers[question.id]?.otherAnswersCount} more answer avaiable
-            </Link>
-          </div>
-        )}
       </div>
     </div>
   );
