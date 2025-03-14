@@ -13,6 +13,6 @@
   letter-spacing: 0.5px;
 }
 
-annotation{
+.katex-html{
   @apply hidden;
 }
