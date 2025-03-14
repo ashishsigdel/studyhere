@@ -48,6 +48,10 @@ export default function QuestionCard({
   handleAnswerEdit,
   setAnswerStates,
 }: Props) {
+  const cleanHTML = answers[question.id]?.answer?.answer?.replace(
+  /<annotation[^>]*>.*?<\/annotation>/gs,
+  ""
+);
   return (
     <div
       key={question.id}
@@ -154,13 +158,8 @@ export default function QuestionCard({
             </div>
           ) : (
             <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    answers[question.id]?.answer?.answer ||
-                    "No answer available.",
-                }}
-              />
+                  <div dangerouslySetInnerHTML={{ __html: cleanHTML || "No answer available." }} />
+
               {answers[question.id]?.answer?.answer && (
                 <div className="mt-10 flex items-center justify-between">
                   <div className="flex items-center my-3 gap-3">
