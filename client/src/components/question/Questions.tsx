@@ -40,6 +40,8 @@ export default function Questions() {
     openedAnswerIds,
     loadingAnswer,
     answers,
+    generateAnswer,
+    generatingAnswer,
   } = useQuestions();
 
   return (
@@ -71,6 +73,8 @@ export default function Questions() {
         totalPages={totalPages}
         loadingAnswer={loadingAnswer}
         answers={answers}
+        generateAnswer={generateAnswer}
+        generatingAnswer={generatingAnswer}
       />
 
       {showModal && (

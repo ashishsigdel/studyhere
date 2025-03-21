@@ -28,6 +28,8 @@ type Props = {
   openedAnswerIds: number[];
   loadingAnswer: boolean;
   answers: any;
+  generateAnswer: Function;
+  generatingAnswer: boolean;
 };
 
 export default function QuestionFields({
@@ -41,6 +43,8 @@ export default function QuestionFields({
   openedAnswerIds,
   loadingAnswer,
   answers,
+  generateAnswer,
+  generatingAnswer,
 }: Props) {
   const [userL, setUserL] = useState<any>({});
   const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(
@@ -151,6 +155,8 @@ export default function QuestionFields({
           handleCancel={handleCancel}
           handleAnswerEdit={handleAnswerEdit}
           setAnswerStates={setAnswerStates}
+          generateAnswer={generateAnswer}
+          generatingAnswer={generatingAnswer}
         />
       ))}
     </InfiniteScroll>

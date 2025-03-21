@@ -6,6 +6,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import { JoditForm } from "../utils";
 import moment from "moment";
+import { RiAiGenerate2 } from "react-icons/ri";
 
 type Props = {
   question: {
@@ -29,6 +30,8 @@ type Props = {
   handleCancel: (id: number) => void;
   handleAnswerEdit: any;
   setAnswerStates: any;
+  generateAnswer: Function;
+  generatingAnswer: boolean;
 };
 
 export default function QuestionCard({
@@ -47,11 +50,13 @@ export default function QuestionCard({
   handleCancel,
   handleAnswerEdit,
   setAnswerStates,
+  generateAnswer,
+  generatingAnswer,
 }: Props) {
   const cleanHTML = answers[question.id]?.answer?.answer?.replace(
-  /<annotation[^>]*>.*?<\/annotation>/gs,
-  ""
-);
+    /<annotation[^>]*>.*?<\/annotation>/gs,
+    ""
+  );
   return (
     <div
       key={question.id}
@@ -120,20 +125,38 @@ export default function QuestionCard({
                 </div>
               </div>
             ) : answers[question.id]?.answer?.user?.id === userL?.id ? (
-              <div
-                onClick={() => handleAnswerEdit(question.id)}
-                className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-              >
-                <FaEdit className="" size={16} />
-                Edit
+              <div className="flex items-center mt-5">
+                <button
+                  onClick={() => generateAnswer(question.id)}
+                  className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
+                >
+                  <RiAiGenerate2 />
+                  {generatingAnswer ? "Generating..." : "Generate With AI"}
+                </button>
+                <div
+                  onClick={() => handleAnswerEdit(question.id)}
+                  className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+                >
+                  <FaEdit className="" size={16} />
+                  Edit
+                </div>
               </div>
             ) : (
-              <div
-                onClick={() => handleAnswerEdit(question.id)}
-                className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-              >
-                <FaPlus className="" size={16} />
-                Add
+              <div className="flex items-center mt-5">
+                <button
+                  onClick={() => generateAnswer(question.id)}
+                  className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
+                >
+                  <RiAiGenerate2 />
+                  {generatingAnswer ? "Generating..." : "Generate With AI"}
+                </button>
+                <div
+                  onClick={() => handleAnswerEdit(question.id)}
+                  className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+                >
+                  <FaPlus className="" size={16} />
+                  Add
+                </div>
               </div>
             )}
           </div>
@@ -158,7 +181,11 @@ export default function QuestionCard({
             </div>
           ) : (
             <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
-                  <div dangerouslySetInnerHTML={{ __html: cleanHTML || "No answer available." }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: cleanHTML || "No answer available.",
+                }}
+              />
 
               {answers[question.id]?.answer?.answer && (
                 <div className="mt-10 flex items-center justify-between">
@@ -186,19 +213,14 @@ export default function QuestionCard({
                     </div>
                   </div>
 
-                  <div className="mt-5">
-                    <Link
-                      href={`/question/${question.id}`}
-                      className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
-                    >
-                      {answers[question.id]?.otherAnswersCount == 0
-                        ? "View all answer"
-                        : `${
-                            answers[question.id]?.otherAnswersCount
-                          } more answer
-                      avaiable`}
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/question/${question.id}`}
+                    className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
+                  >
+                    {`View all answer (${
+                      answers[question.id]?.otherAnswersCount + 1
+                    })`}
+                  </Link>
                 </div>
               )}
             </div>

@@ -39,6 +39,7 @@ export default function useQuestions() {
   );
   const [openedAnswerIds, setOpenedAnswerIds] = useState<number[]>([]);
   const [loadingAnswer, setLoadingAnswer] = useState(false);
+  const [generatingAnswer, setGeneratingAnswer] = useState(false);
   const [answers, setAnswers] = useState<Record<number, {}>>({});
 
   // State for form inputs
@@ -72,6 +73,22 @@ export default function useQuestions() {
       toast.error(error?.response?.data.message || "Something went wrong!");
     } finally {
       setLoadingAnswer(false);
+    }
+  };
+
+  const generateAnswer = async (questionId: number) => {
+    setGeneratingAnswer(true);
+    try {
+      const response = await myAxios.get(`/ai/generate/${questionId}`);
+      const data = response?.data?.data;
+      setAnswers((prev) => ({
+        ...prev,
+        [questionId]: data,
+      }));
+    } catch (error: any) {
+      toast.error(error?.response?.data.message || "Something went wrong!");
+    } finally {
+      setGeneratingAnswer(false);
     }
   };
 
@@ -297,5 +314,7 @@ export default function useQuestions() {
     openedAnswerIds,
     loadingAnswer,
     answers,
+    generateAnswer,
+    generatingAnswer,
   };
 }
