@@ -9,7 +9,6 @@ import Question from "../models/question";
 dotenv.config();
 import { convert } from "html-to-text";
 import Answer from "../models/answer";
-import { convertMarkdownToHtml } from "../utils/convertStructuredContent";
 
 const genAI = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
@@ -38,9 +37,20 @@ export const getAnswerFromAi = asyncHandler(
       });
     }
 
-    const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question. The answer should be proportional to the marks assigned (${
-      existQuestion.marks
-    } marks) and Question: ${convert(existQuestion.question)}
+    let answer = await Answer.findOne({
+      where: { questionId, userId: 22 },
+      attributes: ["id", "answer", "createdAt"],
+      include: {
+        model: User,
+        attributes: ["id", "fullName", "profilePic"],
+      },
+    });
+
+    let htmlContent = answer ? answer.answer : "";
+    if (!answer) {
+      const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question. The answer should be proportional to the marks assigned (${
+        existQuestion.marks
+      } marks) and Question: ${convert(existQuestion.question)}
     Please provide:
     1. A clear and direct answer that addresses all parts of the question
     2. Relevant explanations of key concepts and terms
@@ -52,18 +62,19 @@ export const getAnswerFromAi = asyncHandler(
 
     Focus on accuracy, clarity, and depth of understanding while avoiding unnecessary verbosity. and doesn't mention any here is html format or other things. Just write the answer`;
 
-    const result = await model.generateContent(prompt);
+      const result = await model.generateContent(prompt);
 
-    const rawText = result.response.text();
+      const rawText = result.response.text();
 
-    const match = rawText.match(/```html\n([\s\S]*?)\n```/);
-    const htmlContent = match ? match[1] : rawText;
+      const match = rawText.match(/```html\n([\s\S]*?)\n```/);
+      htmlContent = match ? match[1] : rawText;
 
-    await Answer.create({
-      answer: htmlContent,
-      userId: 22,
-      questionId: questionId,
-    });
+      await Answer.create({
+        answer: htmlContent,
+        userId: 22,
+        questionId: questionId,
+      });
+    }
 
     const totalAnswers = await Answer.count({
       where: {
