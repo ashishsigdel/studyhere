@@ -4,6 +4,8 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
-router.route("/generate/:questionId").get(aiController.getAnswerFromAi);
+router
+  .route("/generate/:questionId")
+  .get(authMiddleware, aiController.getAnswerFromAi);
 
 export default router;

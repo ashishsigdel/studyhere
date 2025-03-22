@@ -9,67 +9,14 @@ import Question from "../models/question";
 dotenv.config();
 import { convert } from "html-to-text";
 import Answer from "../models/answer";
+import { convertMarkdownToHtml } from "../utils/convertStructuredContent";
 
 const genAI = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 interface CustomRequest extends Request {
   user?: InstanceType<typeof User>;
 }
-
-const convertMarkdownToHtml = (text: string): string => {
-  // Convert bold text (**text**) to <strong>text</strong>
-  const boldRegex = /\*\*(.*?)\*\*/g;
-  const htmlText = text.replace(boldRegex, "<strong>$1</strong>");
-
-  // Convert lists (assuming '*' or '-' for bullet points)
-  const listItemRegex = /^\s*[\*\-]\s+(.*)$/gm;
-  let processedText = htmlText;
-
-  // Check if there are list items
-  if (listItemRegex.test(htmlText)) {
-    // Reset regex lastIndex
-    listItemRegex.lastIndex = 0;
-
-    // Wrap list items with <ul> and <li> tags
-    const lines = htmlText.split("\n");
-    let inList = false;
-
-    processedText = lines
-      .map((line) => {
-        const listMatch = line.match(/^\s*[\*\-]\s+(.*)/);
-
-        if (listMatch) {
-          const prefix = !inList ? "<ul>\n" : "";
-          inList = true;
-          return `${prefix}<li>${listMatch[1]}</li>`;
-        } else {
-          const suffix = inList ? "</ul>\n" : "";
-          inList = false;
-          return `${suffix}${line}`;
-        }
-      })
-      .join("\n");
-
-    if (inList) {
-      processedText += "\n</ul>";
-    }
-  }
-  const headerRegex = /^##\s+(.*)$/gm;
-  processedText = processedText.replace(headerRegex, "<h2>$1</h2>");
-
-  const paragraphs = processedText.split(/\n\s*\n/);
-  processedText = paragraphs
-    .map((para) => {
-      if (para.trim() === "" || /<\/?[a-z][\s\S]*>/i.test(para)) {
-        return para;
-      }
-      return `<p>${para}</p>`;
-    })
-    .join("\n\n");
-
-  return processedText;
-};
 
 export const getAnswerFromAi = asyncHandler(
   async (req: CustomRequest, res: Response) => {
@@ -91,9 +38,23 @@ export const getAnswerFromAi = asyncHandler(
       });
     }
 
-    const prompt = `Generate a well-structured answer for the following question, ensuring the length and detail align with the marks allotted. The answer should be concise, but detailed enough to provide a thorough explanation : marks:${
+    const prompt = `Generate a comprehensive, structured answer for the following academic question.Question (${
       existQuestion.marks
-    } question:${convert(existQuestion.question)}`;
+    } marks): ${convert(existQuestion.question)}
+    Please provide:
+    1. A clear and direct answer that addresses all parts of the question
+    2. Relevant explanations of key concepts and terms
+    3. Supporting evidence, examples, or case studies where appropriate
+    4. Logical structure with clear paragraphs and transitions
+    5. A brief conclusion that summarizes the main points
+
+    The answer should be proportional to the marks assigned (${
+      existQuestion.marks
+    } marks). Use markdown formatting for headings, lists, and emphasis where appropriate.
+
+    Focus on accuracy, clarity, and depth of understanding while avoiding unnecessary verbosity.
+    
+    And At last give me just answer.`;
 
     const result = await model.generateContent(prompt);
 
