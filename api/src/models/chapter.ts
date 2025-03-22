@@ -1,11 +1,14 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from "sequelize-typescript";
 import Subject from "./subject";
+import Question from "./question";
 @Table({
   tableName: "Chapters",
   timestamps: true,
@@ -30,5 +33,8 @@ class Chapter extends Model {
     allowNull: false,
   })
   name!: string;
+
+  @HasMany(() => Question)
+  questions!: Question[];
 }
 export default Chapter;

@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import Chapter from "./chapter";
 @Table({
   tableName: "Subjects",
   timestamps: true,

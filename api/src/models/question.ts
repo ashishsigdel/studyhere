@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -56,5 +57,8 @@ class Question extends Model {
     onDelete: "CASCADE",
   })
   createdBy!: number;
+
+  @BelongsTo(() => Chapter)
+  chapter!: Chapter;
 }
 export default Question;

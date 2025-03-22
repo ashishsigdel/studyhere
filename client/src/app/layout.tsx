@@ -5,7 +5,6 @@ import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
-import { Floating } from "@/components/floatmessages";
 import { Cookies } from "@/components/floatmessages";
 import { Footer } from "@/components/footer";
 import Head from "next/head";
@@ -88,7 +87,7 @@ export default function RootLayout({
           }}
         />
       </Head>
-      <body className="bg-gray-100 dark:bg-slate-950 text-slate-950 dark:text-gray-100">
+      <body className="bg-gray-100 dark:bg-slate-950 text-slate-950 dark:text-gray-300">
         <CustomThemeProvider>
           <Header />
           {children}

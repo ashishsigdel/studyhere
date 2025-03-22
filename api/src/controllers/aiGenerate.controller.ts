@@ -9,6 +9,8 @@ import Question from "../models/question";
 dotenv.config();
 import { convert } from "html-to-text";
 import Answer from "../models/answer";
+import Subject from "../models/subject";
+import Chapter from "../models/chapter";
 
 const genAI = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
@@ -28,7 +30,23 @@ export const getAnswerFromAi = asyncHandler(
       });
     }
 
-    const existQuestion = await Question.findByPk(questionId);
+    const existQuestion = await Question.findByPk(questionId, {
+      include: [
+        {
+          model: Chapter,
+          attributes: ["id", "name", "subjectId"],
+        },
+      ],
+    });
+    let subjectname;
+    if (
+      existQuestion &&
+      existQuestion.chapter &&
+      existQuestion.chapter.subjectId
+    ) {
+      const subject = await Subject.findByPk(existQuestion.chapter.subjectId);
+      subjectname = subject?.name;
+    }
 
     if (!existQuestion) {
       throw new ApiError({
@@ -48,7 +66,9 @@ export const getAnswerFromAi = asyncHandler(
 
     let htmlContent = answer ? answer.answer : "";
     if (!answer) {
-      const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question. The answer should be proportional to the marks assigned (${
+      const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question from ${subjectname} subject and ${
+        existQuestion?.chapter.name
+      } chapter. The answer should be proportional to the marks assigned (${
         existQuestion.marks
       } marks) and Question: ${convert(existQuestion.question)}
     Please provide:
@@ -71,7 +91,7 @@ export const getAnswerFromAi = asyncHandler(
 
       await Answer.create({
         answer: htmlContent,
-        userId: 22,
+        userId: 2,
         questionId: questionId,
       });
     }
