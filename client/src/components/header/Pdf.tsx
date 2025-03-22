@@ -7,8 +7,6 @@ import {
   loadDataFromIndexedDB,
   deleteDataFromIndexedDB,
 } from "@/utils/indexdb";
-import { IoClose } from "react-icons/io5";
-import toast from "react-hot-toast";
 
 const STORE_NAME = "pdfs";
 
@@ -77,14 +75,14 @@ export default function Pdf() {
       {selectPdf && fileURL && (
         <button
           onClick={() => deletePdf()}
-          className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block relative"
+          className="p-1.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block relative text-sm md:text-base"
         >
           Add New PDF
         </button>
       )}
       <button
         onClick={() => setSelectPdf(!selectPdf)}
-        className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block"
+        className="p-1.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hidden lg:inline-block"
       >
         {<FaFilePdf size={20} />}
       </button>

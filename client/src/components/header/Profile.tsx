@@ -101,7 +101,7 @@ export default function Profile() {
             alt="Profile Pic"
             width={40}
             height={40}
-            className="w-[41px] h-[41px] rounded-lg cursor-pointer border border-gray-300 dark:border-gray-600"
+            className="w-[32px] h-[32px] rounded-lg cursor-pointer border border-gray-300 dark:border-gray-600"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           />
 
@@ -126,10 +126,10 @@ export default function Profile() {
         </div>
       ) : (
         <div
-          className="py-2 px-3 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+          className="py-1.5 px-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-sm md:text-base font-semibold"
           onClick={redirectToLogin}
         >
-          <p className="text-[16px] font-semibold">Log In</p>
+          Log In
         </div>
       )}
     </div>

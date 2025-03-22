@@ -42,6 +42,7 @@ export default function Questions() {
     answers,
     generateAnswer,
     generatingAnswer,
+    fetchAnswer,
   } = useQuestions();
 
   return (
@@ -75,6 +76,7 @@ export default function Questions() {
         answers={answers}
         generateAnswer={generateAnswer}
         generatingAnswer={generatingAnswer}
+        fetchAnswer={fetchAnswer}
       />
 
       {showModal && (

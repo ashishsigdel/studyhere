@@ -29,7 +29,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div className="flex items-center justify-between gap-4 mb-4">
-      <div className="flex items-center w-full gap-3 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+      <div className="flex items-center w-full gap-3 px-2.5 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
         <input
           type="text"
           className="w-full bg-transparent focus:outline-none placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-gray-200"
@@ -47,7 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="p-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+          className="p-1.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-105 active:scale-95 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
           onClick={toggleForm}
           aria-label="Add new item"
         >

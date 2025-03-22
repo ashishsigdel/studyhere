@@ -316,5 +316,6 @@ export default function useQuestions() {
     answers,
     generateAnswer,
     generatingAnswer,
+    fetchAnswer,
   };
 }

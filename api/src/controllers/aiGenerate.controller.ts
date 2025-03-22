@@ -91,7 +91,7 @@ export const getAnswerFromAi = asyncHandler(
 
       await Answer.create({
         answer: htmlContent,
-        userId: 2,
+        userId: 22,
         questionId: questionId,
       });
     }

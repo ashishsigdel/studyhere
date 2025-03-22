@@ -1,12 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { FaEdit, FaPlus, FaSave, FaThumbsUp, FaTimes } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import { JoditForm } from "../utils";
 import moment from "moment";
-import { RiAiGenerate2 } from "react-icons/ri";
+import Buttons from "./Buttons";
 
 type Props = {
   question: {
@@ -100,65 +98,18 @@ export default function QuestionCard({
         <div className="mt-2 p-3">
           <div className="flex justify-between gap-3 items-center">
             <strong>Answer:</strong>
-            {openEditors[question.id] ? (
-              <div className="flex gap-2">
-                <div
-                  onClick={() =>
-                    saveAnswer(
-                      answers[question.id]?.answer?.user?.id === userL?.id
-                        ? "update"
-                        : "add",
-                      question.id
-                    )
-                  }
-                  className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-                >
-                  <FaSave className="" size={16} />
-                  {saving ? "Saving" : "Save"}
-                </div>
-                <div
-                  onClick={() => handleCancel(question.id)}
-                  className="flex gap-2 items-center cursor-pointer bg-red-200 dark:bg-red-900 px-2 py-1.5 rounded-md text-sm"
-                >
-                  <FaTimes className="" size={16} />
-                  Cancel
-                </div>
-              </div>
-            ) : answers[question.id]?.answer?.user?.id === userL?.id ? (
-              <div className="flex items-center mt-5">
-                <button
-                  onClick={() => generateAnswer(question.id)}
-                  className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
-                >
-                  <RiAiGenerate2 />
-                  {generatingAnswer ? "Generating..." : "Generate With AI"}
-                </button>
-                <div
-                  onClick={() => handleAnswerEdit(question.id)}
-                  className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-                >
-                  <FaEdit className="" size={16} />
-                  Edit
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center mt-5">
-                <button
-                  onClick={() => generateAnswer(question.id)}
-                  className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
-                >
-                  <RiAiGenerate2 />
-                  {generatingAnswer ? "Generating..." : "Generate With AI"}
-                </button>
-                <div
-                  onClick={() => handleAnswerEdit(question.id)}
-                  className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-                >
-                  <FaPlus className="" size={16} />
-                  Add
-                </div>
-              </div>
-            )}
+            <Buttons
+              openEditors={openEditors}
+              question={question}
+              saveAnswer={saveAnswer}
+              answers={answers}
+              userL={userL}
+              saving={saving}
+              handleCancel={handleCancel}
+              generateAnswer={generateAnswer}
+              generatingAnswer={generatingAnswer}
+              handleAnswerEdit={handleAnswerEdit}
+            />
           </div>
           {openEditors[question.id] ? (
             <div className="mt-3">
@@ -180,7 +131,7 @@ export default function QuestionCard({
               <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
             </div>
           ) : (
-            <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
+            <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal mt-2.5">
               <div
                 dangerouslySetInnerHTML={{
                   __html: cleanHTML || "No answer available.",
@@ -218,7 +169,7 @@ export default function QuestionCard({
                     className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
                   >
                     {`View all answer (${
-                      answers[question.id]?.otherAnswersCount + 1
+                      answers[question.id]?.otherAnswersCount
                     })`}
                   </Link>
                 </div>

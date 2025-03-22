@@ -7,7 +7,7 @@ import Pdf from "./Pdf";
 
 export default function Header() {
   return (
-    <div className="h-16 bg-gray-100 dark:bg-slate-950 border-b border-gray-300 dark:border-gray-600">
+    <div className="h-16 bg-gray-100 dark:bg-[#0c0d10] border-b border-gray-300 dark:border-gray-600 sticky top-0 z-50">
       <div className="h-full max-w-7xl mx-auto px-5 flex items-center">
         <div className="w-full flex items-center justify-between">
           <Link href={"/"}>

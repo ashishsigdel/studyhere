@@ -30,6 +30,7 @@ type Props = {
   answers: any;
   generateAnswer: Function;
   generatingAnswer: boolean;
+  fetchAnswer: Function;
 };
 
 export default function QuestionFields({
@@ -45,6 +46,7 @@ export default function QuestionFields({
   answers,
   generateAnswer,
   generatingAnswer,
+  fetchAnswer,
 }: Props) {
   const [userL, setUserL] = useState<any>({});
   const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(
@@ -98,7 +100,9 @@ export default function QuestionFields({
       } else {
         await myAxios.put(`/answer/update/${id}`, { answer: answerStates[id] });
       }
+      fetchAnswer(id);
       toast.success("Answer saved successfully!");
+
       setOpenEditors((prev) => ({
         ...prev,
         [id]: false,
