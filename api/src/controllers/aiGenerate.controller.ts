@@ -38,9 +38,9 @@ export const getAnswerFromAi = asyncHandler(
       });
     }
 
-    const prompt = `Generate a comprehensive, structured answer for the following academic question.Question (${
+    const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question. The answer should be proportional to the marks assigned (${
       existQuestion.marks
-    } marks): ${convert(existQuestion.question)}
+    } marks) and Question: ${convert(existQuestion.question)}
     Please provide:
     1. A clear and direct answer that addresses all parts of the question
     2. Relevant explanations of key concepts and terms
@@ -48,19 +48,16 @@ export const getAnswerFromAi = asyncHandler(
     4. Logical structure with clear paragraphs and transitions
     5. A brief conclusion that summarizes the main points
 
-    The answer should be proportional to the marks assigned (${
-      existQuestion.marks
-    } marks). Use markdown formatting for headings, lists, and emphasis where appropriate.
+    Use best html for formatting for headings, lists, table, and emphasis where appropriate.
 
-    Focus on accuracy, clarity, and depth of understanding while avoiding unnecessary verbosity.
-    
-    And At last give me just answer.`;
+    Focus on accuracy, clarity, and depth of understanding while avoiding unnecessary verbosity. and doesn't mention any here is html format or other things. Just write the answer`;
 
     const result = await model.generateContent(prompt);
 
     const rawText = result.response.text();
 
-    const htmlContent = convertMarkdownToHtml(rawText);
+    const match = rawText.match(/```html\n([\s\S]*?)\n```/);
+    const htmlContent = match ? match[1] : rawText;
 
     await Answer.create({
       answer: htmlContent,
@@ -68,15 +65,22 @@ export const getAnswerFromAi = asyncHandler(
       questionId: questionId,
     });
 
+    const totalAnswers = await Answer.count({
+      where: {
+        questionId,
+      },
+    });
+
     const responseData = {
       answer: {
         answer: htmlContent,
         user: {
-          id: null,
+          id: 22,
           fullName: "StudyHere AI",
           profilePic: "https://studyhere.asigdel.com.np/icon192.png",
         },
       },
+      otherAnswersCount: totalAnswers,
     };
 
     return new ApiResponse({
