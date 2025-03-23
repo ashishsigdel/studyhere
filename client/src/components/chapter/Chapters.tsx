@@ -41,6 +41,14 @@ export default function Chapters() {
   };
 
   useEffect(() => {
+    if (subject) {
+      document.title = `${subject} - Chapters`;
+    } else {
+      document.title = "Chapters";
+    }
+  }, [subject]);
+
+  useEffect(() => {
     try {
       const cachedData = localStorage.getItem(`chapters_${id}`);
       if (cachedData) {

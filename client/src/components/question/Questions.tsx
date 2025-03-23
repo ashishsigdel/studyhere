@@ -45,6 +45,14 @@ export default function Questions() {
     fetchAnswer,
   } = useQuestions();
 
+  useEffect(() => {
+    if (chapter) {
+      document.title = `${chapter} - Questions`;
+    } else {
+      document.title = "Questions";
+    }
+  }, [chapter]);
+
   return (
     <>
       <div className="flex flex-col justify-between w-full border-b border-gray-300 dark:border-gray-600">
