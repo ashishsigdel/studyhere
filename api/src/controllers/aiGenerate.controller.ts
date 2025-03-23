@@ -66,7 +66,7 @@ export const getAnswerFromAi = asyncHandler(
 
     let htmlContent = answer ? answer.answer : "";
     if (!answer) {
-      const prompt = `Generate a comprehensive, structured in html (only body content and not also <body>) answer for the following academic question from ${subjectname} subject and ${
+      const prompt = `Generate a comprehensive, structured, simple like human write in html (only body content and not also <body>) answer for the following academic question from ${subjectname} subject and ${
         existQuestion?.chapter.name
       } chapter. The answer should be proportional to the marks assigned (${
         existQuestion.marks
