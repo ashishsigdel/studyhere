@@ -66,21 +66,24 @@ export const getAnswerFromAi = asyncHandler(
 
     let htmlContent = answer ? answer.answer : "";
     if (!answer) {
-      const prompt = `Generate a comprehensive, structured, simple like human write in html (only body content and not also <body>) answer for the following academic question from ${subjectname} subject and ${
+      const prompt = `Generate a well-structured, easy-to-understand, human like, and concise answer in HTML (only body content, excluding <body>) for the following academic question from the ${subjectname} subject, specifically from the ${
         existQuestion?.chapter.name
-      } chapter. The answer should be proportional to the marks assigned (${
-        existQuestion.marks
-      } marks) and Question: ${convert(existQuestion.question)}
-    Please provide:
-    1. A clear and direct answer that addresses all parts of the question
-    2. Relevant explanations of key concepts and terms
-    3. Supporting evidence, examples, or case studies where appropriate
-    4. Logical structure with clear paragraphs and transitions
-    5. A brief conclusion that summarizes the main points
+      } chapter.  
 
-    Use best html for formatting for headings, lists, table, and emphasis where appropriate.
+    The answer should be proportional to the assigned marks (${
+      existQuestion.marks
+    } marks) and should directly address the following question:  
+    **${convert(existQuestion.question)}**  
 
-    Focus on accuracy, clarity, and depth of understanding while avoiding unnecessary verbosity. and doesn't mention any here is html format or other things. Just write the answer`;
+    ### Requirements:
+    1. Provide a **clear and direct answer** covering all parts of the question.  
+    2. Explain key concepts and terms in **simple, human-like language**.  
+    3. Include **examples, case studies, or supporting evidence** where relevant.  
+    4. Maintain **logical structure** with well-defined paragraphs and smooth transitions.  
+    5. Use **HTML formatting** for headings, lists, tables, and emphasis to improve readability.  
+    6. Conclude with a **brief summary** of the main points.  
+
+    Ensure accuracy, clarity, and depth without unnecessary complexity. The output should feel **natural and easy to remember**, without mentioning anything about HTML formatting or structure explicitly—just present the well-formatted answer itself.`;
 
       const result = await model.generateContent(prompt);
 
