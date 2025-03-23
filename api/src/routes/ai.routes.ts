@@ -23,6 +23,6 @@ const router = express.Router();
 
 router
   .route("/generate/:questionId")
-  .get(authMiddleware, limiter, aiController.getAnswerFromAi);
+  .get(authMiddleware, aiController.getAnswerFromAi);
 
 export default router;
