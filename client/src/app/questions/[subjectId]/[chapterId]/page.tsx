@@ -1,3 +1,4 @@
+import Sidebar from "@/components/ads/Sidebar";
 import { Questions } from "@/components/question";
 import RequireAuth from "@/utils/RequireAuth";
 import { Metadata } from "next";
@@ -11,8 +12,12 @@ export const metadata: Metadata = {
 export default function page() {
   return (
     <RequireAuth>
-      <div className="container px-5 mx-auto max-w-7xl">
-        <Questions />
+      <div className="flex flex-col md:flex-row">
+        <Sidebar />
+        <div className="container px-5 mx-auto max-w-6xl">
+          <Questions />
+        </div>
+        <Sidebar />
       </div>
     </RequireAuth>
   );

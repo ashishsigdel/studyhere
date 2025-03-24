@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Spinner from "@/utils/Spinner";
 import Breadcrumb from "./BreadCrumb";
 import AddModal from "./AddModal";
+import ChapterAds from "../ads/ChapterAds";
 
 export default function Chapters() {
   const pathname = usePathname();
@@ -133,7 +134,8 @@ export default function Chapters() {
           setShowForm={setShowForm}
         />
       </div>
-      <div className="flex flex-col mt-10">
+      <ChapterAds />
+      <div className="flex flex-col mt-5">
         {loading && <Spinner color="#222" />}
         {!navigator.onLine && chapters.length === 0 && <>You are offline. </>}
         {!loading && chapters.length === 0 && <>No chapters</>}

@@ -4,11 +4,6 @@ import Spinner from "@/utils/Spinner";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
-import { JoditForm } from "../utils";
-import Image from "next/image";
-import defaultPic from "@/assets/pictures/defaultpic.jpg";
-import Link from "next/link";
-import { HiDotsVertical } from "react-icons/hi";
 import QuestionCard from "./QuestionCard";
 
 type Props = {
