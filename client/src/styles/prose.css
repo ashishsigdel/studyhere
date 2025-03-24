@@ -103,43 +103,43 @@ and List Styling .prose {
 
   .prose ul,
   .prose ol {
-    padding-left: 1rem;
+    padding-left: 2rem;
   }
 }
 
 .prose h1 {
   font-size: 32px;
-  line-height: 52px;
+  margin: 13px 0px;
 }
 
 .prose h2 {
   font-size: 28px;
-  line-height: 52px;
+  margin: 13px 0px;
 }
 
 .prose h3 {
   font-size: 24px;
-  line-height: 52px;
+  margin: 13px 0px;
 }
 
 .prose h4 {
   font-size: 20px;
-  line-height: 28px;
+  margin: 13px 0px;
 }
 
 .prose h5 {
   font-size: 18px;
-  line-height: 24px;
+  margin: 13px 0px;
 }
 
 .prose h6 {
   font-size: 16px;
-  line-height: 22px;
+  margin: 13px 0px;
 }
 
 .prose p {
   font-size: 16px;
-  line-height: 24px;
+  margin: 8px 0px;
 }
 
 .prose annotation[encoding="application/x-tex"] {
