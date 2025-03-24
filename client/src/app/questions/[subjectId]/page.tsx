@@ -1,3 +1,4 @@
+import ChapterAds from "@/components/ads/ChapterAds";
 import { Chapters } from "@/components/chapter";
 import { Metadata } from "next";
 import React from "react";
@@ -11,6 +12,9 @@ export default function page() {
   return (
     <div className="container p-5 mx-auto max-w-7xl">
       <Chapters />
+      <div className="mt-10">
+        <ChapterAds />
+      </div>
     </div>
   );
 }

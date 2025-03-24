@@ -1,3 +1,4 @@
+import CardAds from "@/components/ads/CardAds";
 import { Subjects } from "@/components/subject";
 
 export default function Home() {

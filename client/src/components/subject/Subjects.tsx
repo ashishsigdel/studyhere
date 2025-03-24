@@ -11,6 +11,8 @@ import Image from "next/image";
 import bookcover from "@/assets/bookcover.png";
 import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
 import { FaRegStar, FaStar } from "react-icons/fa";
+import CardAds from "../ads/CardAds";
+import ChapterAds from "../ads/ChapterAds";
 
 const STORE_NAME = "subjects";
 
@@ -118,6 +120,27 @@ export default function Subjects() {
     );
   };
 
+  const renderSubject = (subject: { id: number; name: string }) => (
+    <div
+      key={subject.id}
+      className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
+    >
+      <Link href={`/questions/${subject.id}`}>
+        <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
+          {subject.name}
+        </h3>
+      </Link>
+
+      <Image src={bookcover} alt={subject.name} className="pb-[0.8]" priority />
+      <button
+        className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
+        onClick={() => handleToggleFavorite(subject.id, subject.name)}
+      >
+        <FaStar size={24} />
+      </button>
+    </div>
+  );
+
   return (
     <>
       <TopBar showForm={showForm} setShowForm={setShowForm} />
@@ -169,35 +192,15 @@ export default function Subjects() {
         {loading && <Spinner color="#222" />}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {!loading && subjects.length === 0 && <>No subjects available</>}
-          {subjects.map((subject) => (
-            <div
-              key={subject.id}
-              className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
-            >
-              <Link href={`/questions/${subject.id}`}>
-                <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
-                  {subject.name}
-                </h3>
-              </Link>
-              <Image
-                src={bookcover}
-                alt={subject.name}
-                className="pb-[0.8]"
-                priority
-              />
-              <button
-                className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
-                onClick={() => handleToggleFavorite(subject.id, subject.name)}
-              >
-                {favSubjects.find((fav) => fav.id === subject.id) ? (
-                  <FaStar size={24} />
-                ) : (
-                  <FaRegStar size={24} />
-                )}
-              </button>
-            </div>
-          ))}
+          {subjects.map((subject, index) =>
+            index > 0 && index % 3 === 0 // Insert CardAds after every 3 items
+              ? [<CardAds key={`ad-${index}`} />, renderSubject(subject)]
+              : [renderSubject(subject)]
+          )}
         </div>
+      </div>
+      <div className="mt-10">
+        <ChapterAds />
       </div>
 
       <div className="flex flex-col mt-10">
