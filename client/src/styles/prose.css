@@ -139,7 +139,6 @@ and List Styling .prose {
 
 .prose p {
   font-size: 16px;
-  margin: 8px 0px;
 }
 
 .prose annotation[encoding="application/x-tex"] {
