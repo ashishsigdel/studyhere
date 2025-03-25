@@ -26,7 +26,8 @@ type Props = {
   saveAnswer: (type: string, id: number) => void;
   saving: boolean;
   handleCancel: (id: number) => void;
-  handleAnswerEdit: any;
+  handleAnswerAdd: Function;
+  handleAnswerEdit: Function;
   setAnswerStates: any;
   generateAnswer: Function;
   generatingAnswer: boolean;
@@ -46,6 +47,7 @@ export default function QuestionCard({
   saveAnswer,
   saving,
   handleCancel,
+  handleAnswerAdd,
   handleAnswerEdit,
   setAnswerStates,
   generateAnswer,
@@ -108,6 +110,7 @@ export default function QuestionCard({
               handleCancel={handleCancel}
               generateAnswer={generateAnswer}
               generatingAnswer={generatingAnswer}
+              handleAnswerAdd={handleAnswerAdd}
               handleAnswerEdit={handleAnswerEdit}
             />
           </div>

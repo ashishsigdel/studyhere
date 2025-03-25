@@ -17,7 +17,8 @@ type Props = {
   handleCancel: (id: number) => void;
   generateAnswer: Function;
   generatingAnswer: boolean;
-  handleAnswerEdit: any;
+  handleAnswerAdd: Function;
+  handleAnswerEdit: Function;
 };
 
 export default function Buttons({
@@ -31,6 +32,7 @@ export default function Buttons({
   generateAnswer,
   generatingAnswer,
   handleAnswerEdit,
+  handleAnswerAdd,
 }: Props) {
   const isAuthor = answers[question.id]?.answer?.user?.id === userL?.id;
   const isAdmin = userL.role === "admin";
@@ -72,7 +74,7 @@ export default function Buttons({
           </button>
           {!isAuthor && (
             <button
-              onClick={() => handleAnswerEdit(question.id)}
+              onClick={() => handleAnswerAdd(question.id)}
               className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
             >
               <FaPlus size={16} />

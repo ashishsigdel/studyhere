@@ -51,17 +51,33 @@ export default function QuestionFields({
   const [openEditors, setOpenEditors] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const [editorMode, setEditorMode] = useState<"none" | "add" | "edit">("none");
 
-  const handleAnswerEdit = async (id: number) => {
+  const handleAnswerAdd = async (id: number) => {
     // Clear any existing answer states first
-    setAnswerStates((prev) => ({
+    {
+      setAnswerStates((prev) => ({
+        ...prev,
+        [id]: "",
+      }));
+    }
+    setEditorMode("add");
+    setOpenEditors((prev) => ({
       ...prev,
-      [id]:
-        answers[id]?.answer?.user?.id === userL?.id
-          ? answers[id]?.answer?.answer
-          : "",
+      [id]: true,
     }));
-
+  };
+  const handleAnswerEdit = async (id: number) => {
+    {
+      setAnswerStates((prev) => ({
+        ...prev,
+        [id]:
+          answers[id]?.answer?.user?.id === userL?.id || userL.role === "admin"
+            ? answers[id]?.answer?.answer
+            : "",
+      }));
+    }
+    setEditorMode("edit");
     setOpenEditors((prev) => ({
       ...prev,
       [id]: true,
@@ -90,8 +106,12 @@ export default function QuestionFields({
 
     setSaving(true);
     try {
-      if (type === "add") {
+      if (editorMode === "add") {
         await myAxios.post(`/answer/add/${id}`, { answer: answerStates[id] });
+      } else if (userL.role === "admin") {
+        await myAxios.put(`/answer/update-admin/${answers[id].answer.id}`, {
+          answer: answerStates[id],
+        });
       } else {
         await myAxios.put(`/answer/update/${id}`, { answer: answerStates[id] });
       }
@@ -107,6 +127,7 @@ export default function QuestionFields({
         delete newStates[id];
         return newStates;
       });
+      setEditorMode("none");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     } finally {
@@ -152,6 +173,7 @@ export default function QuestionFields({
           saveAnswer={saveAnswer}
           saving={saving}
           handleCancel={handleCancel}
+          handleAnswerAdd={handleAnswerAdd}
           handleAnswerEdit={handleAnswerEdit}
           setAnswerStates={setAnswerStates}
           generateAnswer={generateAnswer}

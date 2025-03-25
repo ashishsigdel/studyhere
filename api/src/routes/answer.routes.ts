@@ -13,6 +13,10 @@ router
   .put(authMiddleware, answerController.updateAnswer);
 
 router
+  .route("/update-admin/:answerId")
+  .put(authMiddleware, answerController.updateAnswerAdmin);
+
+router
   .route("/get/:questionId")
   .get(authMiddleware, answerController.getYourAnswersByQuestionId);
 

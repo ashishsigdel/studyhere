@@ -117,6 +117,51 @@ export const updateAnswer = asyncHandler(
     }).send(res);
   }
 );
+export const updateAnswerAdmin = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const { answerId } = req.params;
+
+    const user = req.user;
+    if (user?.role !== "admin") {
+      throw new ApiError({
+        status: 403,
+        message: "You are not authorized to update this answer!",
+      });
+    }
+
+    if (!answerId) {
+      throw new ApiError({
+        status: 400,
+        message: "Cannot update answer!",
+      });
+    }
+
+    const existAnswer = await Answer.findByPk(answerId);
+
+    if (!existAnswer) {
+      throw new ApiError({
+        status: 404,
+        message: "Answer not found!",
+      });
+    }
+
+    const { answer } = req.body;
+
+    if (!answer) {
+      throw new ApiError({
+        status: 400,
+        message: "Answer is required!",
+      });
+    }
+
+    await existAnswer.update({ answer });
+
+    return new ApiResponse({
+      status: 200,
+      message: "Answer updated successfully!",
+    }).send(res);
+  }
+);
 
 export const getAnswersByQuestionId = asyncHandler(
   async (req: CustomRequest, res: Response) => {
