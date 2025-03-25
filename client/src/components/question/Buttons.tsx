@@ -32,11 +32,14 @@ export default function Buttons({
   generatingAnswer,
   handleAnswerEdit,
 }: Props) {
+  const isAuthor = answers[question.id]?.answer?.user?.id === userL?.id;
+  const isAdmin = userL.role === "admin";
+
   return (
     <>
       {openEditors[question.id] ? (
         <div className="flex gap-2">
-          <div
+          <button
             onClick={() =>
               saveAnswer(
                 answers[question.id]?.answer?.user?.id === userL?.id
@@ -49,72 +52,43 @@ export default function Buttons({
           >
             <FaSave className="" size={16} />
             {saving ? "Saving" : "Save"}
-          </div>
-          <div
+          </button>
+          <button
             onClick={() => handleCancel(question.id)}
             className="flex gap-2 items-center cursor-pointer bg-red-200 dark:bg-red-900 px-2 py-1.5 rounded-md text-sm"
           >
             <FaTimes className="" size={16} />
             Cancel
-          </div>
-        </div>
-      ) : userL.role === "admin" ? (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => generateAnswer(question.id)}
-            className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
-          >
-            <RiAiGenerate2 />
-            {generatingAnswer ? "Generating..." : "Generate With AI"}
           </button>
-          <div
-            onClick={() => handleAnswerEdit(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-          >
-            <FaEdit className="" size={16} />
-            Edit
-          </div>
-          <div
-            onClick={() => handleAnswerEdit(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-          >
-            <FaPlus className="" size={16} />
-            Add
-          </div>
-        </div>
-      ) : answers[question.id]?.answer?.user?.id === userL?.id ? (
-        <div className="flex items-center">
-          <button
-            onClick={() => generateAnswer(question.id)}
-            className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
-          >
-            <RiAiGenerate2 />
-            {generatingAnswer ? "Generating..." : "Generate With AI"}
-          </button>
-          <div
-            onClick={() => handleAnswerEdit(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
-          >
-            <FaEdit className="" size={16} />
-            Edit
-          </div>
         </div>
       ) : (
-        <div className="flex items-center">
+        <div className="flex gap-2">
           <button
             onClick={() => generateAnswer(question.id)}
-            className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer flex items-center gap-2"
-          >
-            <RiAiGenerate2 />
-            {generatingAnswer ? "Generating..." : "Generate With AI"}
-          </button>
-          <div
-            onClick={() => handleAnswerEdit(question.id)}
             className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
           >
-            <FaPlus className="" size={16} />
-            Add
-          </div>
+            <RiAiGenerate2 size={16} />
+            {generatingAnswer ? "Generating..." : "Generate With AI"}
+          </button>
+          {!isAuthor && (
+            <button
+              onClick={() => handleAnswerEdit(question.id)}
+              className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+            >
+              <FaPlus size={16} />
+              Add
+            </button>
+          )}
+
+          {(isAuthor || isAdmin) && (
+            <button
+              onClick={() => handleAnswerEdit(question.id)}
+              className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+            >
+              <FaEdit size={16} />
+              Edit
+            </button>
+          )}
         </div>
       )}
     </>
