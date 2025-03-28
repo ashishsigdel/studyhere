@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 Prose,
 Table,
 and List Styling .prose {
@@ -14,24 +18,20 @@ and List Styling .prose {
 
 .prose th,
 .prose td {
-  border: 1px solid #e2e8f0;
-  padding: 8px;
+  @apply border border-gray-300 dark:border-gray-700 p-2;
   text-align: left;
 }
 
 .prose th {
-  background-color: #f8fafc;
-  font-weight: 600;
-  color: #2d3748;
+  @apply bg-white dark:bg-black text-gray-800 dark:text-gray-200 font-semibold;
 }
 
 .prose td {
-  background-color: #ffffff;
-  color: #4a5568;
+  @apply bg-white dark:bg-black text-gray-700 dark:text-gray-200;
 }
 
 .prose tr:nth-child(even) {
-  background-color: #f9fafb;
+  @apply bg-[#f9fafb] dark:bg-[#0f0f0f];
 }
 
 .prose tr:hover {
