@@ -55,20 +55,11 @@ export const getAnswerFromAi = asyncHandler(
       });
     }
 
-    let answer = await Answer.findOne({
-      where: { questionId, userId: 22 },
-      attributes: ["id", "answer", "createdAt"],
-      include: {
-        model: User,
-        attributes: ["id", "fullName", "profilePic"],
-      },
-    });
+    let htmlContent = "";
 
-    let htmlContent = answer ? answer.answer : "";
-    if (!answer) {
-      const prompt = `Generate a well-structured, easy-to-understand, human like, and concise answer in HTML (only body content, excluding <body>) for the following academic question from the ${subjectname} subject, specifically from the ${
-        existQuestion?.chapter.name
-      } chapter.  
+    const prompt = `Generate a well-structured, easy-to-understand, human like, and concise answer in HTML (only body content, excluding <body>) for the following academic question from the ${subjectname} subject, specifically from the ${
+      existQuestion?.chapter.name
+    } chapter.  
 
     The answer should be proportional to the assigned marks (${
       existQuestion.marks
@@ -85,19 +76,18 @@ export const getAnswerFromAi = asyncHandler(
 
     Ensure accuracy, clarity, and depth without unnecessary complexity. The output should feel **natural and easy to remember**, without mentioning anything about HTML formatting or structure explicitly—just present the well-formatted answer itself.`;
 
-      const result = await model.generateContent(prompt);
+    const result = await model.generateContent(prompt);
 
-      const rawText = result.response.text();
+    const rawText = result.response.text();
 
-      const match = rawText.match(/```html\n([\s\S]*?)\n```/);
-      htmlContent = match ? match[1] : rawText;
+    const match = rawText.match(/```html\n([\s\S]*?)\n```/);
+    htmlContent = match ? match[1] : rawText;
 
-      await Answer.create({
-        answer: htmlContent,
-        userId: 22,
-        questionId: questionId,
-      });
-    }
+    await Answer.create({
+      answer: htmlContent,
+      userId: 22,
+      questionId: questionId,
+    });
 
     const totalAnswers = await Answer.count({
       where: {

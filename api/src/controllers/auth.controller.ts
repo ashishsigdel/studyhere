@@ -63,6 +63,15 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
     user = await User.create({ fullName: name, email, profilePic });
   }
 
+  await User.update(
+    {
+      lastActiveAt: new Date(),
+    },
+    {
+      where: { id: user.id },
+    }
+  );
+
   const refreshToken = generateRefreshToken({
     userId: user.id,
   });
@@ -163,6 +172,15 @@ export const refreshAccessToken = asyncHandler(
           status: 401,
         });
       }
+
+      await User.update(
+        {
+          lastActiveAt: new Date(),
+        },
+        {
+          where: { id: user.id },
+        }
+      );
 
       //generate access token
       const accessToken = generateAccessToken({

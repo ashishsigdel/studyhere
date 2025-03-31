@@ -34,6 +34,12 @@ class User extends Model {
   profilePic!: string;
 
   @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  lastActiveAt!: Date;
+
+  @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
     allowNull: false,
     defaultValue: UserRole.USER,
