@@ -13,6 +13,7 @@ import {
   verifyToken,
 } from "../utils/jwtUtils";
 import { isAllowedOrigin } from "../utils/allowedOrigins";
+import admin from "../config/firebase";
 
 export const authUser = asyncHandler(async (req: Request, res: Response) => {
   const origin = req.headers.origin;
@@ -20,6 +21,25 @@ export const authUser = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError({
       status: 403,
       message: "Unauthorized origin.",
+    });
+  }
+
+  const authHeader = req.headers["x-oauth"] as string;
+
+  if (!authHeader) {
+    throw new ApiError({
+      status: 400,
+      message: "Authentication failed",
+    });
+  }
+
+  let decodedToken;
+  try {
+    decodedToken = await admin.auth().verifyIdToken(authHeader);
+  } catch (error) {
+    throw new ApiError({
+      status: 400,
+      message: "Authentication failed",
     });
   }
 

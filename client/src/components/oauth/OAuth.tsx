@@ -23,11 +23,22 @@ export default function OAuth() {
     try {
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const response = await myAxios.post("/auth/user", {
-        fullName: result.user.displayName,
-        email: result.user.email,
-        profilePic: result.user.photoURL,
-      });
+      const idToken = await result.user.getIdToken();
+
+      const response = await myAxios.post(
+        "/auth/user",
+        {
+          fullName: result.user.displayName,
+          email: result.user.email,
+          profilePic: result.user.photoURL,
+        },
+        {
+          headers: {
+            "X-OAuth": `${idToken}`,
+          },
+        }
+      );
+
       const user = JSON.stringify(response.data.data.user);
       localStorage.setItem("user", user);
       localStorage.setItem("accessToken", response.data.data.accessToken);
