@@ -76,4 +76,4 @@ myAxios.interceptors.request.use((config) => {
 //   console.log("Request was sent with this config:", config);
 //   return config;
 // });
-export { myAxios };
+export { myAxios, refreshAccessToken };

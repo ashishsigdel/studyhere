@@ -8,6 +8,7 @@ import QuestionFields from "./QuestionFields";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";
 import useQuestions from "./useQuestions";
+import { refreshAccessToken } from "@/services/apiServices";
 
 export default function Questions() {
   const {
@@ -52,6 +53,14 @@ export default function Questions() {
       document.title = "Questions";
     }
   }, [chapter]);
+
+  useEffect(() => {
+    try {
+      refreshAccessToken();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <>
