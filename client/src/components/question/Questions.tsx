@@ -44,6 +44,8 @@ export default function Questions() {
     generateAnswer,
     generatingAnswer,
     fetchAnswer,
+    handleSearchChange,
+    filteredQuestions,
   } = useQuestions();
 
   useEffect(() => {
@@ -72,6 +74,7 @@ export default function Questions() {
           setShowForm={setShowForm}
           showForm={showForm}
           setSearch={setSearch}
+          handleSearchChange={handleSearchChange}
         />
       </div>
 
@@ -86,7 +89,7 @@ export default function Questions() {
         loading={loading}
         openedAnswerIds={openedAnswerIds}
         page={page}
-        questions={questions}
+        questions={filteredQuestions}
         toggleAnswer={toggleAnswer}
         totalPages={totalPages}
         loadingAnswer={loadingAnswer}

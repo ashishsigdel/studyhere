@@ -2,7 +2,7 @@
 import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
 
@@ -13,6 +13,15 @@ export default function useQuestions() {
   const id = params.chapterId;
 
   const [questions, setQuestions] = useState<
+    {
+      id: number;
+      question: string;
+      answer?: string;
+      year?: string;
+      marks?: string;
+    }[]
+  >([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<
     {
       id: number;
       question: string;
@@ -49,6 +58,22 @@ export default function useQuestions() {
     year: "",
     marks: "",
   });
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.toLowerCase();
+    setSearch(query);
+
+    if (query.trim() === "") {
+      setFilteredQuestions(questions);
+    } else {
+      const filtered = questions.filter(
+        (q) =>
+          q.question.toLowerCase().includes(query) ||
+          q.year?.toString().includes(query)
+      );
+      setFilteredQuestions(filtered);
+    }
+  };
 
   const toggleAnswer = async (id: number) => {
     setOpenedAnswerIds((prev) => {
@@ -132,6 +157,7 @@ export default function useQuestions() {
         const data = response.data.data;
         if (pageNumber === 1) {
           setQuestions(data.allQuestions);
+          setFilteredQuestions(data.allQuestions);
         } else {
           setQuestions((prev) => [...prev, ...data.allQuestions]);
         }
@@ -173,7 +199,7 @@ export default function useQuestions() {
   useEffect(() => {
     setPage(1);
     fetchQuestions(1, debouncedSearch);
-  }, [debouncedSearch]);
+  }, []);
 
   const fetchMoreQuestions = () => {
     if (page < totalPages) {
@@ -317,5 +343,7 @@ export default function useQuestions() {
     generateAnswer,
     generatingAnswer,
     fetchAnswer,
+    handleSearchChange,
+    filteredQuestions,
   };
 }

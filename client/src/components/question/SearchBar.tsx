@@ -8,6 +8,7 @@ interface SearchBarProps {
   showForm: boolean;
   setShowForm: (show: boolean) => void;
   setSearch: (search: string) => void;
+  handleSearchChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -15,12 +16,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   loading,
   setShowForm,
   showForm,
-  setSearch,
+  handleSearchChange,
 }) => {
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
   const toggleForm = () => {
     setShowForm(!showForm);
   };
