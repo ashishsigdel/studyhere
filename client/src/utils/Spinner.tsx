@@ -1,12 +1,14 @@
 "use client";
+import { useTheme } from "next-themes";
 import React from "react";
 import styled from "styled-components";
 
-interface LoaderProps {
-  color?: string;
-}
+interface LoaderProps {}
 
-const Loader: React.FC<LoaderProps> = ({ color = "#fff" }) => {
+const Loader: React.FC<LoaderProps> = () => {
+  const { theme } = useTheme();
+
+  const color = theme === "dark" ? "#ffffff" : "#000000";
   return (
     <StyledWrapper color={color}>
       <div className="spinner">

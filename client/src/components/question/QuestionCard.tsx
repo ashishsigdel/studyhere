@@ -128,10 +128,10 @@ export default function QuestionCard({
               />
             </div>
           ) : loadingAnswer && !answers[question.id] ? (
-            <div className="animate-pulse space-y-2">
-              <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/4"></div>
-              <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
+            <div className="animate-pulse space-y-2 mt-10">
+              <div className="h-4 bg-gray-300 dark:bg-gray-500 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-300 dark:bg-gray-500 rounded w-2/4"></div>
+              <div className="h-4 bg-gray-300 dark:bg-gray-500 rounded w-full"></div>
             </div>
           ) : (
             <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal mt-2.5">
@@ -159,7 +159,7 @@ export default function QuestionCard({
                       <span className="font-bold mr-1 text-xs truncate">
                         {answers[question.id]?.answer?.user?.fullName}
                       </span>
-                      <span className="text-gray-500 text-xs">
+                      <span className="text-gray-600 dark:text-gray-200 text-xs">
                         {moment(
                           answers[question.id]?.answer.createdAt
                         ).fromNow()}
@@ -169,7 +169,7 @@ export default function QuestionCard({
 
                   <Link
                     href={`/question/${question.id}`}
-                    className="mx-3 px-3 py-2 text-sm bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-md w-fit cursor-pointer"
+                    className="mx-3 px-3 py-2 text-sm bg-black dark:bg-white text-white dark:text-black rounded-md w-fit cursor-pointer"
                   >
                     {`View all answer (${
                       answers[question.id]?.otherAnswersCount

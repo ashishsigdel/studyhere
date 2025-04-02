@@ -26,7 +26,7 @@ export default function JoditForm({
       maxHeight: 600,
       statusbar: false,
       style: {
-        backgroundColor: isDarkMode ? "#020617" : "#f3f4f6",
+        backgroundColor: isDarkMode ? "#3c3c3c" : "#f3f4f6",
         color: isDarkMode ? "#ffffff" : "#000000",
         fontSize: "18px",
       },
@@ -39,7 +39,7 @@ export default function JoditForm({
     <div
       className={`w-full rounded-lg mb-5 border ${
         isDarkMode
-          ? "bg-slate-800  border-white/20"
+          ? "bg-slate-800  border-white/5"
           : "bg-gray-200 border-black/10"
       }`}
     >

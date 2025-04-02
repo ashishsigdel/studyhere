@@ -37,7 +37,7 @@ export default function EditModal({
   };
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center px-3">
-      <div className="bg-gray-300 dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+      <div className="bg-white dark:bg-[#323232] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-gray-300 dark:border-gray-600">
         <div className="flex gap-2 items-center mb-4 justify-between">
           <h2 className="text-xl">Edit Question</h2>
           <button
@@ -82,7 +82,7 @@ export default function EditModal({
               onChange={(e) =>
                 setEditQuestion({ ...editQuestion, year: e.target.value })
               }
-              className="w-full p-2 border border-black/10 dark:border-white/20 rounded-md mb-2"
+              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
               placeholder="Year"
             />
             <input
@@ -91,7 +91,7 @@ export default function EditModal({
               onChange={(e) =>
                 setEditQuestion({ ...editQuestion, marks: e.target.value })
               }
-              className="w-full p-2 border border-black/10 dark:border-white/20 rounded-md mb-2"
+              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
               placeholder="Marks"
             />
           </>

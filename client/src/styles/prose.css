@@ -13,25 +13,25 @@ and List Styling .prose {
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
 }
 
 .prose th,
 .prose td {
-  @apply border border-gray-300 dark:border-gray-700 p-2;
+  @apply border border-gray-300 dark:border-gray-800 p-2;
   text-align: left;
 }
 
 .prose th {
-  @apply bg-white dark:bg-black text-gray-800 dark:text-gray-200 font-semibold;
+  @apply bg-white dark:bg-[#595c62] text-gray-800 dark:text-gray-200 font-semibold;
 }
 
 .prose td {
-  @apply bg-white dark:bg-black text-gray-700 dark:text-gray-200;
+  @apply bg-white dark:bg-[#3f4145] text-gray-700 dark:text-gray-200;
 }
 
 .prose tr:nth-child(even) {
-  @apply bg-[#f9fafb] dark:bg-[#0f0f0f];
+  @apply bg-[#f9fafb] dark:bg-[#4e5155];
 }
 
 .prose tr:hover {
@@ -80,14 +80,49 @@ and List Styling .prose {
   margin-bottom: 0;
 }
 
+/* Your existing styles */
 .prose pre {
-  background-color: #1c1c1c;
-  color: #ffffff;
-  padding: 18px;
+  background-color: #202020;
+  color: #acb2be;
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.15);
   overflow-x: auto;
-  margin: 1rem 0;
+  margin: 2rem 0 1rem;
+  position: relative; /* Add this */
+}
+
+.prose pre::before {
+  content: "Code";
+  display: block;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  font-weight: bold;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  margin-bottom: 5px;
+  position: sticky; /* Make the header stick when scrolling */
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+/* Add padding to the code content */
+.prose pre code {
+  padding: 1rem;
+  display: block;
+  min-width: 100%; /* Ensure code takes up at least full width */
+}
+
+/* For the actual code content if not using code tags */
+.prose pre > div,
+.prose pre > span {
+  padding: 1rem;
+  display: inline-block; /* This helps with horizontal content */
+  min-width: 100%; /* Ensure content takes up at least full width */
 }
 
 /* Responsive Adjustments */

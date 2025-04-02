@@ -50,7 +50,7 @@ export default function Buttons({
                 question.id
               )
             }
-            className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
           >
             <FaSave className="" size={16} />
             {saving ? "Saving" : "Save"}
@@ -67,7 +67,7 @@ export default function Buttons({
         <div className="flex gap-2">
           <button
             onClick={() => generateAnswer(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
           >
             <RiAiGenerate2 size={16} />
             {generatingAnswer ? "Generating..." : "Generate With AI"}
@@ -75,7 +75,7 @@ export default function Buttons({
           {!isAuthor && (
             <button
               onClick={() => handleAnswerAdd(question.id)}
-              className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
             >
               <FaPlus size={16} />
               Add
@@ -85,7 +85,7 @@ export default function Buttons({
           {(isAuthor || isAdmin) && (
             <button
               onClick={() => handleAnswerEdit(question.id)}
-              className="flex gap-2 items-center cursor-pointer bg-gray-300 dark:bg-gray-800 px-2 py-1.5 rounded-md text-sm"
+              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
             >
               <FaEdit size={16} />
               Edit

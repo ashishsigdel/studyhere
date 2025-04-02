@@ -77,7 +77,7 @@ export default function Questions() {
 
       {loading && questions.length === 0 && (
         <div className="p-2">
-          <Spinner color="#222" />
+          <Spinner />
         </div>
       )}
       <QuestionFields

@@ -87,7 +87,7 @@ export default function RootLayout({
           }}
         />
       </Head>
-      <body className="bg-gray-100 dark:bg-[#0c0d10] text-slate-950 dark:text-gray-300">
+      <body className="bg-white dark:bg-[#323232] text-black dark:text-[#ffffff]">
         <CustomThemeProvider>
           <Header />
           {children}

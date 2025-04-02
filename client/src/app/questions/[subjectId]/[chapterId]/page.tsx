@@ -14,7 +14,7 @@ export default function page() {
     <RequireAuth>
       <div className="flex flex-col md:flex-row">
         <Sidebar />
-        <div className="container px-5 mx-auto max-w-7xl">
+        <div className="container px-5 mx-auto max-w-6xl">
           <Questions />
         </div>
         <Sidebar />
