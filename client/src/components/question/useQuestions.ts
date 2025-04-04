@@ -117,16 +117,6 @@ export default function useQuestions() {
     }
   };
 
-  // Debounce search input (Wait 500ms before updating)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  // Fetch Questions API with offline caching
   const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
     const cacheKey = `questions_${id}_${searchQuery}`;
     setLoading(true);
@@ -195,7 +185,7 @@ export default function useQuestions() {
     }
   };
 
-  // Fetch when component mounts or debounced search changes
+  // Fetch when component mounts
   useEffect(() => {
     setPage(1);
     fetchQuestions(1, debouncedSearch);
@@ -246,13 +236,7 @@ export default function useQuestions() {
         marks: "",
       });
 
-      // Update cache
-      const cacheKey = `questions_${id}_${debouncedSearch}`;
-      const cachedData = localStorage.getItem(cacheKey);
-      if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        parsedData.questions.push(response.data.data);
-      }
+      fetchQuestions(1, debouncedSearch);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -261,6 +245,10 @@ export default function useQuestions() {
   };
 
   const handleDoubleClick = (question: any) => {
+    navigator.clipboard.writeText(question.question);
+    toast.success("Question copied to clipboard");
+  };
+  const handleOpenModel = (question: any) => {
     setModelFormChoose("question");
     setEditQuestion(question);
     setShowModal(true);
@@ -286,15 +274,7 @@ export default function useQuestions() {
       toast.success("Question updated successfully");
       setShowModal(false);
 
-      // Update cache
-      const cacheKey = `questions_${id}_${debouncedSearch}`;
-      const cachedData = localStorage.getItem(cacheKey);
-      if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        parsedData.questions = parsedData.questions.map((q: any) =>
-          q.id === editQuestion.id ? editQuestion : q
-        );
-      }
+      fetchQuestions(1, debouncedSearch);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -320,6 +300,7 @@ export default function useQuestions() {
     questions,
     fetchMoreQuestions,
     handleDoubleClick,
+    handleOpenModel,
     openedAnswer,
     page,
     showModal,
@@ -345,5 +326,6 @@ export default function useQuestions() {
     fetchAnswer,
     handleSearchChange,
     filteredQuestions,
+    fetchQuestions,
   };
 }

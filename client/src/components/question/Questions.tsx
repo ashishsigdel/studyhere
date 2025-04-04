@@ -8,7 +8,6 @@ import QuestionFields from "./QuestionFields";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";
 import useQuestions from "./useQuestions";
-import { refreshAccessToken } from "@/services/apiServices";
 
 export default function Questions() {
   const {
@@ -21,7 +20,7 @@ export default function Questions() {
     questions,
     fetchMoreQuestions,
     handleDoubleClick,
-    openedAnswer,
+    handleOpenModel,
     page,
     showModal,
     toggleAnswer,
@@ -46,6 +45,7 @@ export default function Questions() {
     fetchAnswer,
     handleSearchChange,
     filteredQuestions,
+    fetchQuestions,
   } = useQuestions();
 
   useEffect(() => {
@@ -55,14 +55,6 @@ export default function Questions() {
       document.title = "Questions";
     }
   }, [chapter]);
-
-  useEffect(() => {
-    try {
-      refreshAccessToken();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   return (
     <>
@@ -79,13 +71,14 @@ export default function Questions() {
       </div>
 
       {loading && questions.length === 0 && (
-        <div className="p-2">
+        <div className="p-2 scale-150 flex justify-center items-center mt-20">
           <Spinner />
         </div>
       )}
       <QuestionFields
         fetchMoreQuestions={fetchMoreQuestions}
         handleDoubleClick={handleDoubleClick}
+        handleOpenModel={handleOpenModel}
         loading={loading}
         openedAnswerIds={openedAnswerIds}
         page={page}
@@ -108,6 +101,7 @@ export default function Questions() {
           setShowModal={setShowModal}
           handleSaveEdit={handleSaveEdit}
           loadingEdit={loadingEdit}
+          fetchQuestions={fetchQuestions}
         />
       )}
       {showForm && (

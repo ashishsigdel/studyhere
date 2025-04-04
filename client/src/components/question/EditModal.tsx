@@ -13,24 +13,24 @@ type Props = {
   setShowModal: any;
   handleSaveEdit: any;
   loadingEdit: boolean;
+  fetchQuestions: Function;
 };
 
 export default function EditModal({
-  switchForm,
   modelFormChoose,
   editQuestion,
   setEditQuestion,
   setShowModal,
   handleSaveEdit,
   loadingEdit,
+  fetchQuestions,
 }: Props) {
-  console.log(editQuestion);
-
   const handleDelete = async (id: number) => {
     try {
-      const response = await myAxios.delete(`/question/delete/${id}`);
+      await myAxios.delete(`/question/delete/${id}`);
       setShowModal(false);
-      toast.success("Question deleted. Changes will seen shortly.");
+      toast.success("Question deleted.");
+      fetchQuestions(1, "");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }

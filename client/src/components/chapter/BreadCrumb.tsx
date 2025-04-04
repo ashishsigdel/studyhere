@@ -23,8 +23,7 @@ export default function Breadcrumb({ subject, showForm, setShowForm }: Props) {
         <li className="flex items-center min-w-0">
           <Link
             href="/"
-            className="px-2.5 py-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600  text-gray-700 dark:text-gray-200
-            truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px] block"
+            className="px-2.5 py-2 rounded-lg bg-gray-200 dark:bg-[#3f4145] text-black dark:text-white border border-black/10 dark:border-white/10 shadow-md shadow-black/10 dark:shadow-white.10            truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px] block"
             title={subject || "Home"}
           >
             {subject || "Home"}

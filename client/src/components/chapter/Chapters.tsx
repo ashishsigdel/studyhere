@@ -126,8 +126,8 @@ export default function Chapters() {
   };
 
   return (
-    <>
-      <div className="flex justify-between w-full border-b border-gray-300 dark:border-gray-600">
+    <div className="flex flex-col">
+      <div className="flex flex-col justify-between w-full border-b border-gray-300 dark:border-gray-600">
         <Breadcrumb
           subject={subject}
           showForm={showForm}
@@ -136,7 +136,7 @@ export default function Chapters() {
       </div>
       <ChapterAds />
       <div className="flex flex-col mt-5">
-        {loading && <Spinner color="#222" />}
+        {loading && <Spinner />}
         {!navigator.onLine && chapters.length === 0 && <>You are offline. </>}
         {!loading && chapters.length === 0 && <>No chapters</>}
         {chapters.length > 0 &&
@@ -166,6 +166,6 @@ export default function Chapters() {
           setChapter={setChapter}
         />
       )}
-    </>
+    </div>
   );
 }

@@ -34,7 +34,6 @@ const refreshAccessToken = async () => {
     const searchParams = window.location.search;
     const currentUrl = encodeURIComponent(pathname + searchParams);
 
-    // Redirect to login
     window.location.href = `/login?redirect=${currentUrl}`;
   }
 };

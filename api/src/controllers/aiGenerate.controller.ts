@@ -57,7 +57,7 @@ export const getAnswerFromAi = asyncHandler(
 
     let htmlContent = "";
 
-    const prompt = `Generate a well-structured, easy-to-understand, human like, and concise answer in HTML (only body content, excluding <body>) for the following academic question from the ${subjectname} subject, specifically from the ${
+    const prompt = `Generate a well-structured, easy-to-understand, human like very simple, not long, and concise answer in HTML (only body content, excluding <body>) for the following academic question from the ${subjectname} subject, specifically from the ${
       existQuestion?.chapter.name
     } chapter.  
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "@/utils/Spinner";
-import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import QuestionCard from "./QuestionCard";
@@ -19,6 +18,7 @@ type Props = {
   totalPages: number;
   loading: boolean;
   handleDoubleClick: Function;
+  handleOpenModel: Function;
   toggleAnswer: Function;
   openedAnswerIds: number[];
   loadingAnswer: boolean;
@@ -35,6 +35,7 @@ export default function QuestionFields({
   totalPages,
   loading,
   handleDoubleClick,
+  handleOpenModel,
   toggleAnswer,
   openedAnswerIds,
   loadingAnswer,
@@ -151,7 +152,7 @@ export default function QuestionFields({
       dataLength={questions.length}
       next={fetchMoreQuestions}
       hasMore={page < totalPages}
-      loader={<Spinner color="#222" />}
+      loader={<Spinner />}
     >
       {questions.length === 0 && !loading && (
         <p className="my-10">No questions available.</p>
@@ -162,6 +163,7 @@ export default function QuestionFields({
           key={question.id}
           question={question}
           handleDoubleClick={handleDoubleClick}
+          handleOpenModel={handleOpenModel}
           index={index}
           toggleAnswer={toggleAnswer}
           openedAnswerIds={openedAnswerIds}

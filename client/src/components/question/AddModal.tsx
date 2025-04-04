@@ -13,7 +13,6 @@ type Props = {
 };
 
 export default function AddModal({
-  switchForm,
   modelFormChoose,
   newQuestion,
   setNewQuestion,
@@ -22,7 +21,7 @@ export default function AddModal({
   loadingAdd,
 }: Props) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 ">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 overflow-y-scroll z-[999]">
       <div className="bg-white dark:bg-[#323232] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-gray-300 dark:border-gray-600">
         <div className="flex gap-2 items-center mb-4">
           <h2 className="text-xl">Add Question</h2>

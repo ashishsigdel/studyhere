@@ -16,6 +16,7 @@ type Props = {
   };
   index: number;
   handleDoubleClick: Function;
+  handleOpenModel: Function;
   toggleAnswer: Function;
   openedAnswerIds: number[];
   openEditors: { [key: number]: boolean };
@@ -36,6 +37,7 @@ type Props = {
 export default function QuestionCard({
   question,
   handleDoubleClick,
+  handleOpenModel,
   index,
   toggleAnswer,
   openedAnswerIds,
@@ -60,12 +62,14 @@ export default function QuestionCard({
   return (
     <div
       key={question.id}
-      // onDoubleClick={() => handleDoubleClick(question)}
       className="flex flex-col gap-1 mt-2 border-b border-gray-200 dark:border-gray-700 p-3 group"
     >
-      <div className="flex items-start gap-2 group">
-        <span className="font-medium text-gray-600 dark:text-gray-300">
-          {index + 1}.
+      <div className="flex items-start gap-2">
+        <span
+          onDoubleClick={() => handleDoubleClick(question)}
+          className="font-medium text-gray-600 dark:text-gray-300"
+        >
+          {index + 1}
         </span>
         <div
           className="w-full cursor-pointer"
@@ -75,9 +79,9 @@ export default function QuestionCard({
             <div dangerouslySetInnerHTML={{ __html: question.question }} />
           </div>
         </div>
-        <div className="relative inline-block lg:hidden group-hover:inline-block">
+        <div className="relative inline-block">
           <div
-            onClick={() => handleDoubleClick(question)}
+            onClick={() => handleOpenModel(question)}
             className="p-1 hover:bg-gray-300 hover:dark:bg-gray-700 rounded-full cursor-pointer "
           >
             <HiDotsVertical />
@@ -93,7 +97,7 @@ export default function QuestionCard({
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           openedAnswerIds.includes(question.id)
-            ? "max-h-fit opacity-100 overflow-y-scroll"
+            ? "max-h-fit opacity-100 overflow-y-auto"
             : "max-h-0 opacity-0 pb-0"
         }`}
       >
