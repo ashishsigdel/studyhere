@@ -33,7 +33,8 @@ const refreshAccessToken = async () => {
     const pathname = window.location.pathname;
     const searchParams = window.location.search;
     const currentUrl = encodeURIComponent(pathname + searchParams);
-
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
     window.location.href = `/login?redirect=${currentUrl}`;
   }
 };

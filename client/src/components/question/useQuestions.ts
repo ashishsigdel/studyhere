@@ -1,7 +1,7 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
@@ -11,6 +11,9 @@ const DB_STORE_NAME = "questions";
 export default function useQuestions() {
   const params = useParams<{ chapterId: string }>();
   const id = params.chapterId;
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("search");
 
   const [questions, setQuestions] = useState<
     {
@@ -37,7 +40,6 @@ export default function useQuestions() {
   const [subject, setSubject] = useState("");
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -59,17 +61,18 @@ export default function useQuestions() {
     marks: "",
   });
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value.toLowerCase();
-    setSearch(query);
+  useEffect(() => {
+    handleSearchChange(search || "");
+  }, [search]);
 
-    if (query.trim() === "") {
+  const handleSearchChange = (search: string) => {
+    if (search.trim() === "") {
       setFilteredQuestions(questions);
     } else {
       const filtered = questions.filter(
         (q) =>
-          q.question.toLowerCase().includes(query) ||
-          q.year?.toString().includes(query)
+          q.question.toLowerCase().includes(search) ||
+          q.year?.toString().includes(search)
       );
       setFilteredQuestions(filtered);
     }
@@ -296,7 +299,6 @@ export default function useQuestions() {
     search,
     loading,
     setShowForm,
-    setSearch,
     questions,
     fetchMoreQuestions,
     handleDoubleClick,

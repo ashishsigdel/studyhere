@@ -185,7 +185,7 @@ const BugReportForm = ({}) => {
               value={formData.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-md mb-2"
+              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
               placeholder="Brief description of the issue"
             />
             {errors.title && (
@@ -210,7 +210,7 @@ const BugReportForm = ({}) => {
               onChange={handleChange}
               onBlur={handleBlur}
               rows={4}
-              className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-md mb-2"
+              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
               placeholder="Detailed description of the bug"
             />
             {errors.description && (

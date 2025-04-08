@@ -69,7 +69,7 @@ export default function QuestionCard({
           onDoubleClick={() => handleDoubleClick(question)}
           className="font-medium text-gray-600 dark:text-gray-300"
         >
-          {index + 1}
+          {index + 1}.
         </span>
         <div
           className="w-full cursor-pointer"

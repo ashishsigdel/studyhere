@@ -8,6 +8,7 @@ import { NetworkStatus } from "@/components/utils";
 import { Cookies } from "@/components/floatmessages";
 import { Footer } from "@/components/footer";
 import Head from "next/head";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "StudyHere - Best Learning Platform",
@@ -87,8 +88,9 @@ export default function RootLayout({
           }}
         />
       </Head>
-      <body className="bg-white dark:bg-[#323232] text-black dark:text-[#ffffff]">
+      <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
         <CustomThemeProvider>
+          <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
           <Header />
           {children}
           <Toaster position="bottom-center" reverseOrder={true} />

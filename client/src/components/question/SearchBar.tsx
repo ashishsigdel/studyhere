@@ -1,54 +1,38 @@
-import { ChangeEvent } from "react";
-import { FaPlus } from "react-icons/fa";
-import Spinner from "@/utils/Spinner";
+"use client";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-interface SearchBarProps {
-  search: string;
-  loading: boolean;
-  showForm: boolean;
-  setShowForm: (show: boolean) => void;
-  setSearch: (search: string) => void;
-  handleSearchChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
+const SearchBar: React.FC = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialSearch = searchParams.get("search") || "";
+  const [search, setSearch] = useState(initialSearch);
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  search,
-  loading,
-  setShowForm,
-  showForm,
-  handleSearchChange,
-}) => {
-  const toggleForm = () => {
-    setShowForm(!showForm);
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setSearch(newValue);
+    const params = new URLSearchParams(window.location.search);
+    if (newValue) {
+      params.set("search", newValue);
+    } else {
+      params.delete("search");
+    }
+    router.push(`?${params.toString()}`);
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-4">
-      <div className="flex items-center w-full gap-3 px-2.5 py-1.5 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c]">
-        <input
-          type="text"
-          className="w-full bg-transparent focus:outline-none placeholder-[#9b9b9b] text-gray-800 dark:text-gray-200"
-          placeholder="Search Question or Year..."
-          value={search}
-          onChange={handleSearchChange}
-        />
-        {loading && (
-          <div className="flex-shrink-0">
-            <Spinner />
-          </div>
-        )}
-      </div>
-
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          className="p-1.5 cursor-pointer border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c]"
-          onClick={toggleForm}
-          aria-label="Add new item"
-        >
-          <FaPlus size={20} />
-        </button>
-      </div>
+    <div className="flex items-center w-full gap-3 px-2.5 py-1.5 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c]">
+      <input
+        type="text"
+        className="w-full bg-transparent focus:outline-none placeholder-[#9b9b9b] text-gray-800 dark:text-gray-200"
+        placeholder="Search..."
+        value={search}
+        onChange={handleChange}
+      />
     </div>
   );
 };

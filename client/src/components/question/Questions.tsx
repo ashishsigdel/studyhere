@@ -8,15 +8,14 @@ import QuestionFields from "./QuestionFields";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";
 import useQuestions from "./useQuestions";
+import { FaPlus } from "react-icons/fa";
 
 export default function Questions() {
   const {
     chapter,
     subject,
-    search,
     loading,
     setShowForm,
-    setSearch,
     questions,
     fetchMoreQuestions,
     handleDoubleClick,
@@ -43,7 +42,6 @@ export default function Questions() {
     generateAnswer,
     generatingAnswer,
     fetchAnswer,
-    handleSearchChange,
     filteredQuestions,
     fetchQuestions,
   } = useQuestions();
@@ -56,18 +54,22 @@ export default function Questions() {
     }
   }, [chapter]);
 
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+
   return (
     <>
-      <div className="flex flex-col justify-between w-full border-b border-gray-300 dark:border-gray-600">
+      <div className="flex justify-between w-full border-b border-gray-300 dark:border-gray-600 py-4">
         <BreadCrumb subject={subject} chapter={chapter} />
-        <SearchBar
-          search={search}
-          loading={loading}
-          setShowForm={setShowForm}
-          showForm={showForm}
-          setSearch={setSearch}
-          handleSearchChange={handleSearchChange}
-        />
+        <button
+          type="button"
+          className="w-9 h-9 aspect-square flex items-center justify-center cursor-pointer border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c]"
+          onClick={toggleForm}
+          aria-label="Add new item"
+        >
+          <FaPlus size={18} />
+        </button>
       </div>
 
       {loading && questions.length === 0 && (

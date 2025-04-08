@@ -8,8 +8,8 @@ interface Props {
 
 export default function AddPdf({ handleFileChange, onClose }: Props) {
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center px-4 transition-opacity duration-300">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl w-full max-w-lg border border-gray-300 dark:border-gray-700 relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 overflow-y-scroll z-[999]">
+      <div className="bg-white dark:bg-[#323232] p-6 rounded-lg shadow-lg w-full max-w-xl mx-auto border border-gray-300 dark:border-gray-600">
         {/* Close Button */}
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"

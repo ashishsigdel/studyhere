@@ -13,10 +13,12 @@ import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import CardAds from "../ads/CardAds";
 import ChapterAds from "../ads/ChapterAds";
+import { useRouter } from "next/navigation";
 
 const STORE_NAME = "subjects";
 
 export default function Subjects() {
+  const router = useRouter();
   const [subjects, setSubjects] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [subject, setSubject] = useState("");
@@ -68,7 +70,7 @@ export default function Subjects() {
     );
     setRecentChapters(storedChapters);
     setFavSubjects(favoriteSubjects);
-  }, []);
+  }, [router]);
 
   const handleSaveSubject = async () => {
     const checkAuth = CheckAuth();
@@ -120,26 +122,35 @@ export default function Subjects() {
     );
   };
 
-  const renderSubject = (subject: { id: number; name: string }) => (
-    <div
-      key={subject.id}
-      className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
-    >
-      <Link href={`/questions/${subject.id}`}>
-        <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
-          {subject.name}
-        </h3>
-      </Link>
+  const renderSubject = (subject: { id: number; name: string }) => {
+    const isFullStar = favSubjects.some((sub) => sub.id === subject.id);
 
-      <Image src={bookcover} alt={subject.name} className="pb-[0.8]" priority />
-      <button
-        className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
-        onClick={() => handleToggleFavorite(subject.id, subject.name)}
+    return (
+      <div
+        key={subject.id}
+        className="relative border border-black/10 dark:border-white/30 shadow-lg rounded-lg overflow-hidden group"
       >
-        <FaStar size={24} />
-      </button>
-    </div>
-  );
+        <Link href={`/questions/${subject.id}`}>
+          <h3 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold px-4 py-1 rounded-md group-hover:scale-105 transition duration-300">
+            {subject.name}
+          </h3>
+        </Link>
+
+        <Image
+          src={bookcover}
+          alt={subject.name}
+          className="pb-[0.8]"
+          priority
+        />
+        <button
+          className="absolute bottom-4 right-4 text-yellow-400 md:hidden group-hover:inline-block"
+          onClick={() => handleToggleFavorite(subject.id, subject.name)}
+        >
+          {isFullStar ? <FaStar size={24} /> : <FaRegStar size={24} />}
+        </button>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -189,7 +200,7 @@ export default function Subjects() {
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-5">
           Featured Subjects 📚
         </h2>
-        {loading && <Spinner color="#222" />}
+        {loading && <Spinner />}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {!loading && subjects.length === 0 && <>No subjects available</>}
           {subjects.map((subject, index) =>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   GoogleAuthProvider,
   GithubAuthProvider,
@@ -51,6 +51,14 @@ export default function OAuth() {
       toast.error(error?.response?.data.message || "Something went wrong!");
     }
   };
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    const accessToken = localStorage.getItem("accessToken");
+    if (user && accessToken) {
+      router.push(redirectUrl);
+    }
+  }, [router]);
 
   return (
     <div className="w-full h-[calc(100dvh-64px)] flex flex-col items-center justify-center gap-4">
