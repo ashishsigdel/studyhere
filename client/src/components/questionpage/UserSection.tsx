@@ -5,6 +5,7 @@ import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import moment from "moment";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   answer: any;
@@ -46,8 +47,14 @@ export default function UserSection({
           className="w-8 h-8 rounded-full bg-gray-200"
         />
         <div className="flex flex-col">
-          <span className="font-bold mr-1 text-xs truncate">
-            {answer?.user?.fullName || "Anonymous User"}
+          <span className="font-bold text-xs flex items-center gap-2 truncate">
+            {answer?.user?.fullName}
+
+            {answer?.user?.role === "admin" && (
+              <div className="relative group">
+                <MdVerified className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
+              </div>
+            )}
           </span>
           <span className="text-gray-500 text-xs">
             {moment(answer.createdAt).fromNow()}
