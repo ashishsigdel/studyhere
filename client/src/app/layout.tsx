@@ -87,11 +87,11 @@ export default function RootLayout({
             }),
           }}
         />
-        <script
+        {/* <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
           crossOrigin="anonymous"
-        ></script>
+        ></script> */}
       </Head>
       <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
         <CustomThemeProvider>
