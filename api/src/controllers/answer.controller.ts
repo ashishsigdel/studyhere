@@ -190,7 +190,7 @@ export const getAnswersByQuestionId = asyncHandler(
       include: [
         {
           model: User,
-          attributes: ["id", "fullName", "profilePic"],
+          attributes: ["id", "fullName", "profilePic", "role"],
         },
       ],
     });
@@ -262,7 +262,7 @@ export const getYourAnswersByQuestionId = asyncHandler(
       attributes: ["id", "answer", "createdAt"],
       include: {
         model: User,
-        attributes: ["id", "fullName", "profilePic"],
+        attributes: ["id", "fullName", "profilePic", "role"],
       },
     });
 
@@ -272,7 +272,7 @@ export const getYourAnswersByQuestionId = asyncHandler(
         attributes: ["id", "answer", "createdAt"],
         include: {
           model: User,
-          attributes: ["id", "fullName", "profilePic"],
+          attributes: ["id", "fullName", "profilePic", "role"],
         },
         order: [
           [

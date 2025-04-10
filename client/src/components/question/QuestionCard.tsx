@@ -5,6 +5,7 @@ import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import { JoditForm } from "../utils";
 import moment from "moment";
 import Buttons from "./Buttons";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   question: {
@@ -160,8 +161,15 @@ export default function QuestionCard({
                       className="w-8 h-8 rounded-full bg-gray-200"
                     />
                     <div className="flex flex-col">
-                      <span className="font-bold mr-1 text-xs truncate">
+                      <span className="font-bold text-xs flex items-center gap-2 truncate">
                         {answers[question.id]?.answer?.user?.fullName}
+
+                        {answers[question.id]?.answer?.user?.role ===
+                          "admin" && (
+                          <div className="relative group">
+                            <MdVerified className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
+                          </div>
+                        )}
                       </span>
                       <span className="text-gray-600 dark:text-gray-200 text-xs">
                         {moment(
@@ -170,7 +178,6 @@ export default function QuestionCard({
                       </span>
                     </div>
                   </div>
-
                   <Link
                     href={`/question/${question.id}`}
                     className="mx-3 px-3 py-2 text-sm bg-black dark:bg-white text-white dark:text-black rounded-md w-fit cursor-pointer"
