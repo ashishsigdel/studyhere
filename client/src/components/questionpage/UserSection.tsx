@@ -6,6 +6,7 @@ import moment from "moment";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { MdVerified } from "react-icons/md";
+import { RiSparklingFill } from "react-icons/ri";
 
 type Props = {
   answer: any;
@@ -50,11 +51,15 @@ export default function UserSection({
           <span className="font-bold text-xs flex items-center gap-2 truncate">
             {answer?.user?.fullName}
 
-            {answer?.user?.role === "admin" && (
+            {answer?.user?.role === "admin" ? (
               <div className="relative group">
                 <MdVerified className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
               </div>
-            )}
+            ) : answer?.user?.role === "ai" ? (
+              <div className="relative group">
+                <RiSparklingFill className="w-3.5 h-3.5 text-yellow-500 cursor-pointer" />
+              </div>
+            ) : null}
           </span>
           <span className="text-gray-500 text-xs">
             {moment(answer.createdAt).fromNow()}

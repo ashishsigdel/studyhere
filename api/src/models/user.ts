@@ -3,6 +3,7 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 enum UserRole {
   ADMIN = "admin",
   USER = "user",
+  AI = "ai",
 }
 
 @Table({

@@ -6,6 +6,7 @@ import { JoditForm } from "../utils";
 import moment from "moment";
 import Buttons from "./Buttons";
 import { MdVerified } from "react-icons/md";
+import { RiAiGenerate2, RiSparklingFill } from "react-icons/ri";
 
 type Props = {
   question: {
@@ -165,11 +166,16 @@ export default function QuestionCard({
                         {answers[question.id]?.answer?.user?.fullName}
 
                         {answers[question.id]?.answer?.user?.role ===
-                          "admin" && (
+                        "admin" ? (
                           <div className="relative group">
                             <MdVerified className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
                           </div>
-                        )}
+                        ) : answers[question.id]?.answer?.user?.role ===
+                          "ai" ? (
+                          <div className="relative group">
+                            <RiSparklingFill className="w-3.5 h-3.5 text-yellow-500 cursor-pointer" />
+                          </div>
+                        ) : null}
                       </span>
                       <span className="text-gray-600 dark:text-gray-200 text-xs">
                         {moment(

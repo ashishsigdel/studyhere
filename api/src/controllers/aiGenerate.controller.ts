@@ -102,6 +102,7 @@ export const getAnswerFromAi = asyncHandler(
           id: 22,
           fullName: "StudyHere AI",
           profilePic: "https://studyhere.asigdel.com.np/icon192.png",
+          role: "ai",
         },
       },
       otherAnswersCount: totalAnswers,
