@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <div className="h-16 bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-300 dark:border-gray-600 sticky top-0 z-50">
-      <div className="h-full max-w-6xl mx-auto px-5 flex items-center">
+      <div className="h-full max-w-[1400px] mx-auto px-5 flex items-center">
         <div className="w-full flex items-center justify-between">
           <Link href={"/"}>
             <div className="flex items-center gap-3">
@@ -25,18 +25,15 @@ export default function Header() {
                 className="rounded-full"
               />
               <h3
-                className={`text-[26px] font-semibold customfont-typoround ${
-                  id ? "hidden sm:inline-block" : ""
-                }`}
+                className={`text-[26px] font-semibold customfont-typoround hidden sm:inline-block`}
               >
-                <span className="text-[#4caf50]">Study</span>
+                <span className="text-[#4caf50]">Learn</span>
                 Here
               </h3>
             </div>
           </Link>
           <div className="flex items-center justify-end gap-2 sm:gap-3 w-full max-w-[400px] ">
             {id && <SearchBar />}
-            <Pdf />
             <Theme />
             <Profile />
           </div>
