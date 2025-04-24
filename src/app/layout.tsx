@@ -9,18 +9,19 @@ import { Cookies } from "@/components/floatmessages";
 import { Footer } from "@/components/footer";
 import Head from "next/head";
 import NextTopLoader from "nextjs-toploader";
+import { StoreProvider } from "@/providers";
 
 export const metadata: Metadata = {
-  title: "StudyHere - Best Learning Platform",
+  title: "LearnHere - Best Learning Platform",
   description:
-    "Join StudyHere to access expert study materials, Q&A discussions, and learning resources.",
+    "Join LearnHere to access expert learn materials, Q&A discussions, and learning resources.",
   keywords: [
-    "StudyHere",
+    "LearnHere",
     "online learning",
     "education",
-    "study resources",
+    "learn resources",
     "student help",
-    "study",
+    "learn",
     "here",
     "ioeexam",
     "ioe",
@@ -29,30 +30,30 @@ export const metadata: Metadata = {
     "best learing",
     "learning",
   ],
-  authors: [{ name: "StudyHere", url: "https://studyhere.asigdel.com.np" }],
+  authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
   manifest: "/manifest.json",
   openGraph: {
-    title: "StudyHere - Best Learning Platform",
+    title: "LearnHere - Best Learning Platform",
     description:
-      "Explore high-quality study guides, Q&A, and expert resources.",
-    url: "https://studyhere.asigdel.com.np",
-    siteName: "StudyHere",
+      "Explore high-quality learn guides, Q&A, and expert resources.",
+    url: "https://learnhere.asigdel.com.np",
+    siteName: "LearnHere",
     images: [
       {
-        url: "https://studyhere.asigdel.com.np/og-image.png",
+        url: "https://learnhere.asigdel.com.np/og-image.png",
         width: 1200,
         height: 630,
-        alt: "StudyHere - Best Learning Platform",
+        alt: "LearnHere - Best Learning Platform",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    site: "@studyhere", // Replace with your Twitter handle
-    title: "StudyHere - Best Learning Platform",
+    site: "@learnhere", // Replace with your Twitter handle
+    title: "LearnHere - Best Learning Platform",
     description: "Discover expert learning resources and Q&A discussions.",
-    images: ["https://studyhere.asigdel.com.np/og-image.png"],
+    images: ["https://learnhere.asigdel.com.np/og-image.png"],
   },
 };
 
@@ -71,39 +72,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "EducationalOrganization",
-              name: "StudyHere",
-              url: "https://studyhere.asigdel.com.np",
-              logo: "https://studyhere.asigdel.com.np/icon192.png",
-              description:
-                "Find the best study resources, Q&A, and expert guidance on StudyHere.",
-            }),
-          }}
-        />
-        {/* <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
-          crossOrigin="anonymous"
-        ></script> */}
-      </Head>
-      <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
-        <CustomThemeProvider>
-          <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
-          <Header />
-          {children}
-          <Toaster position="bottom-center" reverseOrder={true} />
-          <NetworkStatus />
-          <Cookies />
-          <Footer />
-        </CustomThemeProvider>
-      </body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "EducationalOrganization",
+                name: "LearnHere",
+                url: "https://learnhere.asigdel.com.np",
+                logo: "https://learnhere.asigdel.com.np/icon192.png",
+                description:
+                  "Find the best learn resources, Q&A, and expert guidance on LearnHere.",
+              }),
+            }}
+          />
+        </Head>
+        <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
+          <CustomThemeProvider>
+            <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
+            <Header />
+            {children}
+            <Toaster position="bottom-center" reverseOrder={true} />
+            <NetworkStatus />
+            <Cookies />
+            <Footer />
+          </CustomThemeProvider>
+        </body>
+      </html>
+    </StoreProvider>
   );
 }

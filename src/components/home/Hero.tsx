@@ -4,9 +4,13 @@ import Image from "next/image";
 import heroImageLight from "@/assets/pictures/hero-light.png";
 import heroImageDark from "@/assets/pictures/hero-dark.png";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
   const [greeting, setGreeting] = useState("");
+  const user = useSelector((state: any) => state.auth.user);
+  const router = useRouter();
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -15,9 +19,20 @@ export default function Hero() {
     else setGreeting("Good Evening! 🌙");
   }, []);
 
+  if (user) {
+    return null;
+  }
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="min-h-[calc(100vh-64px)] w-full relative overflow-hidden flex items-center">
-      <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row items-center justify-between gap-12">
+    <section className=" w-full relative overflow-hidden flex items-center">
+      <div className=" mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-12">
         {/* Left Content */}
         <div className="w-full md:w-1/2 z-10 text-center md:text-left">
           <h1 className="text-5xl sm:text-6xl md:text-6xl font-bold leading-tight text-gray-900 dark:text-white mb-6">
@@ -35,11 +50,17 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-            <button className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition duration-200">
-              Sign Up
+            <button
+              onClick={() => scrollToSection("featured-subjects")}
+              className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition duration-200"
+            >
+              Start Exploring
             </button>
-            <button className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white px-6 py-3 rounded-lg font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200">
-              Explore More
+            <button
+              onClick={() => router.push("/login")}
+              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white px-6 py-3 rounded-lg font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200"
+            >
+              Sign Up for Free
             </button>
           </div>
         </div>

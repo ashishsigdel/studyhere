@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuth } from "@/redux/features/authSlice";
 
 export default function OAuth() {
   const router = useRouter();
@@ -18,6 +20,8 @@ export default function OAuth() {
   const redirect = searchParams.get("redirect") || "/";
   const redirectUrl = decodeURIComponent(redirect);
   const { theme } = useTheme();
+  const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.auth.user);
 
   const handleOAuthLogin = async (provider: any) => {
     try {
@@ -39,10 +43,8 @@ export default function OAuth() {
         }
       );
 
-      const user = JSON.stringify(response.data.data.user);
-      localStorage.setItem("user", user);
       localStorage.setItem("accessToken", response.data.data.accessToken);
-      window.dispatchEvent(new Event("user-update"));
+      dispatch(setAuth(response.data.data.user));
       toast.success("Logged in successfully!");
       router.push(redirectUrl);
     } catch (error: any) {
@@ -53,7 +55,6 @@ export default function OAuth() {
   };
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
     const accessToken = localStorage.getItem("accessToken");
     if (user && accessToken) {
       router.push(redirectUrl);

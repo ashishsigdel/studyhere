@@ -5,43 +5,17 @@ import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { InstallPWA } from "../installPWA";
+import { useDispatch, useSelector } from "react-redux";
+import { removeAuth } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
-  const [user, setUser] = useState<any>(null);
+  const user = useSelector((state: any) => state.auth.user);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
-
-  const updateUserFromLocalStorage = () => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  };
-
-  useEffect(() => {
-    updateUserFromLocalStorage();
-
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === "user") {
-        updateUserFromLocalStorage();
-      }
-    };
-
-    // Listen for custom event from within the same tab
-    const handleUserUpdate = () => {
-      updateUserFromLocalStorage();
-    };
-
-    // Add event listeners
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("user-update", handleUserUpdate);
-
-    // Cleanup event listeners
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("user-update", handleUserUpdate);
-    };
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -49,9 +23,8 @@ export default function Profile() {
     } catch (error) {
       console.log(error);
     } finally {
-      localStorage.removeItem("user");
-      setUser(null);
-      window.dispatchEvent(new Event("user-update"));
+      localStorage.removeItem("accessToken");
+      dispatch(removeAuth());
       toast.success("Logged Out successfully!");
     }
   };
@@ -101,13 +74,19 @@ export default function Profile() {
             alt="Profile Pic"
             width={40}
             height={40}
-            className="w-[32px] h-[32px] rounded-lg cursor-pointer border border-gray-300 dark:border-gray-600"
+            className="w-[32px] h-[32px] rounded-full cursor-pointer border border-gray-300 dark:border-gray-600"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           />
 
           {/* Dropdown Menu */}
           {dropdownOpen && (
             <div className="absolute right-0 top-12 w-40 bg-[#e8eaec] dark:bg-[#2c2f34] border border-gray-300 dark:border-gray-600 shadow-md rounded-lg overflow-hidden p-1 z-[9999]">
+              <button
+                className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-white dark:border-black"
+                onClick={() => router.push("/profile")}
+              >
+                Profile
+              </button>
               <button
                 className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={toggleFullScreen}
@@ -126,7 +105,7 @@ export default function Profile() {
         </div>
       ) : (
         <div
-          className="py-1.5 px-2.5 rounded-lg cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-sm md:text-base font-semibold"
+          className="cursor-pointer text-sm md:text-base font-semibold"
           onClick={redirectToLogin}
         >
           Log In
