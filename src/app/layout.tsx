@@ -7,9 +7,9 @@ import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
 import { Cookies } from "@/components/floatmessages";
 import { Footer } from "@/components/footer";
-import Head from "next/head";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "LearnHere - Best Learning Platform",
@@ -74,33 +74,22 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-        <Head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "EducationalOrganization",
-                name: "LearnHere",
-                url: "https://learnhere.asigdel.com.np",
-                logo: "https://learnhere.asigdel.com.np/icon192.png",
-                description:
-                  "Find the best learn resources, Q&A, and expert guidance on LearnHere.",
-              }),
-            }}
+        <head>
+          {/* Google AdSense verification meta tag */}
+          <meta
+            name="google-adsense-account"
+            content="ca-pub-9557309412103379"
           />
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
-            crossOrigin="anonymous"
-          ></script>
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
-            crossOrigin="anonymous"
-          ></script>
-        </Head>
+        </head>
         <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
+          {/* Google AdSense script */}
+          <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+
           <CustomThemeProvider>
             <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
             <Header />
