@@ -76,7 +76,7 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
         )}
         {subjects.map((subject, index) => (
           <Link href={`/questions/${subject.id}`} key={index}>
-            <div className="flex items-center w-full h-16 border border-black/10 dark:border-white/10 rounded-lg hover:scale-105 transition-transform duration-200 ease-in-out bg-white dark:bg-gray-800 shadow-sm hover:shadow-md">
+            <div className="flex items-center w-full h-16 border border-black/10 dark:border-white/10 rounded-lg hover:scale-105 transition-transform duration-200 ease-in-out bg-white dark:bg-gray-800/30 shadow-sm hover:shadow-md">
               <Image
                 src={bookThumbnail[`${index % bookThumbnail.length}`]}
                 alt="Book Cover"

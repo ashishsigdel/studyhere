@@ -31,7 +31,7 @@ export default function Hero() {
   };
 
   return (
-    <section className=" w-full relative overflow-hidden flex items-center">
+    <section className="px-4 w-full relative overflow-hidden flex items-center">
       <div className=" mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-12">
         {/* Left Content */}
         <div className="w-full md:w-1/2 z-10 text-center md:text-left">

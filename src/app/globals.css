@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.container {
+  min-height: calc(100vh - 64px);
+}
+
 .customfont-typoround {
   font-family: "Typo Round Regular Demo", sans-serif;
   font-weight: 600;

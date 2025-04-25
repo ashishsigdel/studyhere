@@ -3,9 +3,9 @@ import { Subjects } from "@/components/subject";
 
 export default function Home() {
   return (
-    <div className="px-7">
+    <div className="">
       <Hero />
-      <div className="mx-auto max-w-[1400px]">
+      <div className="px-4 mx-auto max-w-[1400px]">
         <Subjects />
       </div>
     </div>
