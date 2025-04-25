@@ -7,6 +7,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { bookThumbnail } from "@/data/BookThumbnail";
 import TopBar from "./Topbar";
+import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
+
+const STORE_NAME = "subjects";
 
 interface TopBarProps {
   showForm: boolean;
@@ -22,12 +25,28 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
   const user = useSelector((state: any) => state.auth.user);
 
   const fetchSubjects = async () => {
-    setLoading(true);
     try {
-      const response = await myAxios.get(`/subject`);
-      setSubjects(response.data.data);
+      try {
+        const cachedSubjects = await loadDataFromIndexedDB(
+          STORE_NAME,
+          "subjects"
+        );
+        if (cachedSubjects) {
+          setSubjects(cachedSubjects);
+        } else {
+          setLoading(true);
+        }
+      } catch (error) {
+        setLoading(true);
+      }
+
+      if (navigator.onLine) {
+        const response = await myAxios.get("/subject");
+        setSubjects(response.data.data);
+
+        await saveDataToIndexedDB(STORE_NAME, "subjects", response.data.data);
+      }
     } catch (error) {
-      console.error("Error fetching subjects:", error);
     } finally {
       setLoading(false);
     }

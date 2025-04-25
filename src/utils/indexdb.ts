@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-const DB_NAME = "studyhere";
+const DB_NAME = "learnhere_db";
 
 // Initialize IndexedDB
 const initDB = async () => {
@@ -8,6 +8,10 @@ const initDB = async () => {
     upgrade(db) {
       if (!db.objectStoreNames.contains("subjects")) {
         db.createObjectStore("subjects");
+      }
+
+      if (!db.objectStoreNames.contains("recentChapters")) {
+        db.createObjectStore("recentChapters");
       }
 
       if (!db.objectStoreNames.contains("chapters")) {

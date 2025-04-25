@@ -3,16 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
-  min-height: calc(100vh - 63px);
-}
-
 .customfont-typoround {
   font-family: "Typo Round Regular Demo", sans-serif;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
-.katex-html{
+.katex-html {
   @apply hidden;
 }

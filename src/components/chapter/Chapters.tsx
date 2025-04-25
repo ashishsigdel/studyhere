@@ -10,6 +10,7 @@ import Spinner from "@/utils/Spinner";
 import Breadcrumb from "./BreadCrumb";
 import AddModal from "./AddModal";
 import ChapterAds from "../ads/ChapterAds";
+import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
 
 export default function Chapters() {
   const pathname = usePathname();
@@ -101,16 +102,22 @@ export default function Chapters() {
     }
   };
 
-  const handleChapterClick = (
+  const handleChapterClick = async (
     subjectName: string,
     chapterName: string,
     chapterId: number
   ) => {
-    const storageKey = "recentChapters";
+    const STORE_NAME = "recentChapters";
     const chapterUrl = `${pathname}/${chapterId}`;
 
-    let recentChapters = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    let recentChapters = await loadDataFromIndexedDB(
+      STORE_NAME,
+      "recentChapters"
+    );
 
+    if (!recentChapters) {
+      recentChapters = [];
+    }
     recentChapters = recentChapters.filter((ch: any) => ch.url !== chapterUrl);
     recentChapters.unshift({
       name: chapterName,
@@ -122,7 +129,7 @@ export default function Chapters() {
       recentChapters = recentChapters.slice(0, 4);
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(recentChapters));
+    await saveDataToIndexedDB(STORE_NAME, "recentChapters", recentChapters);
   };
 
   return (

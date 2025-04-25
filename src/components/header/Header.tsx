@@ -45,7 +45,7 @@ export default function Header() {
             </div>
           </div>
 
-          <ul className="flex items-center justify-evenly gap-4 md:gap-8">
+          <ul className="flex items-center justify-evenly gap-4 md:gap-6">
             <li>
               <Link href={"/subjects"} className="text-sm hover:text-primary">
                 Subjects
