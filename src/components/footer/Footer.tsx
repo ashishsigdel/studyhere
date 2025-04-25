@@ -7,7 +7,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="px-5 mx-auto max-w-6xl border-t-[1px] border-solid border-black/15 dark:border-white/15 mt-[40px]">
+    <footer className="px-5 mx-auto max-w-[1400px] border-t-[1px] border-solid border-black/15 dark:border-white/15 mt-[40px]">
       <div className="footer-container">
         <div className="footer-top py-[30px] max-[767px]:py-[40px]">
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-7xl">

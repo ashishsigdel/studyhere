@@ -1,8 +1,25 @@
-import React from "react";
+"use client";
 
-export default function ChapterAds() {
-  if (process.env.NEXT_PUBLIC_NODE_ENV === "development") return null;
-  if (process.env.NEXT_PUBLIC_AD_SHOW === "false") return null;
+import { useEffect } from "react";
 
-  return <div className="h-40 bg-black rounded-lg">ChapterAds</div>;
+export default function Sidebar() {
+  useEffect(() => {
+    try {
+      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      (window as any).adsbygoogle.push({});
+    } catch (e) {
+      console.error("AdSense error:", e);
+    }
+  }, []);
+
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: "block" }}
+      data-ad-client="ca-pub-9557309412103379"
+      data-ad-slot="8484275460"
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    />
+  );
 }
