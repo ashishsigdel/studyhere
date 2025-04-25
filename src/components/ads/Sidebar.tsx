@@ -1,8 +1,25 @@
-import React from "react";
+"use client";
+
+import { useEffect } from "react";
 
 export default function Sidebar() {
-  if (process.env.NEXT_PUBLIC_NODE_ENV === "development") return null;
-  if (process.env.NEXT_PUBLIC_AD_SHOW === "false") return null;
+  useEffect(() => {
+    try {
+      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      (window as any).adsbygoogle.push({});
+    } catch (e) {
+      console.error("AdSense error:", e);
+    }
+  }, []);
 
-  return <div className="w-72 bg-black">sidebar</div>;
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: "block" }}
+      data-ad-client="ca-pub-9557309412103379"
+      data-ad-slot="8236029305"
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    />
+  );
 }

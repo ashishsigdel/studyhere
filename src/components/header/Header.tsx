@@ -63,7 +63,7 @@ export default function Header() {
           <div className="flex items-center">
             {/* Mobile Menu Button */}
             <button
-              className="mr-3 text-gray-600 dark:text-gray-300 md:hidden active:scale-90 transition-transform duration-150"
+              className="mr-3 text-gray-600 dark:text-gray-300 min-[900px]:hidden active:scale-90 transition-transform duration-150"
               onClick={toggleMenu}
             >
               {isMenuOpen ? (
@@ -91,7 +91,7 @@ export default function Header() {
             </Link>
 
             {pathname === "/" && (
-              <div className="relative hidden md:flex items-center">
+              <div className="relative hidden min-[900px]:flex items-center">
                 <form onSubmit={handleSearchSubmit} className="relative">
                   <input
                     type="text"
@@ -112,7 +112,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center justify-evenly gap-4 lg:gap-6">
+          <ul className="hidden min-[900px]:flex items-center justify-evenly gap-4 lg:gap-6">
             <li className="hover:-translate-y-1 transition-transform duration-200">
               <Link
                 href={"/subjects"}
@@ -155,10 +155,10 @@ export default function Header() {
             <Theme />
           </ul>
           {/* Navbar (Mobile) */}
-          <ul className="flex md:hidden items-center justify-evenly gap-4 lg:gap-6">
+          <ul className="flex min-[900px]:hidden items-center justify-evenly gap-4 lg:gap-6">
             {pathname === "/" && (
               <button
-                className="p-2 text-gray-600 dark:text-gray-300 md:hidden active:scale-90 transition-transform duration-150"
+                className="p-2 text-gray-600 dark:text-gray-300 min-[900px]:hidden active:scale-90 transition-transform duration-150"
                 onClick={toggleSearch}
               >
                 <FaSearch className="text-lg" />
@@ -183,7 +183,7 @@ export default function Header() {
 
       {/* Mobile Search Overlay with animation */}
       <div
-        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] p-4 border-b border-gray-300 dark:border-gray-600 md:hidden shadow-lg transform transition-all duration-300 ${
+        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] p-4 border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden shadow-lg transform transition-all duration-300 ${
           isSearchOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full pointer-events-none"
@@ -211,7 +211,7 @@ export default function Header() {
 
       {/* Mobile Menu Overlay with animation */}
       <div
-        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-300 dark:border-gray-600 md:hidden transform transition-all duration-300 ${
+        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden transform transition-all duration-300 ${
           isMenuOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full pointer-events-none"
