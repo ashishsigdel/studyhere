@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 
@@ -17,6 +18,20 @@ export default function AddModal({
   setShowForm,
   loading,
 }: Props) {
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const onCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+  };
+
+  const handleSubmit = () => {
+    if (!captchaToken) {
+      alert("Please verify you are human.");
+      return;
+    }
+    handleSaveSubject();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 overflow-y-scroll z-[999]">
       <div className="bg-white dark:bg-[#323232] p-6 rounded-lg shadow-lg w-full max-w-xl mx-auto border border-gray-300 dark:border-gray-600">
@@ -32,6 +47,13 @@ export default function AddModal({
           placeholder="Subject Name"
         />
 
+        <div className="my-4">
+          <ReCAPTCHA
+            sitekey="6LfblSQrAAAAAKUsFiMn7ASp2j6S8CQaC7i7hl-O"
+            onChange={onCaptchaChange}
+          />
+        </div>
+
         <div className="flex justify-end gap-4 mt-5">
           <button
             onClick={() => setShowForm(false)}
@@ -40,8 +62,8 @@ export default function AddModal({
             Cancel
           </button>
           <button
-            onClick={handleSaveSubject}
-            disabled={loading}
+            onClick={handleSubmit}
+            disabled={loading || !captchaToken}
             className="px-4 py-2 bg-blue-500 text-white rounded-md"
           >
             {loading ? <Spinner /> : "Add"}
