@@ -13,7 +13,7 @@ const FooterWidgetOne = () => {
             className="rounded-full"
           />
           <h3 className="text-[26px] font-semibold customfont-typoround ">
-            <span className="text-[#4caf50]">Study</span>
+            <span className="text-[#4caf50]">Learn</span>
             Here
           </h3>
         </div>

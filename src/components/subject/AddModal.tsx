@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
+import { useTheme } from "next-themes";
 
 type Props = {
   subject: string;
@@ -19,6 +19,7 @@ export default function AddModal({
   loading,
 }: Props) {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const { theme } = useTheme();
 
   const onCaptchaChange = (token: string | null) => {
     setCaptchaToken(token);
@@ -47,11 +48,14 @@ export default function AddModal({
           placeholder="Subject Name"
         />
 
-        <div className="my-4">
-          <ReCAPTCHA
-            sitekey="6LfblSQrAAAAAKUsFiMn7ASp2j6S8CQaC7i7hl-O"
-            onChange={onCaptchaChange}
-          />
+        <div className="flex justify-center my-4">
+          <div className="rounded-md overflow-hidden">
+            <ReCAPTCHA
+              sitekey="6LfblSQrAAAAAKUsFiMn7ASp2j6S8CQaC7i7hl-O"
+              onChange={onCaptchaChange}
+              theme={theme === "dark" ? "dark" : "light"}
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-4 mt-5">

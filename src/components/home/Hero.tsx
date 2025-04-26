@@ -69,13 +69,13 @@ export default function Hero() {
         <div className="hidden md:block w-full md:w-1/2 relative">
           <Image
             src={heroImageLight}
-            alt="StudyHere Illustration"
+            alt="Learnhere Illustration"
             className="w-full h-auto object-cover rounded-xl block dark:hidden"
             priority
           />
           <Image
             src={heroImageDark}
-            alt="StudyHere Illustration"
+            alt="Learnhere Illustration"
             className="w-full h-auto object-cover rounded-xl hidden dark:block"
             priority
           />

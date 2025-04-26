@@ -8,7 +8,7 @@ const FooterWidgetFour = () => {
     >
       <div className="py-2.5 border-b w-full border-black/15 dark:border-white/10">
         <h4 className="text-base lg:text-lg font-medium font-Poppins">
-          StudyHere
+          LearnHere
         </h4>
       </div>
       <ul className="mt-4 flex flex-col gap-4">

@@ -31,7 +31,7 @@ const FooterWidgetFive = () => {
         <li className="items-center flex flex-wrap">
           <div className="pr-[12px]">
             <a
-              href="https://github.com/ashishsigdel/studyhere.git"
+              href="https://github.com/ashishsigdel/learnhere.git"
               className="h-[30px] w-[30px] bg-gray-700 dark:bg-gray-300 rounded-full capitadivze flex items-center justify-center text-[15px]"
             >
               <FaGithub className="text-gray-100 dark:text-gray-700 text-[16px]" />
