@@ -50,8 +50,11 @@ export default function ChaptersList({
     await saveDataToIndexedDB(STORE_NAME, "recentChapters", recentChapters);
   };
   return (
-    <div id="chapters" className="min-h-[100vh]">
-      <div className="flex flex-col py-6 border-b border-black/20 dark:border-white/20">
+    <div
+      id="chapters"
+      className="min-h-[100vh] border-b border-black/20 dark:border-white/20 py-6 "
+    >
+      <div className="flex flex-col ">
         <div className="flex flex-col justify-between w-full">
           <div className="w-full justify-between flex items-center mb-4">
             <h2 className="text-2xl font-semibold ">Chapters</h2>

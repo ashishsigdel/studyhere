@@ -6,20 +6,18 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
-import { useState, useEffect } from "react";
-import { HiMenu, HiX } from "react-icons/hi";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
   const params = useParams<{ chapterId: string }>();
   const id = params.chapterId;
   const user = useSelector((state: any) => state.auth.user);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const pathname = usePathname();
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll effect
   useEffect(() => {
@@ -31,14 +29,26 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    if (isSearchOpen) setIsSearchOpen(false);
-  };
+  useEffect(() => {
+    function hanldeClickOutside(event: MouseEvent) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchOpen(false);
+      }
+    }
+    if (isSearchOpen) {
+      document.addEventListener("mousedown", hanldeClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", hanldeClickOutside);
+    };
+  }, [isSearchOpen]);
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
-    if (isMenuOpen) setIsMenuOpen(false);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -53,7 +63,7 @@ export default function Header() {
     <div
       className={`h-16 sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/90 dark:bg-[#1e2024]/90 backdrop-blur-md shadow-md"
+          ? "bg-white/90 dark:bg-[#1e2024]/90 backdrop-blur-md shadow-md border-b border-gray-300 dark:border-gray-600"
           : "bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-300 dark:border-gray-600"
       }`}
     >
@@ -61,17 +71,6 @@ export default function Header() {
         <div className="w-full flex items-center justify-between px-4">
           {/* Logo and Search Section */}
           <div className="flex items-center">
-            {/* Mobile Menu Button */}
-            <button
-              className="mr-3 text-gray-600 dark:text-gray-300 min-[900px]:hidden active:scale-90 transition-transform duration-150"
-              onClick={toggleMenu}
-            >
-              {isMenuOpen ? (
-                <HiX className="text-2xl transition-transform duration-300 rotate-0" />
-              ) : (
-                <HiMenu className="text-2xl transition-transform duration-300 rotate-0" />
-              )}
-            </button>
             <Link href={"/"} className="mr-2 sm:mr-4">
               <div className="flex items-center gap-2 hover:scale-105 transition-transform duration-300">
                 <Image
@@ -89,46 +88,28 @@ export default function Header() {
                 </h3>
               </div>
             </Link>
-
-            {pathname === "/" && (
-              <div className="relative hidden min-[900px]:flex items-center">
-                <form onSubmit={handleSearchSubmit} className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search for subjects, or resources..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
-                  >
-                    <FaSearch className="text-primary text-lg" />
-                  </button>
-                </form>
-              </div>
-            )}
           </div>
 
           {/* Desktop Navigation */}
           <ul className="hidden min-[900px]:flex items-center justify-evenly gap-4 lg:gap-6">
-            <li className="hover:-translate-y-1 transition-transform duration-200">
-              <Link
-                href={"/subjects"}
-                className="text-sm hover:text-primary transition-colors duration-300"
-              >
-                Subjects
-              </Link>
+            <li className="relative hidden min-[900px]:flex items-center">
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <input
+                  type="text"
+                  placeholder="Search for subjects, or resources..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
+                >
+                  <FaSearch className="text-primary text-lg" />
+                </button>
+              </form>
             </li>
-            <li className="hover:-translate-y-1 transition-transform duration-200">
-              <Link
-                href={"/resources"}
-                className="text-sm hover:text-primary transition-colors duration-300"
-              >
-                Resources
-              </Link>
-            </li>
+
             {user ? (
               <li className="hover:scale-105 transition-transform duration-200">
                 <Profile />
@@ -156,14 +137,13 @@ export default function Header() {
           </ul>
           {/* Navbar (Mobile) */}
           <ul className="flex min-[900px]:hidden items-center justify-evenly gap-4 lg:gap-6">
-            {pathname === "/" && (
-              <button
-                className="p-2 text-gray-600 dark:text-gray-300 min-[900px]:hidden active:scale-90 transition-transform duration-150"
-                onClick={toggleSearch}
-              >
-                <FaSearch className="text-lg" />
-              </button>
-            )}
+            <button
+              className="p-2 text-gray-600 dark:text-gray-300 min-[900px]:hidden active:scale-90 transition-transform duration-150"
+              onClick={toggleSearch}
+            >
+              <FaSearch className="text-lg" />
+            </button>
+
             {user ? (
               <li className="hover:scale-105 transition-transform duration-200">
                 <Profile />
@@ -183,6 +163,7 @@ export default function Header() {
 
       {/* Mobile Search Overlay with animation */}
       <div
+        ref={searchRef}
         className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] p-4 border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden shadow-lg transform transition-all duration-300 ${
           isSearchOpen
             ? "opacity-100 translate-y-0"
@@ -207,36 +188,6 @@ export default function Header() {
             </button>
           </form>
         </div>
-      </div>
-
-      {/* Mobile Menu Overlay with animation */}
-      <div
-        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden transform transition-all duration-300 ${
-          isMenuOpen
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-full pointer-events-none"
-        }`}
-      >
-        <ul className="flex flex-col p-4 gap-4">
-          <li className="transform transition-all duration-300 hover:translate-x-2">
-            <Link
-              href={"/subjects"}
-              className="block text-sm py-2 hover:text-primary transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Subjects
-            </Link>
-          </li>
-          <li className="transform transition-all duration-300 hover:translate-x-2">
-            <Link
-              href={"/resources"}
-              className="block text-sm py-2 hover:text-primary transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Resources
-            </Link>
-          </li>
-        </ul>
       </div>
     </div>
   );

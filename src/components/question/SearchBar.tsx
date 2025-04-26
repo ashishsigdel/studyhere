@@ -25,11 +25,11 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center w-full gap-3 px-2.5 py-1.5 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c]">
+    <div className="flex items-center w-full gap-3 px-2.5 py-1.5 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mt-3">
       <input
         type="text"
         className="w-full bg-transparent focus:outline-none placeholder-[#9b9b9b] text-gray-800 dark:text-gray-200"
-        placeholder="Search..."
+        placeholder="Search Question..."
         value={search}
         onChange={handleChange}
       />

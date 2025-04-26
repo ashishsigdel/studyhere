@@ -18,15 +18,20 @@ export default function Cookies() {
     setAnimate(false);
     setTimeout(() => setShowBanner(false), 300); // Wait for animation to finish
   };
+  const declineCookies = () => {
+    localStorage.setItem("cookie_consent", "false");
+    setAnimate(false);
+    setTimeout(() => setShowBanner(false), 300); // Wait for animation to finish
+  };
 
   if (!showBanner) return null;
 
   return (
     <div
-      className={`fixed bottom-5 right-5 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-5 flex items-center justify-between space-x-4 max-w-md border border-gray-300 dark:border-gray-700 
-      transition-transform duration-300 ease-in-out ${
-        animate ? "translate-x-0 opacity-100" : "translate-x-32 opacity-0"
-      }`}
+      className={`fixed bottom-5 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-5 w-[calc(100%-2.5rem)] md:w-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-md border border-gray-300 dark:border-gray-700 
+    transition-all duration-300 ease-in-out ${
+      animate ? "translate-y-0 opacity-100" : "translate-y-32 opacity-0"
+    }`}
     >
       <p className="text-sm text-gray-700 dark:text-gray-300">
         We use cookies to improve your experience. By using our site, you agree
@@ -36,12 +41,20 @@ export default function Cookies() {
         </a>
         .
       </p>
-      <button
-        onClick={acceptCookies}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
-      >
-        Accept
-      </button>
+      <div className="flex gap-3 justify-end">
+        <button
+          onClick={declineCookies}
+          className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={acceptCookies}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
+        >
+          Accept
+        </button>
+      </div>
     </div>
   );
 }

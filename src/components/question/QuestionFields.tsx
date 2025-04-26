@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Spinner from "@/utils/Spinner";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import QuestionCard from "./QuestionCard";
+import useQuestions from "./useQuestions";
+import { useSelector } from "react-redux";
+import { Spinner } from "@/utils";
+import { FaBookOpen, FaWifi } from "react-icons/fa";
+import { QuestionType } from "@/types/question";
 
 type Props = {
-  questions: {
-    id: number;
-    question: string;
-    answer?: string;
-    year?: string;
-    marks?: string;
-  }[];
-  fetchMoreQuestions: any;
-  page: number;
-  totalPages: number;
   loading: boolean;
   handleDoubleClick: Function;
   handleOpenModel: Function;
@@ -26,13 +19,12 @@ type Props = {
   generateAnswer: Function;
   generatingAnswer: boolean;
   fetchAnswer: Function;
+  questions: QuestionType[];
+  filteredQuestions: QuestionType[];
+  search: string | null;
 };
 
 export default function QuestionFields({
-  questions,
-  fetchMoreQuestions,
-  page,
-  totalPages,
   loading,
   handleDoubleClick,
   handleOpenModel,
@@ -43,8 +35,11 @@ export default function QuestionFields({
   generateAnswer,
   generatingAnswer,
   fetchAnswer,
+  questions,
+  filteredQuestions,
+  search,
 }: Props) {
-  const [userL, setUserL] = useState<any>({});
+  const userL = useSelector((state: any) => state.auth.user);
   const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(
     {}
   );
@@ -137,10 +132,6 @@ export default function QuestionFields({
   };
 
   useEffect(() => {
-    const userlogged = localStorage.getItem("user");
-    if (userlogged) {
-      setUserL(JSON.parse(userlogged));
-    }
     return () => {
       setAnswerStates({});
       setOpenEditors({});
@@ -148,17 +139,29 @@ export default function QuestionFields({
   }, []);
 
   return (
-    <InfiniteScroll
-      dataLength={questions.length}
-      next={fetchMoreQuestions}
-      hasMore={page < totalPages}
-      loader={<Spinner />}
-    >
-      {questions.length === 0 && !loading && (
-        <p className="my-10">No questions available.</p>
+    <>
+      {/* Empty States */}
+      {loading && (
+        <div className="p-8 flex justify-center">
+          <Spinner />
+        </div>
+      )}
+      {!navigator.onLine && questions.length === 0 && (
+        <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+          <FaWifi size={24} className="mx-auto mb-2" />
+          <p>
+            You are offline. Please connect to the internet to view questions.
+          </p>
+        </div>
+      )}
+      {navigator.onLine && !loading && questions.length === 0 && (
+        <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+          <FaBookOpen size={24} className="mx-auto mb-2" />
+          <p>No questions available. Add question to get started.</p>
+        </div>
       )}
 
-      {questions.map((question, index) => (
+      {(search ? filteredQuestions : questions).map((question, index) => (
         <QuestionCard
           key={question.id}
           question={question}
@@ -182,6 +185,6 @@ export default function QuestionFields({
           generatingAnswer={generatingAnswer}
         />
       ))}
-    </InfiniteScroll>
+    </>
   );
 }

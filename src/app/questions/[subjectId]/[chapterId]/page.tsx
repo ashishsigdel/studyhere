@@ -1,6 +1,6 @@
-import Sidebar from "@/components/ads/Sidebar";
+import ChapterSidebar from "@/components/chapter/ChapterSidebar";
 import { Questions } from "@/components/question";
-import RequireAuth from "@/utils/RequireAuth";
+import QuestionSidebar from "@/components/question/QuestionSidebar";
 import { Metadata } from "next";
 import React from "react";
 
@@ -11,14 +11,18 @@ export const metadata: Metadata = {
 
 export default function page() {
   return (
-    <RequireAuth>
-      <div className="flex flex-col md:flex-row">
-        <Sidebar />
-        <div className="container px-5 mx-auto max-w-6xl">
-          <Questions />
-        </div>
-        <Sidebar />
+    <div className="mx-auto max-w-[1400px] px-4 container flex min-[900px]:flex-row flex-col-reverse gap-4 relative">
+      {/* Main content */}
+      <div className="w-full min-[900px]:w-4/5">
+        <Questions />
       </div>
-    </RequireAuth>
+
+      {/* Sidebar column */}
+      <div className="w-full min-[900px]:w-1/5">
+        <div className="sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto">
+          <QuestionSidebar />
+        </div>
+      </div>
+    </div>
   );
 }

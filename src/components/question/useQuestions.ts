@@ -1,38 +1,28 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
 import { CheckAuth } from "@/utils/checkAuth";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { saveDataToIndexedDB, loadDataFromIndexedDB } from "@/utils/indexdb";
+import { useSelector } from "react-redux";
+import { QuestionType } from "@/types/question";
 
 const DB_STORE_NAME = "questions";
 
-export default function useQuestions() {
+export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const params = useParams<{ chapterId: string }>();
   const id = params.chapterId;
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search");
 
-  const [questions, setQuestions] = useState<
-    {
-      id: number;
-      question: string;
-      answer?: string;
-      year?: string;
-      marks?: string;
-    }[]
-  >([]);
-  const [filteredQuestions, setFilteredQuestions] = useState<
-    {
-      id: number;
-      question: string;
-      answer?: string;
-      year?: string;
-      marks?: string;
-    }[]
-  >([]);
+  const [questions, setQuestions] = useState<QuestionType[]>([]);
+
+  const [filteredQuestions, setFilteredQuestions] = useState<QuestionType[]>(
+    []
+  );
+
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
@@ -40,23 +30,17 @@ export default function useQuestions() {
   const [subject, setSubject] = useState("");
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [editQuestion, setEditQuestion] = useState<any>(null);
-  const [modelFormChoose, setModelFormChoose] = useState<"question" | "answer">(
-    "question"
-  );
   const [openedAnswerIds, setOpenedAnswerIds] = useState<number[]>([]);
   const [loadingAnswer, setLoadingAnswer] = useState(false);
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
   const [answers, setAnswers] = useState<Record<number, {}>>({});
+  const user = useSelector((state: any) => state.auth.user);
 
   // State for form inputs
   const [newQuestion, setNewQuestion] = useState({
     question: "",
-    answer: "",
     year: "",
     marks: "",
   });
@@ -120,126 +104,80 @@ export default function useQuestions() {
     }
   };
 
-  const fetchQuestions = async (pageNumber = 1, searchQuery = "") => {
-    const cacheKey = `questions_${id}_${searchQuery}`;
+  const fetchQuestions = async () => {
+    const cacheKey = `questions_${id}`;
     setLoading(true);
 
-    // If offline, load from cache
-    if (!navigator.onLine) {
-      try {
-        const cachedData = await loadDataFromIndexedDB(DB_STORE_NAME, cacheKey);
-        if (cachedData) {
-          const { questions, chapter, subject, totalPages } = cachedData;
-          setQuestions(questions);
-          setChapter(chapter);
-          setSubject(subject);
-          setTotalPages(totalPages);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      return;
+    const cachedData = await loadDataFromIndexedDB(DB_STORE_NAME, cacheKey);
+
+    if (cachedData) {
+      const { questions, chapter, subject } = cachedData;
+
+      setQuestions(questions);
+      setChapter(chapter);
+      setSubject(subject);
+      setLoading(false);
     }
 
-    try {
-      if (navigator.onLine) {
-        const response = await myAxios.get(
-          `/question/${id}?page=${pageNumber}&limit=30&search=${searchQuery}`
-        );
+    if (navigator.onLine) {
+      try {
+        const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
         const data = response.data.data;
-        if (pageNumber === 1) {
-          setQuestions(data.allQuestions);
-          setFilteredQuestions(data.allQuestions);
-        } else {
-          setQuestions((prev) => [...prev, ...data.allQuestions]);
-        }
+        setQuestions(data.allQuestions);
+        setFilteredQuestions(data.allQuestions);
         setChapter(data.chapter.name);
         setSubject(data.chapter.subject.name);
-        setTotalPages(data.totalPages);
-
-        // Retrieve existing data from IndexedDB
-        const existingData = await loadDataFromIndexedDB(
-          DB_STORE_NAME,
-          cacheKey
-        );
-
-        // Combine and remove duplicates based on question ID
-        const existingQuestions = existingData?.questions || [];
-        const allQuestions = [...existingQuestions, ...data.allQuestions];
-
-        // Remove duplicate questions using a Map (assumes each question has a unique 'id')
-        const uniqueQuestions = Array.from(
-          new Map(allQuestions.map((q) => [q.id, q])).values()
-        );
 
         // Save updated unique questions to IndexedDB
         await saveDataToIndexedDB(DB_STORE_NAME, cacheKey, {
-          questions: uniqueQuestions,
+          questions: data.allQuestions,
           chapter: data.chapter.name,
           subject: data.chapter.subject.name,
           totalPages: data.totalPages,
         });
+      } catch (err) {
+        toast.error("Failed to fetch chapters online");
+        console.error(err);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  // Fetch when component mounts
   useEffect(() => {
-    setPage(1);
-    fetchQuestions(1, debouncedSearch);
+    fetchQuestions();
   }, []);
 
-  const fetchMoreQuestions = () => {
-    if (page < totalPages) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      fetchQuestions(nextPage, debouncedSearch);
-    }
-  };
-
   const handleSaveQuestion = async () => {
-    const checkAuth = CheckAuth();
-
-    if (!checkAuth) {
-      toast.error("Unauthorized");
-      return;
-    }
     if (!navigator.onLine) {
       toast.error("You are offline!");
       return;
     }
 
-    if (!newQuestion.question.trim()) {
+    if (
+      !newQuestion.question.trim() ||
+      newQuestion.question === "<p><br></p>"
+    ) {
       toast.error("Question cannot be empty");
       return;
     }
 
     setLoadingAdd(true);
     try {
-      const response = await myAxios.post(`/question/create/${id}`, {
+      await myAxios.post(`/question/create/${id}`, {
         question: newQuestion.question,
-        answer: newQuestion.answer,
         year: newQuestion.year,
         marks: newQuestion.marks,
-        createdBy: checkAuth.id,
+        createdBy: user.id,
       });
-
-      setQuestions((prev) => [...prev, response.data.data]);
 
       toast.success("Question added successfully");
       setNewQuestion({
         question: "",
-        answer: "",
         year: newQuestion.year,
         marks: "",
       });
 
-      fetchQuestions(1, debouncedSearch);
+      refresh && refresh();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -252,18 +190,12 @@ export default function useQuestions() {
     toast.success("Question copied to clipboard");
   };
   const handleOpenModel = (question: any) => {
-    setModelFormChoose("question");
     setEditQuestion(question);
     setShowModal(true);
   };
 
   const handleSaveEdit = async () => {
     if (!editQuestion) return;
-    const checkAuth = CheckAuth();
-    if (!checkAuth) {
-      toast.error("Unauthorized");
-      return;
-    }
     if (!navigator.onLine) {
       toast.error("You are offline!");
       return;
@@ -277,19 +209,11 @@ export default function useQuestions() {
       toast.success("Question updated successfully");
       setShowModal(false);
 
-      fetchQuestions(1, debouncedSearch);
+      refresh && refresh();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoadingEdit(false);
-    }
-  };
-
-  const switchForm = () => {
-    if (modelFormChoose === "answer") {
-      setModelFormChoose("question");
-    } else {
-      setModelFormChoose("answer");
     }
   };
 
@@ -300,16 +224,11 @@ export default function useQuestions() {
     loading,
     setShowForm,
     questions,
-    fetchMoreQuestions,
     handleDoubleClick,
     handleOpenModel,
     openedAnswer,
-    page,
     showModal,
     toggleAnswer,
-    totalPages,
-    switchForm,
-    modelFormChoose,
     editQuestion,
     setEditQuestion,
     handleSaveEdit,

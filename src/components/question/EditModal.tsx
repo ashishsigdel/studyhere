@@ -6,8 +6,6 @@ import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 
 type Props = {
-  switchForm: any;
-  modelFormChoose: "question" | "answer";
   editQuestion: any;
   setEditQuestion: any;
   setShowModal: any;
@@ -17,7 +15,6 @@ type Props = {
 };
 
 export default function EditModal({
-  modelFormChoose,
   editQuestion,
   setEditQuestion,
   setShowModal,
@@ -30,7 +27,7 @@ export default function EditModal({
       await myAxios.delete(`/question/delete/${id}`);
       setShowModal(false);
       toast.success("Question deleted.");
-      fetchQuestions(1, "");
+      fetchQuestions();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
@@ -47,55 +44,35 @@ export default function EditModal({
             <MdClose />
           </button>
         </div>
-        {modelFormChoose === "question" && (
-          <JoditForm
-            text={editQuestion.question}
-            setText={(newContent: string) =>
-              setEditQuestion({ ...editQuestion, question: newContent })
+
+        <JoditForm
+          text={editQuestion.question}
+          setText={(newContent: string) =>
+            setEditQuestion({ ...editQuestion, question: newContent })
+          }
+        />
+
+        <>
+          <input
+            type="text"
+            value={editQuestion.year || ""}
+            onChange={(e) =>
+              setEditQuestion({ ...editQuestion, year: e.target.value })
             }
+            className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
+            placeholder="Year"
           />
-        )}
+          <input
+            type="text"
+            value={editQuestion.marks || ""}
+            onChange={(e) =>
+              setEditQuestion({ ...editQuestion, marks: e.target.value })
+            }
+            className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
+            placeholder="Marks"
+          />
+        </>
 
-        {modelFormChoose === "answer" && (
-          <>
-            <div
-              className="prose dark:prose-invert max-w-none table-auto mb-2 text-xs"
-              dangerouslySetInnerHTML={{
-                __html: editQuestion.question,
-              }}
-            />
-            <p className="mt-1 text-sm italic   ">Answer:</p>
-            <JoditForm
-              text={editQuestion.answer}
-              setText={(newContent: string) =>
-                setEditQuestion({ ...editQuestion, answer: newContent })
-              }
-            />
-          </>
-        )}
-
-        {modelFormChoose === "question" && (
-          <>
-            <input
-              type="text"
-              value={editQuestion.year || ""}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, year: e.target.value })
-              }
-              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
-              placeholder="Year"
-            />
-            <input
-              type="text"
-              value={editQuestion.marks || ""}
-              onChange={(e) =>
-                setEditQuestion({ ...editQuestion, marks: e.target.value })
-              }
-              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-2"
-              placeholder="Marks"
-            />
-          </>
-        )}
         <div className="flex justify-between gap-4 mt-5">
           <button
             onClick={() => handleDelete(editQuestion.id)}
