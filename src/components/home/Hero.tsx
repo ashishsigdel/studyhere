@@ -57,7 +57,7 @@ export default function Hero() {
               Start Exploring
             </button>
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/login?new=true")}
               className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white px-6 py-3 rounded-lg font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200"
             >
               Sign Up for Free

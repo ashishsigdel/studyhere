@@ -144,7 +144,7 @@ export default function Header() {
                   </Link>
                 </li>
                 <div className="hover:scale-105 transition-transform duration-200">
-                  <Link href={"/login"} className="text-sm">
+                  <Link href={"/login?new=true"} className="text-sm">
                     <li className="px-2 py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300">
                       Join for Free
                     </li>
