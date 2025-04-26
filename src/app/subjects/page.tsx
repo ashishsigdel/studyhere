@@ -8,7 +8,7 @@ export default function page() {
       <div className="w-full min-[900px]:w-4/5">
         <AllSubjects />
       </div>
-      <div className="w-full min-[900px]:w-1/5 mt-16">
+      <div className="w-full min-[900px]:w-1/5 mt-8 min-[900px]:mt-16">
         <Sidebar />
       </div>
     </div>

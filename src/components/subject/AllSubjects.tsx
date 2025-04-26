@@ -12,6 +12,7 @@ import useSubjects from "./useSubjects";
 import bookCover from "@/assets/bookcover.png";
 import AddModal from "./AddModal";
 import { FaSearch } from "react-icons/fa";
+import Pagination from "../utils/Pagination";
 
 const STORE_NAME = "subjects";
 const DEBOUNCE_DELAY = 500; // milliseconds
@@ -132,7 +133,7 @@ export const AllSubjects = () => {
 
   return (
     <>
-      <div id="featured-subjects" className="mt-16">
+      <div id="featured-subjects" className="mt-8 min-[900px]:mt-16 ">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 md:mb-12 gap-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200">
             All Subjects 📚
@@ -163,7 +164,7 @@ export const AllSubjects = () => {
 
         {loading && subjects.length === 0 && <Spinner />}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-5 md:gap-6">
           {!loading && !isSearching && subjects.length === 0 && (
             <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">
               No subjects available
@@ -178,6 +179,16 @@ export const AllSubjects = () => {
 
           {subjects.map((subject) => renderSubject(subject))}
         </div>
+        <Pagination
+          currentPage={1}
+          totalPages={8}
+          handlePageChange={() => null}
+          color="text-primary"
+          activeBg="bg-primary"
+          activeText="text-white"
+          hoverBg="hover:bg-primary"
+          hoverText="hover:text-white"
+        />
       </div>
 
       {showForm && (
