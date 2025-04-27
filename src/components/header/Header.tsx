@@ -3,21 +3,20 @@ import Theme from "@/utils/Theme";
 import Image from "next/image";
 import Profile from "./Profile";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
-  const params = useParams<{ chapterId: string }>();
-  const id = params.chapterId;
   const user = useSelector((state: any) => state.auth.user);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isSearchPage = pathname === "/search";
 
   // Handle scroll effect
   useEffect(() => {
@@ -54,8 +53,22 @@ export default function Header() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      router.push(`/search?search=${encodeURIComponent(searchTerm.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
       setIsSearchOpen(false);
+    }
+  };
+
+  // Handle real-time search when on search page
+  useEffect(() => {
+    if (isSearchPage && searchTerm.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  }, [searchTerm, isSearchPage, router]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    if (isSearchPage) {
+      return;
     }
   };
 
@@ -98,7 +111,7 @@ export default function Header() {
                   type="text"
                   placeholder="Search for subjects, or resources..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                   className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
                 />
                 <button
@@ -176,7 +189,7 @@ export default function Header() {
               type="text"
               placeholder="Search for subjects, or resources..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="px-4 pr-12 py-2 w-full border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
               autoFocus={isSearchOpen}
             />
