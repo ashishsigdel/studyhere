@@ -21,7 +21,7 @@ export default function AddModal({
   loadingAdd,
 }: Props) {
   const [modeManual, setModeManual] = useState<boolean>(true);
-  const { handleFileChange, image, setImage } = useUploadAi();
+  const { handleFileChange, image, setImage, handleContinue } = useUploadAi();
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 overflow-y-scroll z-[999]">
       <div className="bg-white dark:bg-[#323232] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto border border-gray-300 dark:border-gray-600">
@@ -145,7 +145,7 @@ export default function AddModal({
             </button>
           ) : (
             <button
-              onClick={handleSaveQuestion}
+              onClick={handleContinue}
               disabled={loadingAdd || modeManual}
               className="px-4 py-2 bg-blue-500 disabled:opacity-70 text-white rounded-md"
             >

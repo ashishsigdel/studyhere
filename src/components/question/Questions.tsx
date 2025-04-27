@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Spinner from "@/utils/Spinner";
+import { useEffect, useState } from "react";
 import QuestionFields from "./QuestionFields";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";

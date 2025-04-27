@@ -16,3 +16,21 @@
 .katex-html {
   @apply hidden;
 }
+@keyframes loading-progress {
+  0% {
+    opacity: 0.7;
+    width: 30%;
+  }
+  50% {
+    opacity: 1;
+    width: 60%;
+  }
+  100% {
+    opacity: 0.7;
+    width: 45%;
+  }
+}
+
+.animate-loading-progress {
+  animation: loading-progress 2s ease-in-out infinite;
+}

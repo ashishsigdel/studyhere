@@ -6,7 +6,7 @@ import { JoditForm } from "../utils";
 import moment from "moment";
 import Buttons from "./Buttons";
 import { MdVerified } from "react-icons/md";
-import { RiAiGenerate2, RiSparklingFill } from "react-icons/ri";
+import { RiSparklingFill } from "react-icons/ri";
 
 type Props = {
   question: {
