@@ -15,12 +15,17 @@ export default function AuthForm() {
 
   return (
     <div className="w-full min-h-[calc(100dvh-64px)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800/50 rounded-xl shadow-lg overflow-hidden border border-black/10 dark:border-white/10">
         <div className="p-6 sm:p-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              {isRegister ? "Create your account" : "Welcome back"}
-            </h2>
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white px-4">
+                {isRegister ? "Create your account" : "Welcome back"}
+              </h2>
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+
             <p className="mt-2 text-gray-600 dark:text-gray-300">
               {isRegister
                 ? "Join us today and get started"
@@ -30,15 +35,15 @@ export default function AuthForm() {
 
           <OAuthButtons isRegister={isRegister} redirect={redirect} />
 
-          <div className="flex items-center my-6">
+          {/* <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
             <p className="px-3 text-sm text-gray-500 dark:text-gray-400">or</p>
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
-          </div>
+          </div> */}
 
-          <EmailForm isRegister={isRegister} redirect={redirect} />
+          {/* <EmailForm isRegister={isRegister} redirect={redirect} /> */}
 
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {isRegister
                 ? "Already have an account?"
@@ -52,7 +57,7 @@ export default function AuthForm() {
                 {isRegister ? "Sign in" : "Sign up"}
               </button>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

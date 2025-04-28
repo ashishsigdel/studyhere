@@ -14,19 +14,18 @@ export default function Subjects() {
     setShowForm,
     loadingAdd,
     handleSaveSubject,
+    user,
   } = useSubjects();
 
   return (
     <>
-      <FavSubjects />
-
+      {user && <FavSubjects />}
       <FeaturedSubjects showForm={showForm} setShowForm={setShowForm} />
       <div className="mt-10">
         <ChapterAds />
       </div>
-
-      <RecentChapter />
-      {showForm && (
+      {user && <RecentChapter />}
+      {user && showForm && (
         <AddModal
           handleSaveSubject={handleSaveSubject}
           loading={loadingAdd}

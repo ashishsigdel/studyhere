@@ -16,6 +16,9 @@ export const FavSubjects = ({}) => {
   const user = useSelector((state: any) => state.auth.user);
 
   const fetchSubjects = async () => {
+    if (!user) {
+      return;
+    }
     try {
       try {
         const cachedSubjects = await loadDataFromIndexedDB(
@@ -49,7 +52,7 @@ export const FavSubjects = ({}) => {
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [user]);
 
   if (!user) {
     return null;
