@@ -1,45 +1,140 @@
-// useSearch.ts (updated)
 import { myAxios } from "@/services/apiServices";
-import { useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { SubjectType } from "@/types/subject";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 
-interface Subject {
-  id: number;
-  name: string;
-  createdAt: string;
-  isPremium: boolean;
-  category?: string;
-}
-
-interface Resource {
-  id: number;
-  name: string;
-  createdAt: string;
-  isPremium: boolean;
-  type: string;
-  category?: string;
-}
-
 export default function useSearch() {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const searchTerm = searchParams.get("q") || "";
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [resources, setResources] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState<boolean>(false);
 
-  const fetchSubjects = useCallback(async (term: string) => {
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const initialSortOrder = searchParams.get("sortOrder") || "desc";
+  const initialSortBy = searchParams.get("sortBy") || "createdAt";
+  const initialPage = searchParams.get("page") || "1";
+  const initialSearch = searchParams.get("search") || "";
+
+  const [subjects, setSubjects] = useState<SubjectType[]>([]);
+  const [pagination, setPagination] = useState<{
+    currentPage: number;
+    totalPages: number;
+  }>({
+    currentPage: 1,
+    totalPages: 1,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const [filters, setFilters] = useState({
+    sortOrder: initialSortOrder as "asc" | "desc",
+    sortBy: initialSortBy as "views" | "createdAt" | "updatedAt" | "name",
+    page: parseInt(initialPage),
+    search: initialSearch,
+  });
+
+  // For debouncing
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Handle search term with debouncing
+  const handleSearchChange = useCallback((term: string) => {
+    setSearchTerm(term);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout
+    searchTimeoutRef.current = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        search: term,
+        page: 1, // Reset to first page when search changes
+      }));
+    }, 700);
+  }, []);
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filters.sortOrder !== "desc")
+      params.set("sortOrder", filters.sortOrder);
+    if (filters.sortBy !== "createdAt") params.set("sortBy", filters.sortBy);
+    if (filters.page !== 1) params.set("page", filters.page.toString());
+    if (filters.search) params.set("search", filters.search);
+
+    // Compare with current URL to prevent unnecessary navigation
+    const currentParams = new URLSearchParams(window.location.search);
+    if (params.toString() !== currentParams.toString()) {
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+  }, [filters, pathname, router]);
+
+  useEffect(() => {
+    const newFilters = {
+      sortOrder: (searchParams.get("sortOrder") || "desc") as "asc" | "desc",
+      sortBy: (searchParams.get("sortBy") || "createdAt") as
+        | "views"
+        | "createdAt"
+        | "updatedAt"
+        | "name",
+      page: parseInt(searchParams.get("page") || "1"),
+      search: searchParams.get("search") || "",
+    };
+
+    // Only update filters if they're different from current state
+    setFilters((prev) => {
+      if (
+        prev.sortOrder === newFilters.sortOrder &&
+        prev.sortBy === newFilters.sortBy &&
+        prev.page === newFilters.page &&
+        prev.search === newFilters.search
+      ) {
+        return prev;
+      }
+      return newFilters;
+    });
+
+    setSearchTerm(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  const handleSortChange = (sortBy: typeof filters.sortBy) => {
+    setFilters((prev) => ({
+      ...prev,
+      sortBy,
+      sortOrder:
+        prev.sortBy === sortBy
+          ? prev.sortOrder === "asc"
+            ? "desc"
+            : "asc"
+          : "desc",
+    }));
+  };
+
+  const fetchSubjects = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await myAxios.get(`/subject?search=${term}`);
-      setSubjects(
-        response.data.data.map((subject: any) => ({
-          ...subject,
-          isPremium: subject.isPremium || false,
-          createdAt: subject.createdAt || new Date().toISOString(),
-        }))
-      );
+
+      // Build query string with all filter parameters
+      const queryParams = new URLSearchParams();
+      queryParams.set("sortOrder", filters.sortOrder);
+      queryParams.set("sortBy", filters.sortBy);
+      queryParams.set("page", filters.page.toString());
+      if (filters.search) queryParams.set("search", filters.search);
+
+      const response = await myAxios.get(`/subject?${queryParams.toString()}`);
+      setSubjects(response.data.data.subjects);
+      setPagination(response.data.data.pagination);
     } catch (error: any) {
       toast.error(
         "Error fetching subjects:",
@@ -48,37 +143,25 @@ export default function useSearch() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters]);
 
-  const fetchResources = useCallback(async (term: string) => {
-    try {
-      setLoading(true);
-      const response = await myAxios.get(`/resource?search=${term}`);
-      setResources(
-        response.data.data.map((resource: any) => ({
-          ...resource,
-          isPremium: resource.isPremium || false,
-          createdAt: resource.createdAt || new Date().toISOString(),
-        }))
-      );
-    } catch (error: any) {
-      toast.error(
-        "Error fetching resources:",
-        error.response?.data?.message || error.message
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
+  // Fetch subjects when filters change
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchSubjects(searchTerm);
-      fetchResources(searchTerm);
-    }, 500);
+    fetchSubjects();
+  }, [filters]);
 
-    return () => clearTimeout(timer);
-  }, [searchTerm, refresh, fetchSubjects, fetchResources]);
-
-  return { subjects, resources, searchParams, loading };
+  return {
+    subjects,
+    searchParams,
+    loading,
+    pagination,
+    fetchSubjects,
+    handleSortChange,
+    setMobileFiltersOpen,
+    mobileFiltersOpen,
+    filters,
+    setFilters,
+    searchTerm,
+    handleSearchChange, // New handler for debounced search
+  };
 }

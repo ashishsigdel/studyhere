@@ -1,52 +1,38 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
-import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
-import { useParams, usePathname } from "next/navigation";
+import { SubjectType } from "@/types/subject";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function useChapters() {
-  const pathname = usePathname();
-  const params = useParams<{ subjectId: string }>();
-  const id = params.subjectId;
+  const params = useParams<{ slug: string }>();
+  const id = params.slug;
+  const user = useSelector((state: any) => state.auth.user);
 
   const [chapters, setChapters] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [chapter, setChapter] = useState("");
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState<SubjectType | null>(null);
+
   const [showForm, setShowForm] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const STORE_NAME = "chapters";
   const fetchChapters = async () => {
-    setLoading(true);
-
-    // Try loading from IndexedDB first
-    const cachedData = await loadDataFromIndexedDB(
-      STORE_NAME,
-      `chapters_${id}`
-    );
-    if (cachedData) {
-      setChapters(cachedData.chapters || []);
-      setSubject(cachedData.subject || "");
-      setLoading(false); // Stop loading spinner if cache found
-    }
-
     // If online, fetch from API and update IndexedDB
     if (navigator.onLine) {
       try {
-        const response = await myAxios.get(`/chapter/${id}`);
+        const response = await myAxios.get(
+          `/chapter/${id}?userId=${user ? user.id : ""}`
+        );
         const { chapters: fetchedChapters, subject: fetchedSubject } =
           response.data.data;
 
         setChapters(fetchedChapters);
         setSubject(fetchedSubject);
-
-        // Save to IndexedDB for offline use
-        await saveDataToIndexedDB(STORE_NAME, `chapters_${id}`, {
-          chapters: fetchedChapters,
-          subject: fetchedSubject,
-        });
+        setIsFavorite(fetchedSubject.isSaved);
       } catch (err) {
         toast.error("Failed to fetch chapters online");
         console.error(err);
@@ -72,11 +58,6 @@ export default function useChapters() {
           const newChapters = [...chapters, response.data.data];
           setChapters(newChapters);
 
-          localStorage.setItem(
-            `chapters_${id}`,
-            JSON.stringify({ chapters: newChapters, subject })
-          );
-
           toast.success("Chapter created");
           setChapter("");
         }
@@ -87,6 +68,16 @@ export default function useChapters() {
       }
     } else {
       toast.error("Unauthorized");
+    }
+  };
+
+  const toggleSaved = async () => {
+    try {
+      setIsFavorite(!isFavorite);
+      await myAxios.post(`/subject/add-fav/${id}`);
+    } catch (error: any) {
+      toast.error(error.response.data.message || "Something went wrong!");
+      setIsFavorite(!isFavorite);
     }
   };
   return {
@@ -102,5 +93,7 @@ export default function useChapters() {
     showForm,
     setShowForm,
     id,
+    toggleSaved,
+    isFavorite,
   };
 }

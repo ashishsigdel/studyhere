@@ -53,17 +53,10 @@ export default function Header() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      router.push(`/search?search=${encodeURIComponent(searchTerm.trim())}`);
       setIsSearchOpen(false);
     }
   };
-
-  // Handle real-time search when on search page
-  useEffect(() => {
-    if (isSearchPage && searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  }, [searchTerm, isSearchPage, router]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -105,23 +98,25 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <ul className="hidden min-[900px]:flex items-center justify-evenly gap-4 lg:gap-6">
-            <li className="relative hidden min-[900px]:flex items-center">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for subjects, or resources..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
-                >
-                  <FaSearch className="text-primary text-lg" />
-                </button>
-              </form>
-            </li>
+            {pathname !== "/search" && (
+              <li className="relative hidden min-[900px]:flex items-center">
+                <form onSubmit={handleSearchSubmit} className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for subjects, or resources..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
+                  >
+                    <FaSearch className="text-primary text-lg" />
+                  </button>
+                </form>
+              </li>
+            )}
 
             {user ? (
               <li className="hover:scale-105 transition-transform duration-200">
@@ -175,33 +170,35 @@ export default function Header() {
       </nav>
 
       {/* Mobile Search Overlay with animation */}
-      <div
-        ref={searchRef}
-        className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] p-4 border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden shadow-lg transform transition-all duration-300 ${
-          isSearchOpen
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-full pointer-events-none"
-        }`}
-      >
-        <div className="relative flex items-center">
-          <form onSubmit={handleSearchSubmit} className="relative w-full">
-            <input
-              type="text"
-              placeholder="Search for subjects, or resources..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="px-4 pr-12 py-2 w-full border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
-              autoFocus={isSearchOpen}
-            />
-            <button
-              type="submit"
-              className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
-            >
-              <FaSearch className="text-primary text-lg" />
-            </button>
-          </form>
+      {pathname !== "/search" && (
+        <div
+          ref={searchRef}
+          className={`absolute top-16 left-0 w-full bg-[#e8eaec] dark:bg-[#2c2f34] p-4 border-b border-gray-300 dark:border-gray-600 min-[900px]:hidden shadow-lg transform transition-all duration-300 ${
+            isSearchOpen
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-full pointer-events-none"
+          }`}
+        >
+          <div className="relative flex items-center">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search for subjects, or resources..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="px-4 pr-12 py-2 w-full border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
+                autoFocus={isSearchOpen}
+              />
+              <button
+                type="submit"
+                className="absolute right-0 top-0 h-full px-4 flex items-center justify-center"
+              >
+                <FaSearch className="text-primary text-lg" />
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

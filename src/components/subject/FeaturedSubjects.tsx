@@ -3,11 +3,10 @@ import { Spinner } from "@/utils";
 import { useEffect, useState, useRef } from "react";
 import { myAxios } from "@/services/apiServices";
 import { useSelector } from "react-redux";
-import Link from "next/link";
-import Image from "next/image";
-import { bookThumbnail } from "@/data/BookThumbnail";
 import TopBar from "./Topbar";
 import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
+import { SubjectType } from "@/types/subject";
+import SubjectCard from "./SubjectCard";
 
 const STORE_NAME = "subjects";
 
@@ -21,7 +20,7 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
   setShowForm,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [subjects, setSubjects] = useState<{ id: number; name: string }[]>([]);
+  const [subjects, setSubjects] = useState<SubjectType[]>([]);
   const user = useSelector((state: any) => state.auth.user);
 
   const fetchSubjects = async () => {
@@ -41,10 +40,16 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
       }
 
       if (navigator.onLine) {
-        const response = await myAxios.get("/subject");
-        setSubjects(response.data.data);
+        const response = await myAxios.get(
+          "/subject?sortOrder=desc&sortBy=views"
+        );
+        setSubjects(response.data.data.subjects);
 
-        await saveDataToIndexedDB(STORE_NAME, "subjects", response.data.data);
+        await saveDataToIndexedDB(
+          STORE_NAME,
+          "subjects",
+          response.data.data.subjects
+        );
       }
     } catch (error) {
     } finally {
@@ -74,22 +79,10 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
             No subjects available
           </div>
         )}
-        {subjects.map((subject, index) => (
-          <Link href={`/questions/${subject.id}`} key={index}>
-            <div className="flex items-center w-full h-16 border border-black/10 dark:border-white/10 rounded-lg hover:scale-105 transition-transform duration-200 ease-in-out bg-white dark:bg-gray-800/30 shadow-sm hover:shadow-md">
-              <Image
-                src={bookThumbnail[`${index % bookThumbnail.length}`]}
-                alt="Book Cover"
-                className="w-16 h-16 object-cover rounded-l-lg shadow-md"
-              />
-              <div className="ml-2 pr-1">
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 line-clamp-2">
-                  {subject.name}
-                </h3>
-              </div>
-            </div>
-          </Link>
-        ))}
+        {subjects.length > 0 &&
+          subjects.map((subject) => (
+            <SubjectCard subject={subject} key={subject.id} />
+          ))}
       </div>
     </div>
   );

@@ -34,12 +34,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div className="min-[900px]:min-h-[250px]">
-      {!adLoaded && (
-        <div className="bg-white dark:bg-gray-800/30 p-6 text-center text-sm border border-dashed border-black/20 dark:border-white/20 rounded-lg min-[900px]:min-h-[500px]">
-          Advertisement space
-        </div>
-      )}
+    <div className="">
       <ins
         className="adsbygoogle"
         style={{ display: "block" }}

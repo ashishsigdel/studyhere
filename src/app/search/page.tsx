@@ -3,7 +3,7 @@ import Result from "@/components/search/Result";
 
 export default function page() {
   return (
-    <div className="mx-auto max-w-[1400px] px-4 container flex flex-col-reverse min-[900px]:flex-row gap-4">
+    <div className="mx-auto max-w-[1400px] px-4 container flex flex-col min-[900px]:flex-row gap-4">
       <div className="w-full min-[900px]:w-4/5">
         <Result />
       </div>

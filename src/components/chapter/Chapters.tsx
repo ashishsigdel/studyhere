@@ -5,11 +5,12 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AddModal from "./AddModal";
 import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
-import { FaStar } from "react-icons/fa";
+import { FaBookmark, FaStar } from "react-icons/fa";
 import ChaptersList from "./ChaptersList";
 import Syllabus from "./Syllabus";
 import Resources from "./Resources";
 import useChapters from "./useChapters";
+import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
 
 export default function Chapters() {
   const {
@@ -24,6 +25,8 @@ export default function Chapters() {
     loadingAdd,
     chapter,
     setChapter,
+    toggleSaved,
+    isFavorite,
   } = useChapters();
 
   useEffect(() => {
@@ -41,6 +44,7 @@ export default function Chapters() {
   const toggleForm = () => {
     setShowForm(!showForm);
   };
+
   return (
     <div className="flex flex-col overflow-hidden">
       {/* Header Section */}
@@ -48,18 +52,26 @@ export default function Chapters() {
         <div className="w-full py-6 justify-between flex items-center">
           <div>
             <h2 className="text-3xl font-bold capitalize line-clamp-1">
-              {subject}
+              {subject?.name}
             </h2>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="hidden md:inline-block text-gray-600 dark:text-gray-300 font-medium">
-              Add to Favourite
+          <div className="flex items-center gap-1">
+            <span className="hidden md:inline-block text-gray-500 dark:text-gray-400 font-medium">
+              {isFavorite ? "Shortcut added" : "Add Shortcut"}
             </span>
-            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <FaStar
-                size={20}
-                className="text-yellow-400 hover:text-yellow-500"
-              />
+            <button
+              onClick={() => toggleSaved()}
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Add to Shortcut"
+            >
+              {isFavorite ? (
+                <IoBookmark size={20} className="text-primary" />
+              ) : (
+                <IoBookmarkOutline
+                  size={20}
+                  className="text-gray-400 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors duration-200"
+                />
+              )}
             </button>
           </div>
         </div>
@@ -70,6 +82,7 @@ export default function Chapters() {
         loading={loading}
         subject={subject}
         toggleForm={toggleForm}
+        fetchChapters={fetchChapters}
       />
       <Syllabus />
       <Resources />

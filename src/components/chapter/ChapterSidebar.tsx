@@ -30,7 +30,6 @@ export default function ChapterSidebar() {
         clearTimeout(timeout);
       };
     } catch (e) {
-      console.error("AdSense error:", e);
       setAdLoaded(false);
     }
   }, []);

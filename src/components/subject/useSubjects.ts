@@ -1,5 +1,6 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -8,6 +9,7 @@ export default function useSubjects() {
 
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
+  const router = useRouter();
 
   const handleSaveSubject = async () => {
     if (!subject) {
@@ -23,6 +25,7 @@ export default function useSubjects() {
         });
 
         toast.success("Subject created");
+        router.push(`/subject/${response.data.data.slug}`);
         setSubject("");
         setShowForm(false);
       }

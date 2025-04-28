@@ -1,12 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
 import useUploadAi from "./useUploadAi";
+import { FaCheckCircle, FaSpinner } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { myAxios } from "@/services/apiServices";
+import toast from "react-hot-toast";
 
 export default function PreviewQuestions() {
-  const { handleFetchImage, loading, imagePreview, response } = useUploadAi();
+  const { handleFetchImage, loading, response, subject, chapters } =
+    useUploadAi();
   const [stage, setStage] = useState<"uploaded" | "processing" | "extracting">(
     "uploaded"
   );
+  const [selectedChapters, setSelectedChapters] = useState<
+    Record<number, number>
+  >({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    handleFetchImage();
+  }, []);
 
   useEffect(() => {
     let uploadedTimeout: NodeJS.Timeout;
@@ -24,9 +38,63 @@ export default function PreviewQuestions() {
       clearTimeout(processingTimeout);
     };
   }, []);
+
+  const handleChapterChange = (
+    questionIndex: number,
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const chapterId = Number(e.target.value);
+    setSelectedChapters((prev) => ({
+      ...prev,
+      [questionIndex]: chapterId,
+    }));
+  };
+
+  const preparePayload = () => {
+    if (!response || !subject) return [];
+
+    return response.questions.map((question, index) => ({
+      question: question.question,
+      subjectId: subject.id,
+      chapterId: selectedChapters[index] || Number(question.chapterId),
+      marks: question.marks,
+      year: response.year + response.exam_type,
+    }));
+  };
+
+  const handleSaveQuestions = async () => {
+    if (!subject) {
+      toast.error("Subject information is missing");
+      return;
+    }
+
+    const payload = preparePayload();
+
+    // Validate all questions have chapter selected
+    const hasMissingChapters = payload.some((q) => !q.chapterId);
+    if (hasMissingChapters) {
+      toast.error("Please select chapters for all questions");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await myAxios.post("/question/questions/bulk", {
+        questions: payload,
+      });
+      toast.success("Questions saved successfully!");
+      router.push(`/subject/${subject.slug}`);
+    } catch (error) {
+      toast.error("Failed to save questions");
+      console.error("Error saving questions:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="p-4">
-      {/* Loading skeleton */}
+      {/* Loading skeleton - unchanged from your original */}
       {loading && (
         <div className="space-y-6 animate-pulse">
           <div className="flex items-center gap-3">
@@ -68,9 +136,98 @@ export default function PreviewQuestions() {
         </div>
       )}
 
-      {/* Actual content when not loading */}
-      {!loading && response && (
-        <div className="prose dark:prose-invert">Response</div>
+      {!loading && response && subject && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                {subject.name}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300">
+                {response.year} • {response.exam_type}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {response.questions.length} questions
+              </span>
+              <div className="flex items-center gap-1 text-green-500">
+                <FaCheckCircle />
+                <span className="text-sm">Extracted</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {response.questions.map((question, index) => (
+              <div
+                key={index}
+                className="p-4 border rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
+              >
+                <div className="flex flex-col md:flex-row md:items-start gap-4">
+                  <div className="flex-1">
+                    <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: question.question }}
+                      />
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                      <span>Marks: {question.marks}</span>
+                      <span>Year: {response.year}</span>
+                    </div>
+                  </div>
+
+                  <div className="w-full md:w-48">
+                    <label
+                      htmlFor={`chapter-${index}`}
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Chapter
+                    </label>
+                    <select
+                      id={`chapter-${index}`}
+                      value={
+                        selectedChapters[index] || question.chapterId || ""
+                      }
+                      onChange={(e) => handleChapterChange(index, e)}
+                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    >
+                      <option value="">Select chapter</option>
+                      {chapters.map((chapter) => (
+                        <option key={chapter.id} value={chapter.id}>
+                          {chapter.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-end gap-4 pt-6 border-t dark:border-gray-700">
+            <button
+              onClick={() => router.back()}
+              className="px-4 py-2 border rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveQuestions}
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed transition-colors flex items-center justify-center min-w-32"
+            >
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="animate-spin mr-2" />
+                  Saving...
+                </>
+              ) : (
+                "Save All Questions"
+              )}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
