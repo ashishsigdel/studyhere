@@ -36,35 +36,32 @@ export default function SubjectCard({ subject }: Props) {
         {/* Badge (top-right corner) */}
         {badge && (
           <span
-            className={`absolute top-3 right-3 px-2 py-1 text-xs font-medium rounded-full ${badge.color}`}
+            className={`absolute top-2 right-3 px-2 py-1 text-xs font-medium rounded-full ${badge.color}`}
           >
             {badge.text}
           </span>
         )}
 
         <div className="relative h-full flex flex-col justify-between p-5">
-          {/* Subject name with lock icon */}
-          <div>
-            <h3 className="text-md md:text-lg font-bold text-gray-800 dark:text-white line-clamp-2 flex items-center gap-3 capitalize">
-              {subject.name}
-              {!subject.isPublic && (
-                <span className="text-gray-500 dark:text-gray-400">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-              )}
-            </h3>
-          </div>
+          <h3 className="text-md md:text-lg font-bold text-gray-800 dark:text-white line-clamp-2 flex items-center gap-3 capitalize mt-4">
+            {subject.name}
+            {!subject.isPublic && (
+              <span className="text-gray-500 dark:text-gray-400">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+            )}
+          </h3>
 
           {/* Bottom info bar */}
           <div className="flex justify-end items-end">

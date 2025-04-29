@@ -21,6 +21,7 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState<SubjectType[]>([]);
+
   const user = useSelector((state: any) => state.auth.user);
 
   const fetchSubjects = async () => {
@@ -30,7 +31,8 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
           STORE_NAME,
           "subjects"
         );
-        if (cachedSubjects) {
+
+        if (cachedSubjects !== undefined) {
           setSubjects(cachedSubjects);
         } else {
           setLoading(true);
@@ -71,15 +73,16 @@ export const FeaturedSubjects: React.FC<TopBarProps> = ({
         {user && <TopBar showForm={showForm} setShowForm={setShowForm} />}
       </div>
 
-      {loading && subjects.length === 0 && <Spinner />}
+      {loading && subjects && subjects.length === 0 && <Spinner />}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-6">
-        {!loading && subjects.length === 0 && (
+        {!loading && subjects && subjects.length === 0 && (
           <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">
             No subjects available
           </div>
         )}
-        {subjects.length > 0 &&
+        {subjects &&
+          subjects.length > 0 &&
           subjects.map((subject) => (
             <SubjectCard subject={subject} key={subject.id} />
           ))}

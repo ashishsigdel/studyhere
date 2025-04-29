@@ -81,6 +81,7 @@ export default function ChaptersList({
     if (!recentChapters) {
       recentChapters = [];
     }
+    console.log(recentChapters);
     recentChapters = recentChapters.filter((ch: any) => ch.url !== chapterUrl);
     recentChapters.unshift({
       name: chapterName,
