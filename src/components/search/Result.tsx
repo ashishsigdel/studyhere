@@ -8,17 +8,114 @@ import {
   FiArrowUp,
   FiArrowDown,
 } from "react-icons/fi";
-import useSearch from "./useSearch";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
+import { myAxios } from "@/services/apiServices";
+import { SubjectType } from "@/types/subject";
 
 export default function Result() {
-  const {
-    setMobileFiltersOpen,
-    mobileFiltersOpen,
-    filters,
-    handleSortChange,
-    searchTerm,
-    handleSearchChange,
-  } = useSearch();
+  const router = useRouter();
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const search = useSearchParams().get("q") || "";
+  const sortOrder = useSearchParams().get("order") || "desc";
+  const sortBy = useSearchParams().get("sortby") || "";
+  const page = useSearchParams().get("page") || "1";
+  const [loading, setLoading] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [subjects, setSubjects] = useState<SubjectType[] | []>([]);
+  const [pagination, setPagination] = useState<{
+    currentPage: number;
+    totalPages: number;
+  }>({
+    currentPage: 1,
+    totalPages: 1,
+  });
+
+  const [searchdata, setSearchdata] = useState({
+    q: useSearchParams().get("q") || "",
+    order: useSearchParams().get("order") || "desc",
+    sortby: useSearchParams().get("sortby") || "",
+    page: useSearchParams().get("page") || "1",
+  });
+
+  const handleSortClick = (sortOption: "views" | "createdAt" | "name") => {
+    setSearchdata((prev) => {
+      if (prev.sortby === sortOption) {
+        return {
+          ...prev,
+          order: prev.order === "asc" ? "desc" : "asc",
+        };
+      } else {
+        return {
+          ...prev,
+          sortby: sortOption,
+          order: "desc",
+        };
+      }
+    });
+  };
+
+  // Debounce Effect
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      interface QueryParams {
+        q?: string;
+        order?: string;
+        sortby?: string;
+        page?: string;
+      }
+      const queryParams: QueryParams = {};
+
+      if (searchdata.q.trim() !== "") queryParams.q = searchdata.q;
+      if (searchdata.order.trim() !== "") queryParams.order = searchdata.order;
+      if (searchdata.sortby.trim() !== "")
+        queryParams.sortby = searchdata.sortby;
+      if (searchdata.page !== "") queryParams.page = searchdata.page;
+
+      if (Object.keys(queryParams).length > 0) {
+        const queryString = new URLSearchParams(queryParams as any).toString();
+        router.push(`/search?${queryString}`);
+      }
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [
+    searchdata.q,
+    searchdata.order,
+    searchdata.sortby,
+    searchdata.page,
+    router,
+  ]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        setLoading(true);
+
+        const response = await myAxios.get(
+          `/subject?search=${search}&page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        );
+        setSubjects(response.data.data.subjects);
+        setPagination(response.data.data.pagination);
+      } catch (error: any) {
+        toast.error(
+          "Error fetching subjects:",
+          error.response?.data?.message || error.message
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSubjects();
+  }, [search, page, sortBy, sortOrder, refresh]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setSearchdata({
+      ...searchdata,
+      page: pageNumber.toString(),
+    });
+  };
 
   return (
     <div className="flex flex-col min-[900px]:flex-row gap-6 p-4 max-w-7xl mx-auto">
@@ -52,7 +149,7 @@ export default function Result() {
           </button>
         </div>
 
-        {/* Search Input - Updated to use handleSearchChange */}
+        {/* Search Input */}
         <div className="mb-4">
           <h4 className="text-sm font-medium mb-3 flex items-center gap-2 dark:text-gray-300">
             <FiFileText className="text-gray-500" />
@@ -61,8 +158,13 @@ export default function Result() {
           <input
             type="text"
             placeholder="Search subjects..."
-            value={searchTerm}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            value={searchdata.q}
+            onChange={(e) =>
+              setSearchdata({
+                ...searchdata,
+                q: e.target.value,
+              })
+            }
             className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
           />
         </div>
@@ -78,11 +180,11 @@ export default function Result() {
           </h4>
           <div className="space-y-2">
             <FilterButton
-              active={filters.sortBy === "views"}
-              onClick={() => handleSortChange("views")}
+              active={searchdata.sortby === "views"}
+              onClick={() => handleSortClick("views")}
               icon={
-                filters.sortBy === "views" ? (
-                  filters.sortOrder === "asc" ? (
+                searchdata.sortby === "views" ? (
+                  searchdata.order === "asc" ? (
                     <FiArrowUp />
                   ) : (
                     <FiArrowDown />
@@ -92,17 +194,17 @@ export default function Result() {
                 )
               }
               label={`Views ${
-                filters.sortBy === "views"
-                  ? `(${filters.sortOrder === "asc" ? "↑" : "↓"})`
+                searchdata.sortby === "views"
+                  ? `(${searchdata.order === "asc" ? "↑" : "↓"})`
                   : ""
               }`}
             />
             <FilterButton
-              active={filters.sortBy === "createdAt"}
-              onClick={() => handleSortChange("createdAt")}
+              active={searchdata.sortby === "createdAt"}
+              onClick={() => handleSortClick("createdAt")}
               icon={
-                filters.sortBy === "createdAt" ? (
-                  filters.sortOrder === "asc" ? (
+                searchdata.sortby === "createdAt" ? (
+                  searchdata.order === "asc" ? (
                     <FiArrowUp />
                   ) : (
                     <FiArrowDown />
@@ -112,17 +214,17 @@ export default function Result() {
                 )
               }
               label={`Date Created ${
-                filters.sortBy === "createdAt"
-                  ? `(${filters.sortOrder === "asc" ? "↑" : "↓"})`
+                searchdata.sortby === "createdAt"
+                  ? `(${searchdata.order === "asc" ? "↑" : "↓"})`
                   : ""
               }`}
             />
             <FilterButton
-              active={filters.sortBy === "name"}
-              onClick={() => handleSortChange("name")}
+              active={searchdata.sortby === "name"}
+              onClick={() => handleSortClick("name")}
               icon={
-                filters.sortBy === "name" ? (
-                  filters.sortOrder === "asc" ? (
+                searchdata.sortby === "name" ? (
+                  searchdata.order === "asc" ? (
                     <FiArrowUp />
                   ) : (
                     <FiArrowDown />
@@ -132,8 +234,8 @@ export default function Result() {
                 )
               }
               label={`Name ${
-                filters.sortBy === "name"
-                  ? `(${filters.sortOrder === "asc" ? "A-Z" : "Z-A"})`
+                searchdata.sortby === "name"
+                  ? `(${searchdata.order === "asc" ? "A-Z" : "Z-A"})`
                   : ""
               }`}
             />
@@ -143,7 +245,12 @@ export default function Result() {
 
       {/* Main Content */}
       <div className="flex-1">
-        <AllSubjects />
+        <AllSubjects
+          subjects={subjects}
+          loading={loading}
+          pagination={pagination}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );

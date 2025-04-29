@@ -1,22 +1,27 @@
 "use client";
 import { Spinner } from "@/utils";
 import Pagination from "../utils/Pagination";
-import useSearch from "./useSearch";
 import { FaBookOpen, FaWifi } from "react-icons/fa";
 import React from "react";
 import SubjectCard from "../subject/SubjectCard";
+import { SubjectType } from "@/types/subject";
 
-export const AllSubjects = () => {
-  const { subjects, loading, pagination, filters, setFilters } = useSearch();
-
-  // Add handler for pagination
-  const handlePageChange = (page: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      page: page,
-    }));
+interface Props {
+  subjects: SubjectType[] | [];
+  loading: boolean;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
   };
+  handlePageChange: (page: number) => void;
+}
 
+export const AllSubjects = ({
+  subjects,
+  loading,
+  pagination,
+  handlePageChange,
+}: Props) => {
   return (
     <div id="featured-subjects" className="mt-8 min-[900px]:mt-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 md:mb-8 gap-4">
