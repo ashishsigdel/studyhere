@@ -25,8 +25,6 @@ export default function useNavigation() {
   useEffect(() => {
     const sectionObserver = new IntersectionObserver(
       (entries) => {
-        console.log(entries);
-
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);

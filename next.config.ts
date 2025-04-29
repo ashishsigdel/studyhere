@@ -2,7 +2,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
   skipWaiting: true,
-  cacheOneFrontEndNav: true,
+  cacheOnFrontEndNav: true, // Typo in your code was "cacheOneFrontEndNav"
   aggressiveFrontEndNavCaching: true,
   reloadingOnOnline: true,
   swcMinify: true,
@@ -12,31 +12,62 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   },
   runtimeCaching: [
     {
-      urlPattern: /^\/api\/.*$/, // Match Next.js API routes
+      urlPattern: /^\/api\/.*$/, // API calls
       handler: "NetworkFirst",
       options: {
         cacheName: "api-cache",
-        networkTimeoutSeconds: 5, // If the network takes too long, serve cache
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 }, // Cache for 1 day
+        networkTimeoutSeconds: 5,
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24, // 1 day
+        },
         cacheableResponse: {
-          statuses: [200], // Cache only successful responses
+          statuses: [200],
         },
       },
     },
     {
-      urlPattern: /^https?:\/\/.*/, // Cache all static assets
+      urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/, // Fonts
       handler: "StaleWhileRevalidate",
       options: {
-        cacheName: "static-resources",
-        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 }, // Cache for 7 days
+        cacheName: "google-fonts",
+        expiration: {
+          maxEntries: 30,
+          maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+        },
       },
     },
     {
-      urlPattern: /\/.*/, // Cache all pages
+      urlPattern: /^https?:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp)$/, // Images
+      handler: "StaleWhileRevalidate",
+      options: {
+        cacheName: "images",
+        expiration: {
+          maxEntries: 60,
+          maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+        },
+      },
+    },
+    {
+      urlPattern: /^\/_next\/.*$/, // Next.js static files
+      handler: "StaleWhileRevalidate",
+      options: {
+        cacheName: "next-static",
+        expiration: {
+          maxEntries: 60,
+          maxAgeSeconds: 60 * 60 * 24 * 30,
+        },
+      },
+    },
+    {
+      urlPattern: /^\/(?!sw\.js$|manifest\.json$).*/, // All other pages but NOT sw.js or manifest
       handler: "NetworkFirst",
       options: {
         cacheName: "pages-cache",
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 }, // Cache for 7 days
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24 * 7,
+        },
       },
     },
   ],
@@ -46,13 +77,13 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https", // Accepts only secure images
-        hostname: "**", // Wildcard to allow all hosts
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },
   typescript: {
-    ignoreBuildErrors: true, // This will ignore all TypeScript errors during build
+    ignoreBuildErrors: true,
   },
   webpack(config: any) {
     config.resolve.alias = {
