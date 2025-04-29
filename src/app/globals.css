@@ -34,3 +34,27 @@
 .animate-loading-progress {
   animation: loading-progress 2s ease-in-out infinite;
 }
+
+.adsterra-container {
+  position: relative;
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+  min-height: 90px;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.adsterra-ad-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add this to your responsive styles if needed */
+@media (max-width: 768px) {
+  .adsterra-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+}

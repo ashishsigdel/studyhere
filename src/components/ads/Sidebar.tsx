@@ -1,47 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Script from "next/script";
 
 export default function Sidebar() {
-  const [adLoaded, setAdLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
-      // Fallback if ad doesn't load within 3 seconds
-      const timeout = setTimeout(() => setAdLoaded(false), 3000);
-
-      // Optional: Detect ad insertion success (very limited reliability)
-      const observer = new MutationObserver(() => {
-        setAdLoaded(true);
-        clearTimeout(timeout);
-      });
-
-      const adElement = document.querySelector(".adsbygoogle");
-      if (adElement) {
-        observer.observe(adElement, { childList: true });
-      }
-
-      return () => {
-        observer.disconnect();
-        clearTimeout(timeout);
-      };
-    } catch (e) {
-      console.error("AdSense error:", e);
-      setAdLoaded(false);
-    }
-  }, []);
-
   return (
-    <div className="">
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client="ca-pub-9557309412103379"
-        data-ad-slot="8236029305"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+    <div className="mx-auto mt-4" style={{ width: 300, height: 250 }}>
+      {/* 🔹 Adsterra Ad Configuration */}
+      <Script id="adsterra-config" strategy="afterInteractive">
+        {`
+          atOptions = {
+            'key': '50609253b5034c4a53a422cf7f229cf3',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+          };
+        `}
+      </Script>
+
+      {/* 🔹 Adsterra Script Loader */}
+      <Script
+        id="adsterra-script"
+        strategy="afterInteractive"
+        src="//www.highperformanceformat.com/50609253b5034c4a53a422cf7f229cf3/invoke.js"
       />
     </div>
   );

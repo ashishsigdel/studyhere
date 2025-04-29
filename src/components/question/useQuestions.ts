@@ -143,10 +143,6 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
-
   const handleSaveQuestion = async () => {
     if (!navigator.onLine) {
       toast.error("You are offline!");

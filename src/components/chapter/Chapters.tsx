@@ -11,6 +11,7 @@ import Syllabus from "./Syllabus";
 import Resources from "./Resources";
 import useChapters from "./useChapters";
 import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
+import AdsterraAd from "./AdsterrraAd";
 
 export default function Chapters() {
   const {
@@ -77,6 +78,11 @@ export default function Chapters() {
         </div>
       </div>
 
+      <div className="w-full mb-6 flex justify-center">
+        <div className="adsterra-container">
+          <AdsterraAd />
+        </div>
+      </div>
       <ChaptersList
         chapters={chapters}
         loading={loading}
@@ -84,6 +90,7 @@ export default function Chapters() {
         toggleForm={toggleForm}
         fetchChapters={fetchChapters}
       />
+
       <Syllabus />
       <Resources />
 

@@ -56,8 +56,10 @@ export default function Questions() {
   }, [chapter]);
 
   useEffect(() => {
+    console.log("calling");
+
     fetchQuestions();
-  }, []);
+  }, [refresh]);
 
   const toggleForm = () => {
     setShowForm(!showForm);
