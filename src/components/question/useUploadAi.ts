@@ -35,10 +35,6 @@ export default function useUploadAi() {
   const [subject, setSubject] = useState<SubjectType | null>(null);
   const [chapters, setChapters] = useState<ChaptersType[] | []>([]);
 
-  console.log(response);
-  console.log(subject);
-  console.log(chapters);
-
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
 
@@ -86,15 +82,15 @@ export default function useUploadAi() {
         setSubject(response.data.data.subject);
       } catch (error) {
         toast.error("Unable to Perform.");
-        // router.back();
+        router.back();
       } finally {
         setLoading(false);
-        // dispatch(resetPhotos());
+        dispatch(resetPhotos());
       }
     } else {
-      // dispatch(resetPhotos());
+      dispatch(resetPhotos());
       toast.error("Unable to Perform.");
-      // router.back();
+      router.back();
     }
   };
 

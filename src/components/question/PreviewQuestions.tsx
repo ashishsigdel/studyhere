@@ -58,7 +58,7 @@ export default function PreviewQuestions() {
       subjectId: subject.id,
       chapterId: selectedChapters[index] || Number(question.chapterId),
       marks: question.marks,
-      year: response.year + response.exam_type,
+      year: response.year + " " + response.exam_type,
     }));
   };
 
@@ -162,7 +162,7 @@ export default function PreviewQuestions() {
             {response.questions.map((question, index) => (
               <div
                 key={index}
-                className="p-4 border rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
+                className="p-4 border rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800/40 shadow-sm"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-4">
                   <div className="flex-1">

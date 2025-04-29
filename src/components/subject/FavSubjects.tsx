@@ -3,10 +3,10 @@ import { Spinner } from "@/utils";
 import { useEffect, useState, useRef } from "react";
 import { myAxios } from "@/services/apiServices";
 import { useSelector } from "react-redux";
-import TopBar from "./Topbar";
 import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
 import { SubjectType } from "@/types/subject";
 import SubjectCard from "./SubjectCard";
+import NoData from "../utils/NoData";
 
 const STORE_NAME = "subjects";
 
@@ -70,9 +70,10 @@ export const FavSubjects = ({}) => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-6">
         {!loading && subjects.length === 0 && (
-          <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">
-            No subjects available
-          </div>
+          <NoData
+            title="No Subjects Available"
+            description="It looks like there aren't any subjects added yet."
+          />
         )}
         {subjects.length > 0 &&
           subjects.map((subject) => (

@@ -7,6 +7,9 @@ import moment from "moment";
 import Buttons from "./Buttons";
 import { MdVerified } from "react-icons/md";
 import { RiSparklingFill } from "react-icons/ri";
+import { AiOutlineLike } from "react-icons/ai";
+import { FiArrowRight } from "react-icons/fi";
+import UserFooter from "./UserFooter";
 
 type Props = {
   question: {
@@ -93,7 +96,11 @@ export default function QuestionCard({
 
       <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">
         {question?.year && <span>[{question.year}]</span>}
-        {question?.marks && <span>[{question.marks} marks]</span>}
+        {question?.marks && question.marks.startsWith("[") ? (
+          <span>{question.marks} marks</span>
+        ) : (
+          <span>[{question.marks} marks]</span>
+        )}
       </div>
 
       <div
@@ -148,51 +155,18 @@ export default function QuestionCard({
               />
 
               {answers[question.id]?.answer?.answer && (
-                <div className="mt-10 flex items-center justify-between">
-                  <div className="flex items-center my-3 gap-3">
-                    <Image
-                      src={
-                        answers[question.id]?.answer?.user?.profilePic
-                          ? answers[question.id]?.answer?.user?.profilePic
-                          : defaultPic
-                      }
-                      alt="profilePic"
-                      width={20}
-                      height={20}
-                      className="w-8 h-8 rounded-full bg-gray-200"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-bold text-xs flex items-center gap-2 truncate">
-                        {answers[question.id]?.answer?.user?.fullName}
-
-                        {answers[question.id]?.answer?.user?.role ===
-                        "admin" ? (
-                          <div className="relative group">
-                            <MdVerified className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
-                          </div>
-                        ) : answers[question.id]?.answer?.user?.role ===
-                          "ai" ? (
-                          <div className="relative group">
-                            <RiSparklingFill className="w-3.5 h-3.5 text-yellow-500 cursor-pointer" />
-                          </div>
-                        ) : null}
-                      </span>
-                      <span className="text-gray-600 dark:text-gray-200 text-xs">
-                        {moment(
-                          answers[question.id]?.answer.createdAt
-                        ).fromNow()}
-                      </span>
-                    </div>
-                  </div>
-                  <Link
-                    href={`/question/${question.id}`}
-                    className="mx-3 px-3 py-2 text-sm bg-black dark:bg-white text-white dark:text-black rounded-md w-fit cursor-pointer"
-                  >
-                    {`View all answer (${
-                      answers[question.id]?.otherAnswersCount
-                    })`}
-                  </Link>
-                </div>
+                <UserFooter
+                  image={answers[question.id]?.answer?.user?.profilePic}
+                  fullName={answers[question.id]?.answer?.user?.fullName}
+                  role={answers[question.id]?.answer?.user?.role}
+                  createdAt={answers[question.id]?.answer.createdAt}
+                  totalLikes={answers[question.id]?.answer.TotalLikes}
+                  isLiked={answers[question.id]?.answer.isLiked}
+                  answerId={answers[question.id]?.answer.id}
+                  questionId={question.id}
+                  nextButton
+                  otherAnswersCount={answers[question.id]?.otherAnswersCount}
+                />
               )}
             </div>
           )}
