@@ -2,78 +2,132 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
   skipWaiting: true,
-  cacheOnFrontEndNav: true, // Typo in your code was "cacheOneFrontEndNav"
-  aggressiveFrontEndNavCaching: true,
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: false,
   reloadingOnOnline: true,
+  buildExcludes: [/middleware-manifest\.json$/],
+  scope: "/",
   swcMinify: true,
-  disable: process.env.NODE_ENV === "development",
-  workBoxOptions: {
-    disableDevlogs: true,
+  disable: process.env.NEXT_PUBLIC_NODE_ENV === "development",
+  fallbacks: {
+    document: null,
   },
+  workboxOptions: {
+    disableDevLogs: true,
+    navigateFallback: "/index",
+    // Add cleanupOutdatedCaches to handle outdated cache entries
+    cleanupOutdatedCaches: true,
+    // Force update on page load
+    skipWaiting: true,
+    clientsClaim: true,
+  },
+  // Simplified runtime caching to reduce potential errors
   runtimeCaching: [
     {
-      urlPattern: /^\/api\/.*$/, // API calls
+      urlPattern: /^\/api\/.*$/,
       handler: "NetworkFirst",
       options: {
         cacheName: "api-cache",
-        networkTimeoutSeconds: 5,
+        networkTimeoutSeconds: 10, // Increased timeout
         expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 60 * 60 * 24, // 1 day
-        },
-        cacheableResponse: {
-          statuses: [200],
+          maxEntries: 32,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
         },
       },
     },
     {
-      urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/, // Fonts
-      handler: "StaleWhileRevalidate",
+      urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/,
+      handler: "CacheFirst", // Changed to CacheFirst for fonts
       options: {
         cacheName: "google-fonts",
         expiration: {
           maxEntries: 30,
-          maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
         },
       },
     },
     {
-      urlPattern: /^https?:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp)$/, // Images
-      handler: "StaleWhileRevalidate",
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+      handler: "CacheFirst", // Changed to CacheFirst for images
       options: {
         cacheName: "images",
         expiration: {
           maxEntries: 60,
-          maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         },
       },
     },
     {
-      urlPattern: /^\/_next\/.*$/, // Next.js static files
-      handler: "StaleWhileRevalidate",
+      urlPattern: /^\/_next\/static\/.*/i,
+      handler: "CacheFirst",
       options: {
         cacheName: "next-static",
         expiration: {
-          maxEntries: 60,
-          maxAgeSeconds: 60 * 60 * 24 * 30,
+          maxEntries: 64,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
         },
       },
     },
     {
-      urlPattern: /^\/(?!sw\.js$|manifest\.json$).*/, // All other pages but NOT sw.js or manifest
+      urlPattern: /^\/_next\/image\?.*/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "next-image",
+        expiration: {
+          maxEntries: 64,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
+        },
+      },
+    },
+    {
+      urlPattern: /^\/_next\/data\/.*/i,
       handler: "NetworkFirst",
       options: {
-        cacheName: "pages-cache",
+        cacheName: "next-data",
         expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 60 * 60 * 24 * 7,
+          maxEntries: 32,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
         },
+      },
+    },
+    {
+      urlPattern: /.*/, // Fallback
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "others",
+        expiration: {
+          maxEntries: 32,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
+        },
+        networkTimeoutSeconds: 10,
       },
     },
   ],
 });
 
+// Update the Next.js config
 const nextConfig = {
+  // Handle PWA-related headers
+  headers: async () => [
+    {
+      source: "/sw.js",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=0, must-revalidate",
+        },
+      ],
+    },
+    {
+      source: "/workbox-:hash.js",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=0, must-revalidate",
+        },
+      ],
+    },
+  ],
   images: {
     remotePatterns: [
       {
