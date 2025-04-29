@@ -31,7 +31,6 @@ export const metadata: Metadata = {
     "learning",
   ],
   authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
-  manifest: "/manifest.json",
   openGraph: {
     title: "LearnHere - Best Learning Platform",
     description:
