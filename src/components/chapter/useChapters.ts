@@ -21,7 +21,7 @@ export default function useChapters() {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const fetchChapters = async () => {
-    // If online, fetch from API and update IndexedDB
+    setLoading(true);
     if (navigator.onLine) {
       try {
         const response = await myAxios.get(

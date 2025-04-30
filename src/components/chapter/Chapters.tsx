@@ -32,7 +32,7 @@ export default function Chapters() {
 
   useEffect(() => {
     if (subject) {
-      document.title = `${subject} - Chapters`;
+      document.title = `${subject.name} - Chapters`;
     } else {
       document.title = "Chapters";
     }
@@ -78,11 +78,6 @@ export default function Chapters() {
         </div>
       </div>
 
-      <div className="w-full mb-6 flex justify-center">
-        <div className="adsterra-container">
-          <AdsterraAd />
-        </div>
-      </div>
       <ChaptersList
         chapters={chapters}
         loading={loading}

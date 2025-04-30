@@ -115,10 +115,6 @@ export default function ChaptersList({
     setActiveDropdown(null);
   };
 
-  if (!subject) {
-    return null;
-  }
-
   const editChapter = async (chapterId: number) => {
     try {
       await myAxios.put(`/chapter/update/${chapterId}`, {
@@ -147,7 +143,6 @@ export default function ChaptersList({
       id="chapters"
       className="min-h-[100vh] border-b border-black/20 dark:border-white/20 py-6 "
     >
-      {/* Delete Confirmation Modal */}
       {deleteModal !== null && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800/50 p-6 rounded-lg shadow-xl mx-2 md:mx-0 max-w-md w-full">
@@ -229,55 +224,63 @@ export default function ChaptersList({
                   </button>
                 </div>
               ) : (
-                <>
-                  <Link
-                    href={`${pathname}/${chapter.id}`}
-                    onClick={() =>
-                      handleChapterClick(subject.name, chapter.name, chapter.id)
-                    }
-                    className="text-base font-medium flex-grow capitalize"
-                  >
-                    {chapter.name}
-                  </Link>
-
-                  {/* Dropdown Trigger */}
-                  <button
-                    className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    onClick={(e) => toggleDropdown(chapter.id, e)}
-                    aria-label="Chapter actions"
-                  >
-                    <BsThreeDots className="text-gray-500 dark:text-gray-400" />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {activeDropdown === chapter.id && (
-                    <div
-                      ref={(el: any) => (dropdownRefs.current[chapter.id] = el)}
-                      className="absolute right-0 top-10 z-10 w-40 bg-white dark:bg-gray-800/50 rounded-md shadow-lg border border-gray-200 dark:border-gray-700"
+                subject && (
+                  <>
+                    <Link
+                      href={`${pathname}/${chapter.id}`}
+                      onClick={() =>
+                        handleChapterClick(
+                          subject.name,
+                          chapter.name,
+                          chapter.id
+                        )
+                      }
+                      className="text-base font-medium flex-grow capitalize"
                     >
-                      <button
-                        className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startEditing(chapter.id);
-                        }}
+                      {chapter.name}
+                    </Link>
+
+                    {/* Dropdown Trigger */}
+                    <button
+                      className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      onClick={(e) => toggleDropdown(chapter.id, e)}
+                      aria-label="Chapter actions"
+                    >
+                      <BsThreeDots className="text-gray-500 dark:text-gray-400" />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {activeDropdown === chapter.id && (
+                      <div
+                        ref={(el: any) =>
+                          (dropdownRefs.current[chapter.id] = el)
+                        }
+                        className="absolute right-0 top-10 z-10 w-40 bg-white dark:bg-gray-800/50 rounded-md shadow-lg border border-gray-200 dark:border-gray-700"
                       >
-                        <FaEdit className="text-blue-500" />
-                        <span>Edit</span>
-                      </button>
-                      <button
-                        className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          showDeleteModal(chapter.id);
-                        }}
-                      >
-                        <FaTrash />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  )}
-                </>
+                        <button
+                          className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startEditing(chapter.id);
+                          }}
+                        >
+                          <FaEdit className="text-blue-500" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            showDeleteModal(chapter.id);
+                          }}
+                        >
+                          <FaTrash />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )
               )}
             </div>
           ))}

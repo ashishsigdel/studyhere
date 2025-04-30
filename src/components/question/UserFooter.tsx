@@ -18,7 +18,7 @@ type Props = {
   totalLikes: number;
   isLiked: boolean;
   answerId: number;
-  questionId: number;
+  questionId?: number;
   nextButton?: boolean;
   otherAnswersCount?: number;
 };
@@ -51,8 +51,10 @@ export default function UserFooter({
     }
   };
   return (
-    <div className="mt-6 pt-6 border-t border-dashed border-black/10 dark:border-white/10">
-      <div className="flex items-start justify-between gap-4">
+    <div className="relative">
+      <div className="h-20 border-l border-b pl-5 border-black/25 dark:border-white/20 rounded-bl-2xl w-10 " />
+
+      <div className="flex flex-col min-[580px]:flex-row items-start justify-between gap-4 ml-14 relative -top-5">
         {/* Author Info */}
         <div className="flex items-start gap-3 flex-1 min-w-0">
           {/* Avatar with subtle shadow */}

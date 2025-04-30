@@ -1,5 +1,7 @@
+"use client";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import { RiAiGenerate2 } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 type Props = {
   openEditors: { [key: number]: boolean };
@@ -26,7 +28,6 @@ export default function Buttons({
   question,
   saveAnswer,
   answers,
-  userL,
   saving,
   handleCancel,
   generateAnswer,
@@ -34,58 +35,61 @@ export default function Buttons({
   handleAnswerEdit,
   handleAnswerAdd,
 }: Props) {
-  const isAuthor = answers[question.id]?.answer?.user?.id === userL?.id;
-  const isAdmin = userL.role === "admin";
+  const user = useSelector((state: any) => state.auth.user);
+  const isAdmin = user?.role === "admin";
+  const isAuthor = answers[question.id]?.answer?.user?.id === user?.id;
 
   return (
     <>
       {openEditors[question.id] ? (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() =>
               saveAnswer(
-                answers[question.id]?.answer?.user?.id === userL?.id
+                answers[question.id]?.answer?.user?.id === user?.id
                   ? "update"
                   : "add",
                 question.id
               )
             }
-            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
+            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center"
+            disabled={saving}
           >
-            <FaSave className="" size={16} />
-            {saving ? "Saving" : "Save"}
+            <FaSave size={16} />
+            {saving ? "Saving..." : "Save"}
           </button>
           <button
             onClick={() => handleCancel(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-red-200 dark:bg-red-900 px-2 py-1.5 rounded-md text-sm"
+            className="flex gap-2 items-center cursor-pointer bg-red-200 dark:bg-red-900 px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center"
           >
-            <FaTimes className="" size={16} />
+            <FaTimes size={16} />
             Cancel
           </button>
         </div>
       ) : (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => generateAnswer(question.id)}
-            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
+            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center"
+            disabled={generatingAnswer}
           >
             <RiAiGenerate2 size={16} />
-            {generatingAnswer ? "Generating..." : "Generate With AI"}
+            {generatingAnswer ? "Generating..." : "AI Generate"}
           </button>
           {!isAuthor && (
             <button
               onClick={() => handleAnswerAdd(question.id)}
-              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
+              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center"
             >
               <FaPlus size={16} />
-              Add
+              Add Answer
             </button>
           )}
 
           {(isAuthor || isAdmin) && (
             <button
               onClick={() => handleAnswerEdit(question.id)}
-              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-2 py-1.5 rounded-md text-sm"
+              className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center"
             >
               <FaEdit size={16} />
               Edit

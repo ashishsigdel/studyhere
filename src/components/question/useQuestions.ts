@@ -82,7 +82,6 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
         [id]: response?.data?.data,
       }));
     } catch (error: any) {
-      toast.error(error?.response?.data.message || "Something went wrong!");
     } finally {
       setLoadingAnswer(false);
     }

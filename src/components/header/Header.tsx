@@ -165,6 +165,7 @@ export default function Header() {
                 </li>
               </div>
             )}
+            <Theme />
           </ul>
         </div>
       </nav>

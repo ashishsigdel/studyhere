@@ -1,15 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
 import { HiDotsVertical } from "react-icons/hi";
-import defaultPic from "@/assets/pictures/defaultpic.jpg";
 import { JoditForm } from "../utils";
-import moment from "moment";
 import Buttons from "./Buttons";
-import { MdVerified } from "react-icons/md";
-import { RiSparklingFill } from "react-icons/ri";
-import { AiOutlineLike } from "react-icons/ai";
-import { FiArrowRight } from "react-icons/fi";
 import UserFooter from "./UserFooter";
+import NoData from "../utils/NoData";
 
 type Props = {
   question: {
@@ -110,22 +103,25 @@ export default function QuestionCard({
             : "max-h-0 opacity-0 pb-0"
         }`}
       >
-        <div className="mt-2 p-3">
+        <div className="mt-2">
           <div className="flex justify-between gap-3 items-center">
             <strong>Answer:</strong>
-            <Buttons
-              openEditors={openEditors}
-              question={question}
-              saveAnswer={saveAnswer}
-              answers={answers}
-              userL={userL}
-              saving={saving}
-              handleCancel={handleCancel}
-              generateAnswer={generateAnswer}
-              generatingAnswer={generatingAnswer}
-              handleAnswerAdd={handleAnswerAdd}
-              handleAnswerEdit={handleAnswerEdit}
-            />
+
+            {(openEditors[question.id] || cleanHTML) && (
+              <Buttons
+                openEditors={openEditors}
+                question={question}
+                saveAnswer={saveAnswer}
+                answers={answers}
+                userL={userL}
+                saving={saving}
+                handleCancel={handleCancel}
+                generateAnswer={generateAnswer}
+                generatingAnswer={generatingAnswer}
+                handleAnswerAdd={handleAnswerAdd}
+                handleAnswerEdit={handleAnswerEdit}
+              />
+            )}
           </div>
           {openEditors[question.id] ? (
             <div className="mt-3">
@@ -149,10 +145,32 @@ export default function QuestionCard({
           ) : (
             <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal mt-2.5">
               <div
+                className="border-l pl-5 md:pl-8 border-black/25 dark:border-white/20"
                 dangerouslySetInnerHTML={{
-                  __html: cleanHTML || "No answer available.",
+                  __html: cleanHTML,
                 }}
               />
+              {!cleanHTML && (
+                <NoData
+                  title="No Answers Yet"
+                  description="Be the first to share your thoughts, or try generating an answer with AI."
+                  button={
+                    <Buttons
+                      openEditors={openEditors}
+                      question={question}
+                      saveAnswer={saveAnswer}
+                      answers={answers}
+                      userL={userL}
+                      saving={saving}
+                      handleCancel={handleCancel}
+                      generateAnswer={generateAnswer}
+                      generatingAnswer={generatingAnswer}
+                      handleAnswerAdd={handleAnswerAdd}
+                      handleAnswerEdit={handleAnswerEdit}
+                    />
+                  }
+                />
+              )}
 
               {answers[question.id]?.answer?.answer && (
                 <UserFooter

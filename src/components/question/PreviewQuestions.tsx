@@ -57,8 +57,10 @@ export default function PreviewQuestions() {
       question: question.question,
       subjectId: subject.id,
       chapterId: selectedChapters[index] || Number(question.chapterId),
-      marks: question.marks,
-      year: response.year + " " + response.exam_type,
+      marks: question.marks ? question.marks : null,
+      year: response.year
+        ? response.year + response.exam_type && " " + response.exam_type
+        : null,
     }));
   };
 
