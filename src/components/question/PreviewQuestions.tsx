@@ -88,7 +88,7 @@ export default function PreviewQuestions() {
       router.push(`/subject/${subject.slug}`);
     } catch (error) {
       toast.error("Failed to save questions");
-      console.error("Error saving questions:", error);
+      console.log("Error saving questions:", error);
     } finally {
       setIsSubmitting(false);
     }

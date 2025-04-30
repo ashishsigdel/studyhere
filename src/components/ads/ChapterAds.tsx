@@ -8,7 +8,7 @@ export default function Sidebar() {
       (window as any).adsbygoogle = (window as any).adsbygoogle || [];
       (window as any).adsbygoogle.push({});
     } catch (e) {
-      console.error("AdSense error:", e);
+      console.log("AdSense error:", e);
     }
   }, []);
 

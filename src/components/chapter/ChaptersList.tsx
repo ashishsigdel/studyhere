@@ -178,12 +178,11 @@ export default function ChaptersList({
             <h2 className="text-2xl font-semibold">Chapters</h2>
             <div className="flex items-center gap-4">
               <button
-                type="button"
-                className="p-2 rounded-lg cursor-pointer bg-transparent hover:bg-primary hover:text-white transition-all active:scale-95 text-primary border border-primary flex items-center gap-2"
                 onClick={toggleForm}
+                className="px-2 py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2"
                 aria-label="Add new item"
               >
-                <FaPlus size={18} />
+                <FaPlus size={16} />
                 <span className="hidden sm:inline">Add Chapter</span>
               </button>
             </div>

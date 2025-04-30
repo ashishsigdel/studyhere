@@ -35,7 +35,7 @@ export default function useChapters() {
         setIsFavorite(fetchedSubject.isSaved);
       } catch (err) {
         toast.error("Failed to fetch chapters online");
-        console.error(err);
+        console.log(err);
       }
     }
 

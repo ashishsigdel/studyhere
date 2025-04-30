@@ -11,9 +11,12 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 
 type Props = {
-  image: string;
-  fullName: string;
-  role: string;
+  user: {
+    profilePic: string;
+    fullName: string;
+    role: string;
+    deletedAt?: string;
+  };
   createdAt: string;
   totalLikes: number;
   isLiked: boolean;
@@ -24,9 +27,7 @@ type Props = {
 };
 
 export default function UserFooter({
-  image,
-  fullName,
-  role,
+  user,
   createdAt,
   totalLikes,
   isLiked,
@@ -61,7 +62,13 @@ export default function UserFooter({
           <div className="relative flex-shrink-0">
             <div className="absolute inset-0 rounded-full shadow-sm ring-1 ring-gray-200/10 dark:ring-gray-700/50" />
             <Image
-              src={image ? image : defaultPic}
+              src={
+                user.deletedAt
+                  ? defaultPic
+                  : user.profilePic
+                  ? user.profilePic
+                  : defaultPic
+              }
               alt="profilePic"
               width={40}
               height={40}
@@ -71,16 +78,16 @@ export default function UserFooter({
 
           {/* Metadata */}
           <div className="flex flex-col min-w-0">
-            <span className="bg-gradient-to-r from-primary to-primary/50 text-white text-[11px] px-2 py-1 rounded-full w-fit mb-1.5 transform transition-all hover:scale-[1.02] active:scale-95 cursor-default">
+            <span className="bg-gradient-to-r from-primary to-[#323232]/50 text-white text-[11px] px-2 py-1 rounded-full w-fit mb-1.5 transform transition-all hover:scale-[1.02] active:scale-95 cursor-default">
               Answered By
             </span>
 
             <div className="flex items-center gap-2 mb-0.5">
               <span className="font-semibold text-sm flex items-center gap-1.5 truncate">
-                {fullName}
-                {role === "admin" ? (
+                {user.fullName}
+                {user.role === "admin" ? (
                   <MdVerified className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                ) : role === "ai" ? (
+                ) : user.role === "ai" ? (
                   <RiSparklingFill className="w-4 h-4 text-purple-400 flex-shrink-0 animate-pulse" />
                 ) : null}
               </span>

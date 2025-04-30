@@ -104,41 +104,19 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   };
 
   const fetchQuestions = async () => {
-    const cacheKey = `questions_${id}`;
-    setLoading(true);
-
-    const cachedData = await loadDataFromIndexedDB(DB_STORE_NAME, cacheKey);
-
-    if (cachedData) {
-      const { questions, chapter, subject } = cachedData;
-
-      setQuestions(questions);
-      setChapter(chapter);
-      setSubject(subject);
-      setLoading(false);
+    try {
+      const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
+      const data = response.data.data;
+      setQuestions(data.allQuestions);
+      setFilteredQuestions(data.allQuestions);
+      setChapter(data.chapter.name);
+      setSubject(data.chapter.subject.name);
+    } catch (err: any) {
+      toast.error(
+        err.response.data.message || "Failed to fetch chapters online"
+      );
     }
 
-    if (navigator.onLine) {
-      try {
-        const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
-        const data = response.data.data;
-        setQuestions(data.allQuestions);
-        setFilteredQuestions(data.allQuestions);
-        setChapter(data.chapter.name);
-        setSubject(data.chapter.subject.name);
-
-        // Save updated unique questions to IndexedDB
-        await saveDataToIndexedDB(DB_STORE_NAME, cacheKey, {
-          questions: data.allQuestions,
-          chapter: data.chapter.name,
-          subject: data.chapter.subject.name,
-          totalPages: data.totalPages,
-        });
-      } catch (err) {
-        toast.error("Failed to fetch chapters online");
-        console.error(err);
-      }
-    }
     setLoading(false);
   };
 

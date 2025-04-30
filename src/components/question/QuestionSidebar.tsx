@@ -40,7 +40,7 @@ export default function QuestionSidebar() {
         clearTimeout(timeout);
       };
     } catch (e) {
-      console.error("AdSense error:", e);
+      console.log("AdSense error:", e);
       setAdLoaded(false);
     }
   }, []);

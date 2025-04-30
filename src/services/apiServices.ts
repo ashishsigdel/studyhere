@@ -1,4 +1,6 @@
+import { removeAuth } from "@/redux/features/authSlice";
 import axios, { AxiosInstance } from "axios";
+import { store } from "@/redux/store"; // Import the Redux store directly
 
 export const baseUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}`;
 
@@ -24,18 +26,20 @@ const refreshAccessToken = async () => {
     );
 
     const newAccessToken: string = response.data.data.accessToken;
-
-    const encryptedAccessToken: string = newAccessToken;
-    localStorage.setItem("accessToken", encryptedAccessToken);
+    localStorage.setItem("accessToken", newAccessToken);
 
     return newAccessToken;
   } catch (error: any) {
     const pathname = window.location.pathname;
     const searchParams = window.location.search;
     const currentUrl = encodeURIComponent(pathname + searchParams);
+
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
+    // Use store.dispatch instead of useDispatch hook
+    store.dispatch(removeAuth());
     window.location.href = `/login?redirect=${currentUrl}`;
+
+    return null;
   }
 };
 
@@ -52,9 +56,14 @@ myAxios.interceptors.response.use(
     }
 
     if (error.response && error.response.status === 401) {
-      const newAccessToken: any = await refreshAccessToken();
+      const newAccessToken = await refreshAccessToken();
 
-      const originalRequest: any = error.config;
+      // If token refresh failed, just throw the error
+      if (!newAccessToken) {
+        throw error;
+      }
+
+      const originalRequest = error.config;
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return myAxios(originalRequest);
     }
@@ -65,15 +74,15 @@ myAxios.interceptors.response.use(
 myAxios.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
-    const decryptedToken = accessToken;
-    config.headers.Authorization = `Bearer ${decryptedToken}`;
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
-// create a incerceptor to see the request
+// Uncomment to debug requests
 // myAxios.interceptors.request.use((config) => {
 //   console.log("Request was sent with this config:", config);
 //   return config;
 // });
+
 export { myAxios, refreshAccessToken };

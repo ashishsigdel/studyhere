@@ -33,7 +33,7 @@ export default function OAuthButtons({
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      const endpoint = isRegister ? "/auth/register" : "/auth/user";
+      const endpoint = "/auth/user";
       const response = await myAxios.post(
         endpoint,
         {

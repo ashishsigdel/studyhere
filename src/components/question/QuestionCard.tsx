@@ -174,9 +174,7 @@ export default function QuestionCard({
 
               {answers[question.id]?.answer?.answer && (
                 <UserFooter
-                  image={answers[question.id]?.answer?.user?.profilePic}
-                  fullName={answers[question.id]?.answer?.user?.fullName}
-                  role={answers[question.id]?.answer?.user?.role}
+                  user={answers[question.id]?.answer?.user}
                   createdAt={answers[question.id]?.answer.createdAt}
                   totalLikes={answers[question.id]?.answer.TotalLikes}
                   isLiked={answers[question.id]?.answer.isLiked}

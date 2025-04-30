@@ -65,7 +65,7 @@ const AdsterraAd: React.FC = () => {
             invokeScript.parentNode.removeChild(invokeScript);
           }
         } catch (e) {
-          console.error("Error cleaning up ad scripts:", e);
+          console.log("Error cleaning up ad scripts:", e);
         }
       }
     };

@@ -49,9 +49,7 @@ export default function Question() {
                 />
                 {answer?.answer && (
                   <UserFooter
-                    image={answer?.user?.profilePic}
-                    fullName={answer?.user?.fullName}
-                    role={answer?.user?.role}
+                    user={answer.user}
                     createdAt={answer.createdAt}
                     totalLikes={answer.TotalLikes}
                     isLiked={answer.isLiked}
