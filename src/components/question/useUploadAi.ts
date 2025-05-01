@@ -77,6 +77,7 @@ export default function useUploadAi() {
             },
           }
         );
+
         setResponse(response.data.data.qustions);
         setChapters(response.data.data.chapters);
         setSubject(response.data.data.subject);
@@ -88,7 +89,6 @@ export default function useUploadAi() {
         dispatch(resetPhotos());
       }
     } else {
-      dispatch(resetPhotos());
       toast.error("Unable to Perform.");
       router.back();
     }

@@ -145,7 +145,7 @@ export default function ChaptersList({
     >
       {deleteModal !== null && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800/50 p-6 rounded-lg shadow-xl mx-2 md:mx-0 max-w-md w-full">
+          <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 p-6 rounded-lg shadow-xl mx-2 md:mx-0 max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">Delete Chapter</h3>
             <p className="mb-6">
               Are you sure you want to delete this chapter? This action cannot
@@ -179,7 +179,7 @@ export default function ChaptersList({
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleForm}
-                className="px-2 py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                className="px-2 py-2 sm:py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2"
                 aria-label="Add new item"
               >
                 <FaPlus size={16} />
@@ -194,7 +194,7 @@ export default function ChaptersList({
           {chapters.map((chapter, index) => (
             <div
               key={chapter.id}
-              className="flex gap-3 items-center p-3 rounded-lg hover:bg-white dark:hover:bg-gray-800/30 transition-colors group relative border-b border-black/10 dark:border-white/10"
+              className="flex gap-3 items-center p-3 rounded-lg hover:bg-white dark:hover:bg-[#2f2f2f] transition-colors group relative border-b border-black/10 dark:border-white/10"
             >
               <div className="flex items-center justify-center h-7 w-7 rounded-full border border-primary group-hover:bg-primary group-hover:text-white font-medium">
                 {index + 1}
@@ -254,7 +254,7 @@ export default function ChaptersList({
                         ref={(el: any) =>
                           (dropdownRefs.current[chapter.id] = el)
                         }
-                        className="absolute right-0 top-10 z-10 w-40 bg-white dark:bg-gray-800/50 rounded-md shadow-lg border border-gray-200 dark:border-gray-700"
+                        className="absolute right-0 top-10 z-10 w-40 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-md shadow-lg "
                       >
                         <button
                           className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700"

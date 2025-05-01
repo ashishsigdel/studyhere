@@ -104,6 +104,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   };
 
   const fetchQuestions = async () => {
+    setLoading(true);
     try {
       const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
       const data = response.data.data;

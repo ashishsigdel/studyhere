@@ -31,8 +31,8 @@ export default function Hero() {
   };
 
   return (
-    <section className="px-4 w-full relative overflow-hidden flex items-center">
-      <div className=" mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-12">
+    <section className="px-4 w-full relative overflow-hidden flex items-center mx-auto min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] py-6">
+      <div className="mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-12">
         {/* Left Content */}
         <div className="w-full md:w-1/2 z-10 text-center md:text-left">
           <h1 className="text-5xl sm:text-6xl md:text-6xl font-bold leading-tight text-gray-900 dark:text-white mb-6">
@@ -44,21 +44,72 @@ export default function Hero() {
             <span className="text-primary">LearnHere...</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-xl mx-auto md:mx-0">
-            Your one-stop platform for all your learning needs. Join us and
-            start your journey today!
-          </p>
+          <div className="block md:hidden w-full md:w-1/2 relative">
+            <Image
+              src={heroImageLight}
+              alt="Learnhere Illustration"
+              className="w-full h-auto object-cover rounded-xl block dark:hidden"
+              priority
+            />
+            <Image
+              src={heroImageDark}
+              alt="Learnhere Illustration"
+              className="w-full h-auto object-cover rounded-xl hidden dark:block"
+              priority
+            />
+          </div>
 
-          <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+          <div className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-xl mx-auto md:mx-0">
+            <p className="mb-4">
+              Your one-stop platform for all your learning needs. Join us and
+              start your journey today!
+            </p>
+            <ul className="list-disc list-inside space-y-2 pl-2 text-start">
+              <li>
+                <span className="font-medium text-primary">
+                  Question-wise learning
+                </span>{" "}
+                for focused practice.
+              </li>
+              <li>
+                Each question categorized by{" "}
+                <span className="font-medium text-primary">
+                  individual chapters
+                </span>
+                .
+              </li>
+              <li>
+                Coverage of{" "}
+                <span className="font-medium text-primary">
+                  all past questions
+                </span>
+                .
+              </li>
+              <li>
+                <span className="font-medium text-primary">
+                  Instant solutions
+                </span>{" "}
+                powered by AI.
+              </li>
+              <li>
+                <span className="font-medium text-primary">
+                  Add your own answers
+                </span>{" "}
+                and manage your study materials easily.
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col lg:flex-row justify-center lg:justify-start gap-4">
             <button
-              onClick={() => scrollToSection("featured-subjects")}
+              onClick={() => router.push("/search")}
               className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition duration-200"
             >
               Start Exploring
             </button>
             <button
               onClick={() => router.push("/login?new=true")}
-              className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white px-6 py-3 rounded-lg font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200"
+              className="bg-gray-50 hover:bg-gray-100 dark:bg-[#323232] hover:dark:bg-[#2c2c2c] text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 px-6 py-3 rounded-lg font-semibold transition duration-200"
             >
               Sign Up for Free
             </button>

@@ -151,7 +151,7 @@ export default function PreviewQuestions() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {response.questions.length} questions
+                {response.questions && response.questions.length} questions
               </span>
               <div className="flex items-center gap-1 text-green-500">
                 <FaCheckCircle />
@@ -161,50 +161,54 @@ export default function PreviewQuestions() {
           </div>
 
           <div className="space-y-4">
-            {response.questions.map((question, index) => (
-              <div
-                key={index}
-                className="p-4 border rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800/40 shadow-sm"
-              >
-                <div className="flex flex-col md:flex-row md:items-start gap-4">
-                  <div className="flex-1">
-                    <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
-                      <div
-                        dangerouslySetInnerHTML={{ __html: question.question }}
-                      />
+            {response.questions &&
+              response.questions.map((question, index) => (
+                <div
+                  key={index}
+                  className="p-4 rounded-lg bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-sm"
+                >
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
+                    <div className="flex-1">
+                      <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: question.question,
+                          }}
+                        />
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <span>Marks: {question.marks}</span>
+                        <span>Year: {response.year}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                      <span>Marks: {question.marks}</span>
-                      <span>Year: {response.year}</span>
-                    </div>
-                  </div>
 
-                  <div className="w-full md:w-48">
-                    <label
-                      htmlFor={`chapter-${index}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >
-                      Chapter
-                    </label>
-                    <select
-                      id={`chapter-${index}`}
-                      value={
-                        selectedChapters[index] || question.chapterId || ""
-                      }
-                      onChange={(e) => handleChapterChange(index, e)}
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">Select chapter</option>
-                      {chapters.map((chapter) => (
-                        <option key={chapter.id} value={chapter.id}>
-                          {chapter.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="w-full md:w-48">
+                      <label
+                        htmlFor={`chapter-${index}`}
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >
+                        Chapter
+                      </label>
+                      <select
+                        id={`chapter-${index}`}
+                        value={
+                          selectedChapters[index] || question.chapterId || ""
+                        }
+                        onChange={(e) => handleChapterChange(index, e)}
+                        className="w-full px-3 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#3c3c3c] text-sm transition-all"
+                      >
+                        <option value="">Select chapter</option>
+                        {chapters &&
+                          chapters.map((chapter) => (
+                            <option key={chapter.id} value={chapter.id}>
+                              {chapter.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           <div className="flex justify-end gap-4 pt-6 border-t dark:border-gray-700">

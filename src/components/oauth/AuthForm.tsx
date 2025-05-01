@@ -15,13 +15,13 @@ export default function AuthForm() {
 
   return (
     <div className="w-full min-h-[calc(100dvh-64px)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800/50 rounded-xl shadow-lg overflow-hidden border border-black/10 dark:border-white/10">
+      <div className="w-full max-w-md bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
         <div className="p-6 sm:p-8">
           <div className="text-center mb-8">
             <div className="flex items-center my-6">
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white px-4">
-                {isRegister ? "Create your account" : "Welcome back"}
+                {isRegister ? "Create your Account" : "Welcome Back"}
               </h2>
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
             </div>

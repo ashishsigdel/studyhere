@@ -1,6 +1,7 @@
 import React from "react";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
+import { FaSpinner } from "react-icons/fa";
 
 type Props = {
   chapter: string;
@@ -42,9 +43,9 @@ export default function AddModal({
           <button
             onClick={handleSaveChapter}
             disabled={loading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md flex items-center"
           >
-            {loading ? <Spinner /> : "Add"}
+            {loading ? <FaSpinner className="animate-spin mr-2" /> : <></>} Add
           </button>
         </div>
       </div>

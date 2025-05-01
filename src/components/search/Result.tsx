@@ -118,12 +118,12 @@ export default function Result() {
   };
 
   return (
-    <div className="flex flex-col min-[900px]:flex-row gap-6 p-4 max-w-7xl mx-auto">
+    <div className="flex flex-col min-[900px]:flex-row min-[900px]:gap-6 p-4 max-w-7xl mx-auto">
       {/* Mobile Filter Toggle */}
-      <div className="min-[900px]:hidden mb-4">
+      <div className="min-[900px]:hidden">
         <button
           onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800/50 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg shadow-sm dark:border-gray-700"
         >
           <FiFilter className="text-gray-600 dark:text-gray-300" />
           <span className="font-medium">Filters</span>
@@ -132,7 +132,7 @@ export default function Result() {
 
       {/* Sidebar Filters */}
       <div
-        className={`w-full min-[900px]:w-72 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm p-5 h-fit sticky border border-gray-100 dark:border-gray-700 transition-all duration-300 ${
+        className={`w-full min-[900px]:w-60 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-5 h-fit sticky transition-all duration-300 mt-4 ${
           mobileFiltersOpen ? "block" : "hidden min-[900px]:block"
         }`}
       >
@@ -165,12 +165,12 @@ export default function Result() {
                 q: e.target.value,
               })
             }
-            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
+            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#3c3c3c] text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
           />
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-700 my-5"></div>
+        <div className="border-t border-gray-200 dark:border-gray-500 my-5"></div>
 
         {/* Sort Options */}
         <div className="mb-6">
@@ -273,7 +273,7 @@ const FilterButton = ({
     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
       active
         ? "bg-primary/10 text-primary dark:bg-primary/20 border border-primary/20"
-        : "hover:bg-gray-100 dark:hover:bg-gray-700 border border-transparent"
+        : "hover:bg-gray-100 dark:hover:bg-[#323232] border border-transparent"
     }`}
   >
     <span

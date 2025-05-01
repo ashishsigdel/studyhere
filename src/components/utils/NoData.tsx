@@ -14,13 +14,13 @@ export default function NoData({
   button = <></>,
 }: Props) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full col-span-full mb-4">
+    <div className="flex flex-col items-center justify-center w-full h-full col-span-full mb-4 ">
       <div className="relative w-64 h-64 mx-auto mb-3">
         <Image
           src={Picture}
           alt={title}
           fill
-          className="object-contain"
+          className="object-contain opacity-90"
           priority
         />
       </div>

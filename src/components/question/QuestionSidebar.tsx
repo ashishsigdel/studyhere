@@ -75,34 +75,35 @@ export default function QuestionSidebar() {
       <div className="py-4">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center gap-2 font-medium w-full hover:bg-gray-100 dark:hover:bg-gray-800 py-2 rounded-md"
+          className="flex items-center gap-2 font-medium w-full hover:bg-gray-100 dark:hover:bg-[#2f2f2f] py-2 rounded-md justify-between "
         >
+          <span className="ml-3">Chapters</span>
           {collapsed ? (
             <FaChevronRight className="h-4 w-4" />
           ) : (
             <FaChevronDown className="h-4 w-4" />
           )}
-          <span>Chapters</span>
         </button>
 
         {!collapsed && (
           <nav className="space-y-2">
-            {chapters.map((chapter, index) => (
-              <button
-                key={chapter.id}
-                onClick={() => handleChapterClick(chapter.id)}
-                className={`w-full flex items-start gap-2 text-sm p-2 rounded-md transition-colors ${
-                  pathname.split("/").pop() === chapter.id.toString()
-                    ? "font-semibold text-black dark:text-white bg-white dark:bg-gray-700"
-                    : "font-normal text-gray-800 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                }`}
-              >
-                <span className="min-w-[20px]">{index + 1}.</span>
-                <span className="capitalize text-left line-clamp-1">
-                  {chapter.name}
-                </span>
-              </button>
-            ))}
+            {chapters &&
+              chapters.map((chapter, index) => (
+                <button
+                  key={chapter.id}
+                  onClick={() => handleChapterClick(chapter.id)}
+                  className={`w-full flex items-start gap-2 text-sm p-2 rounded-md transition-colors ${
+                    pathname.split("/").pop() === chapter.id.toString()
+                      ? "font-semibold text-black dark:text-white bg-white dark:bg-[#292828]"
+                      : "font-normal text-gray-800 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2f2f2f]"
+                  }`}
+                >
+                  <span className="min-w-[20px]">{index + 1}.</span>
+                  <span className="capitalize text-left line-clamp-1">
+                    {chapter.name}
+                  </span>
+                </button>
+              ))}
           </nav>
         )}
       </div>

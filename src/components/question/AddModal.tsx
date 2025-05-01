@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import TabItem from "./TabIcon";
-import { FaCloudUploadAlt, FaTimes } from "react-icons/fa";
+import { FaCloudUploadAlt, FaSpinner, FaTimes } from "react-icons/fa";
 import useUploadAi from "./useUploadAi";
 
 type Props = {
@@ -29,7 +29,7 @@ export default function AddModal({
           <h2 className="text-xl">
             Add <span className="hidden min-[400px]:inline">Question</span>
           </h2>
-          <div className="flex gap-1 rounded-xl border border-black/10 p-1 dark:border-white/10 bg-white dark:bg-gray-800/50">
+          <div className="flex gap-1 rounded-xl border border-black/10 p-1 dark:border-white/10 bg-white dark:bg-[#424242]">
             <TabItem
               label="Manual"
               icon={<></>}
@@ -139,9 +139,10 @@ export default function AddModal({
             <button
               onClick={handleSaveQuestion}
               disabled={loadingAdd || !modeManual}
-              className="px-4 py-2 bg-blue-500 disabled:opacity-70 text-white rounded-md"
+              className="px-4 py-2 bg-blue-500 disabled:opacity-70 text-white rounded-md flex items-center"
             >
-              {loadingAdd ? <Spinner /> : "Add"}
+              {loadingAdd ? <FaSpinner className="animate-spin mr-2" /> : <></>}{" "}
+              Add
             </button>
           ) : (
             <button

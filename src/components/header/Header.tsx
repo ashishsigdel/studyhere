@@ -78,7 +78,7 @@ export default function Header() {
           {/* Logo and Search Section */}
           <div className="flex items-center">
             <Link href={"/"} className="mr-2 sm:mr-4">
-              <div className="flex items-center gap-2 hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center gap-2 transition-transform duration-300">
                 <Image
                   src={"/icon192.png"}
                   alt="logo"
@@ -106,7 +106,7 @@ export default function Header() {
                     placeholder="Search for subjects, or resources..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="px-4 pr-12 py-2 w-[320px] border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
+                    className="px-4 pr-12 py-2 w-[320px] rounded-full dark:bg-[#424242] border border-black/10 dark:border-white/10 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
                   />
                   <button
                     type="submit"
@@ -119,12 +119,12 @@ export default function Header() {
             )}
 
             {user ? (
-              <li className="hover:scale-105 transition-transform duration-200">
+              <li className="transition-transform duration-200">
                 <Profile />
               </li>
             ) : (
               <div className="flex items-center gap-3 lg:gap-5">
-                <div className="hover:scale-105 transition-transform duration-200">
+                <div className="transition-transform duration-200">
                   <Link href={"/login"} className="text-sm">
                     <li className="px-2 py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300">
                       Login
@@ -145,7 +145,7 @@ export default function Header() {
             </button>
 
             {user ? (
-              <li className="hover:scale-105 transition-transform duration-200">
+              <li className="transition-transform duration-200">
                 <Profile />
               </li>
             ) : (
@@ -179,7 +179,7 @@ export default function Header() {
                 placeholder="Search for subjects, or resources..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="px-4 pr-12 py-2 w-full border border-gray-300 rounded-full dark:bg-gray-800/50 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
+                className="px-4 pr-12 py-2 w-full rounded-full dark:bg-[#424242] border border-black/10 dark:border-white/10 dark:text-white dark:border-gray-600 focus:outline-none transition-all duration-300"
                 autoFocus={isSearchOpen}
               />
               <button

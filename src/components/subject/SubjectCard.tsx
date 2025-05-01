@@ -32,7 +32,7 @@ export default function SubjectCard({ subject }: Props) {
 
   return (
     <Link href={`/subject/${subject.slug}`} key={subject.id}>
-      <div className="group relative overflow-hidden w-full h-32 rounded-xl bg-white dark:bg-[#424242] shadow-lg hover:shadow-xl hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent transition-all duration-300 ease-in-out hover:-translate-y-1 border border-gray-200 dark:border-[#505050]">
+      <div className="group relative overflow-hidden w-full h-32 rounded-xl bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent transition-all duration-300 ease-in-out hover:-translate-y-1 border border-gray-200 dark:border-[#505050]">
         {/* Badge (top-right corner) */}
         {badge && (
           <span

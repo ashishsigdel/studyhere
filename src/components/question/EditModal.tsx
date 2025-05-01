@@ -4,6 +4,7 @@ import Spinner from "@/utils/Spinner";
 import { MdClose } from "react-icons/md";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
+import { FaSpinner } from "react-icons/fa";
 
 type Props = {
   editQuestion: any;
@@ -84,9 +85,14 @@ export default function EditModal({
             <button
               onClick={handleSaveEdit}
               disabled={loadingEdit}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md flex items-center"
             >
-              {loadingEdit ? <Spinner /> : "Save"}
+              {loadingEdit ? (
+                <FaSpinner className="animate-spin mr-2" />
+              ) : (
+                <></>
+              )}{" "}
+              Save
             </button>
             <button
               onClick={() => setShowModal(false)}

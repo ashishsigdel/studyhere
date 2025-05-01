@@ -64,7 +64,7 @@ export default function OAuthButtons({
     <div className="flex flex-col gap-3">
       <button
         type="button"
-        className="w-full px-4 py-2.5 rounded-lg flex items-center justify-center gap-3 cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 transition-colors"
+        className="w-full px-4 py-2.5 rounded-lg flex items-center justify-center gap-3 cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-[#323232] hover:dark:bg-[#2c2c2c] text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 transition-colors"
         onClick={() => handleOAuthLogin(new GoogleAuthProvider())}
       >
         <svg
@@ -95,7 +95,7 @@ export default function OAuthButtons({
 
       <button
         type="button"
-        className="w-full px-4 py-2.5 rounded-lg flex items-center justify-center gap-3 cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 transition-colors"
+        className="w-full px-4 py-2.5 rounded-lg flex items-center justify-center gap-3 cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-[#323232] hover:dark:bg-[#2c2c2c] text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 transition-colors"
         onClick={() => handleOAuthLogin(new GithubAuthProvider())}
       >
         <svg

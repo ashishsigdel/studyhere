@@ -223,7 +223,7 @@ export default function Profile() {
 
       <div className="space-y-6">
         {/* Profile Picture Section */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg p-6">
           <div className="flex flex-col items-center">
             <div className="relative group mb-4">
               <input
@@ -264,7 +264,7 @@ export default function Profile() {
         </div>
 
         {/* Personal Information Section */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg p-6">
           <h3 className="w-full px-4 sm:px-6 md:px-8 border-b-[1px] border-black/10 dark:border-white/10 pb-4 mb-8 font-semibold text-[17.5px] leading-5 uppercase">
             Personal Information
           </h3>
@@ -329,7 +329,7 @@ export default function Profile() {
         </div>
 
         {/* Edit Form Section */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg p-6">
           <h3 className="w-full px-4 sm:px-6 md:px-8 border-b-[1px] border-black/10 dark:border-white/10 pb-4 mb-8 font-semibold text-[17.5px] leading-5 uppercase">
             Edit Profile
           </h3>
@@ -348,8 +348,8 @@ export default function Profile() {
                   className={`w-full px-3 py-2 rounded-md border ${
                     fullNameError
                       ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      : "border-black/10 dark:border-white/10"
+                  } bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                 />
                 {fullNameError && (
                   <p className="mt-1 text-sm text-red-600">{fullNameError}</p>
@@ -368,8 +368,8 @@ export default function Profile() {
                   className={`w-full px-3 py-2 rounded-md border ${
                     phoneError
                       ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      : "border-black/10 dark:border-white/10"
+                  } bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                 />
                 {phoneError && (
                   <p className="mt-1 text-sm text-red-600">{phoneError}</p>
@@ -384,7 +384,7 @@ export default function Profile() {
                   type="date"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={`w-full px-3 py-2 rounded-md border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                 />
               </div>
 
@@ -396,7 +396,7 @@ export default function Profile() {
                   type="text"
                   value={college}
                   onChange={(e) => setCollege(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={`w-full px-3 py-2 rounded-md border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                 />
               </div>
 
@@ -408,7 +408,7 @@ export default function Profile() {
                   type="text"
                   value={semester}
                   onChange={(e) => setSemester(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={`w-full px-3 py-2 rounded-md border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                 />
               </div>
             </div>
@@ -421,7 +421,7 @@ export default function Profile() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className={`w-full px-3 py-2 rounded-md border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-[#3c3c3c] text-gray-600 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
             </div>
 
@@ -464,7 +464,7 @@ export default function Profile() {
         </div>
 
         {/* Account Section */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg p-6">
           <h3 className="w-full px-4 sm:px-6 md:px-8 border-b-[1px] border-black/10 dark:border-white/10 pb-4 mb-8 font-semibold text-[17.5px] leading-5 uppercase">
             Account
           </h3>
@@ -556,7 +556,7 @@ export default function Profile() {
         </div>
 
         {/* Danger Zone */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-lg p-6 border border-red-200 dark:border-red-800/50">
+        <div className="bg-white dark:bg-[#424242] rounded-lg p-6 border border-red-200 dark:border-red-800/50">
           <h3 className="text-red-500 w-full px-4 sm:px-6 md:px-8 border-b-[1px] border-black/10 dark:border-white/10 pb-4 mb-8 font-semibold text-[17.5px] leading-5 uppercase">
             Danger Zone
           </h3>

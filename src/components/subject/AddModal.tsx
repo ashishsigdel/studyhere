@@ -3,6 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import Spinner from "@/utils/Spinner";
 import { useTheme } from "next-themes";
 import toast from "react-hot-toast";
+import { FaSpinner } from "react-icons/fa";
 const ReCAPTCHA_KEY =
   process.env.NEXT_PUBLIC_RECAPTCHA_KEY ||
   "6LfblSQrAAAAAKUsFiMn7ASp2j6S8CQaC7i7hl-O";
@@ -75,9 +76,10 @@ export default function AddModal({
           <button
             onClick={handleSubmit}
             disabled={loading || !captchaToken}
-            className="px-4 py-2 bg-blue-500 disabled:bg-blue-300 text-white rounded-md"
+            className="px-4 py-2 bg-blue-500 disabled:bg-blue-300 text-white rounded-md flex items-center"
           >
-            {loading ? <Spinner /> : "Add Subject"}
+            {loading ? <FaSpinner className="animate-spin mr-2" /> : <></>} Add
+            Subject
           </button>
         </div>
       </div>

@@ -73,15 +73,12 @@ export default function Questions() {
             {user && (
               <div className="flex items-center gap-4">
                 <button
-                  type="button"
-                  className="p-2 rounded-lg cursor-pointer bg-transparent hover:bg-primary hover:text-white  transition-all active:scale-95 text-primary border border-primary flex items-center gap-2"
                   onClick={toggleForm}
+                  className="px-2 py-2 sm:py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2 whitespace-nowrap"
                   aria-label="Add new item"
                 >
-                  <FaPlus size={18} />
-                  <span className="hidden lg:inline whitespace-nowrap">
-                    Add Question
-                  </span>
+                  <FaPlus size={16} />
+                  <span className="hidden sm:inline">Add Question/s</span>
                 </button>
               </div>
             )}
