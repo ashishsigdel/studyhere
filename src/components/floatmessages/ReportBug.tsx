@@ -1,32 +1,34 @@
 "use client";
 
+import { useState, ChangeEvent, FormEvent } from "react";
+import { FaBullhorn, FaCloudUploadAlt } from "react-icons/fa";
+import { IoAlertCircle } from "react-icons/io5";
+import { MdError } from "react-icons/md";
+import toast from "react-hot-toast";
+import { myAxios } from "@/services/apiServices";
+
 interface FormData {
-  title: string;
+  fullName: string;
+  email: string;
   description: string;
   screenshot: File | null;
 }
 
 interface FormErrors {
-  title?: string;
+  fullName?: string;
+  email?: string;
   description?: string;
   screenshot?: string;
 }
 
-import { myAxios } from "@/services/apiServices";
-import Link from "next/link";
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import toast from "react-hot-toast";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { IoAlertCircle } from "react-icons/io5";
-import { MdError } from "react-icons/md";
-
-const BugReportForm = ({}) => {
+const FloatingBugReport = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    title: "",
+    fullName: "",
+    email: "",
     description: "",
     screenshot: null,
   });
-
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -87,8 +89,8 @@ const BugReportForm = ({}) => {
 
     // Validate required fields
     let isValid = true;
-    if (!validateField("title", formData.title)) isValid = false;
     if (!validateField("description", formData.description)) isValid = false;
+    if (!validateField("screenshot", formData.screenshot)) isValid = false;
 
     if (!isValid) {
       setIsSubmitting(false);
@@ -97,180 +99,221 @@ const BugReportForm = ({}) => {
 
     try {
       const submitData = new FormData();
-      submitData.append("title", formData.title);
+      submitData.append("fullName", formData.fullName);
+      submitData.append("email", formData.email);
       submitData.append("description", formData.description);
       if (formData.screenshot) {
         submitData.append("screenshot", formData.screenshot);
       }
 
-      // Show immediate success toast
       toast.success("Message sending...");
 
-      // Reset form data after showing the success toast
       setFormData({
-        title: "",
+        fullName: "",
+        email: "",
         description: "",
         screenshot: null,
       });
       setPreviewUrl(null);
+      setIsFormOpen(false);
 
-      // Handle API call in the background
-      try {
-        await myAxios.post("/contact/reportbug", submitData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      } catch (error: any) {
-        toast.custom(
-          (t: any) => (
-            <div
-              className={`${
-                t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex border border-black/15 dark:border-white/15`}
-            >
-              <div className="flex-1 w-0 p-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 pt-0.5">
-                    <MdError size={40} color="red" />
-                  </div>
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-medium">
-                      Failed to send your bug report.
-                    </p>
-                    <Link
-                      href={"/report"}
-                      className="mt-1 text-sm text-blue-500 underline"
-                    >
-                      Try again!
-                    </Link>
-                  </div>
+      await myAxios.post("/contact/reportbug", submitData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    } catch (error: any) {
+      toast.custom(
+        (t: any) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex border border-black/15 dark:border-white/15`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">
+                  <MdError size={40} color="red" />
+                </div>
+                <div className="ml-3 flex-1">
+                  <p className="text-sm font-medium">
+                    Failed to send your bug report.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsFormOpen(true);
+                      toast.dismiss(t.id);
+                    }}
+                    className="mt-1 text-sm text-blue-500 underline"
+                  >
+                    Try again!
+                  </button>
                 </div>
               </div>
-              <div className="flex border-l border-black/15 dark:border-white/15">
-                <button
-                  onClick={() => toast.dismiss(t.id)}
-                  className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium"
-                >
-                  Close
-                </button>
-              </div>
             </div>
-          ),
-          {
-            duration: Infinity,
-          }
-        );
-      }
-    } catch (error: any) {
-      toast.error("Error with submission. Please try again.");
+            <div className="flex border-l border-black/15 dark:border-white/15">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          duration: Infinity,
+        }
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-106px)] w-full flex items-center justify-center">
-      <div className={`max-w-2xl mx-auto p-6 w-full`}>
-        <h1 className="text-2xl font-bold mb-6">Report a Bug</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="title">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
-              placeholder="Brief description of the issue"
-            />
-            {errors.title && (
-              <div className="flex items-center text-red-500 text-sm">
-                <IoAlertCircle className="w-4 h-4 mr-1" />
-                {errors.title}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label
-              className="block text-sm font-medium mb-1"
-              htmlFor="description"
+    <div className="fixed bottom-3 sm:bottom-6 right-6 z-[9999]">
+      {isFormOpen ? (
+        <div className="bg-white dark:bg-[#2c2c2c] rounded-3xl shadow-xl border border-black/15 dark:border-white/15 w-[323px] overflow-hidden">
+          <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="font-semibold text-lg">Report a Bug</h3>
+            <button
+              onClick={() => setIsFormOpen(false)}
+              className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl"
             >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              rows={4}
-              className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
-              placeholder="Detailed description of the bug"
-            />
-            {errors.description && (
-              <div className="flex items-center text-red-500 text-sm">
-                <IoAlertCircle className="w-4 h-4 mr-1" />
-                {errors.description}
-              </div>
-            )}
+              &times;
+            </button>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Screenshot</label>
-            <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-md p-4">
-              <input
-                type="file"
-                id="screenshot"
-                name="screenshot"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <label
-                htmlFor="screenshot"
-                className="flex flex-col items-center justify-center cursor-pointer"
-              >
-                <FaCloudUploadAlt className="w-8 h-8 text-gray-400 mb-2" />
-                <span className="text-sm text-gray-500">
-                  Click to upload screenshot
-                </span>
-                <span className="text-xs text-gray-400 mt-1">
-                  PNG, JPG up to 10MB
-                </span>
-              </label>
-            </div>
-            <div className="flex items-center text-gray-500 text-xs mt-2 italic">
-              Note: larger file takes more time to upload.
-            </div>
-
-            {previewUrl && (
-              <div className="mt-4">
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="max-h-48 rounded-md"
+          <div className="max-h-[80vh] overflow-y-auto p-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="fullName"
+                >
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
+                  placeholder="Your Name"
                 />
               </div>
-            )}
-          </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50"
-          >
-            {isSubmitting ? "Submitting..." : "Submit Bug Report"}
-          </button>
-        </form>
-      </div>
+              <div>
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="email"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="description"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  rows={3}
+                  className="w-full p-2 border border-gray-200 dark:border-[#4b4b4b] rounded-lg bg-white dark:bg-[#3c3c3c] mb-1"
+                  placeholder="Detailed description of the bug"
+                />
+                {errors.description && (
+                  <div className="flex items-center text-red-500 text-xs">
+                    <IoAlertCircle className="w-4 h-4 mr-1" />
+                    {errors.description}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Screenshot
+                </label>
+                <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-md p-4">
+                  <input
+                    type="file"
+                    id="screenshot"
+                    name="screenshot"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="screenshot"
+                    className="flex flex-col items-center justify-center cursor-pointer"
+                  >
+                    <FaCloudUploadAlt className="w-8 h-8 text-gray-400 mb-2" />
+                    <span className="text-sm text-gray-500">
+                      Click to upload screenshot
+                    </span>
+                    <span className="text-xs text-gray-400 mt-1">
+                      PNG, JPG up to 10MB
+                    </span>
+                  </label>
+                </div>
+                {errors.screenshot && (
+                  <div className="flex items-center text-red-500 text-xs">
+                    <IoAlertCircle className="w-4 h-4 mr-1" />
+                    {errors.screenshot}
+                  </div>
+                )}
+
+                {previewUrl && (
+                  <div className="mt-4">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="max-h-48 rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Bug Report"}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : (
+        <button
+          onClick={() => setIsFormOpen(true)}
+          className="bg-gray-100 dark:bg-[#323232] border border-black/15 dark:border-white/15 text-gray-600 dark:text-gray-200 rounded-full p-3 sm:py-2 sm:px-4 text-sm shadow-lg flex items-center gap-2 justify-center transition-all duration-200"
+          aria-label="Report a bug"
+        >
+          <FaBullhorn size={17} />
+          <span className="hidden sm:inline-block">Report a Bug </span>
+        </button>
+      )}
     </div>
   );
 };
 
-export default BugReportForm;
+export default FloatingBugReport;

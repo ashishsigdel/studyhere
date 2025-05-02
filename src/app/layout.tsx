@@ -5,7 +5,7 @@ import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
-import { Cookies } from "@/components/floatmessages";
+import { Cookies, ReportBug } from "@/components/floatmessages";
 import { Footer } from "@/components/footer";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
@@ -96,6 +96,7 @@ export default function RootLayout({
             {children}
             <Toaster position="bottom-center" reverseOrder={true} />
             <NetworkStatus />
+            <ReportBug />
             <Cookies />
             <Footer />
           </CustomThemeProvider>
