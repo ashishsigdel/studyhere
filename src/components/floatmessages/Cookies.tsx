@@ -28,7 +28,7 @@ export default function Cookies() {
 
   return (
     <div
-      className={`fixed bottom-5 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-5 w-[calc(100%-2.5rem)] md:w-auto bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-lg rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-md 
+      className={`fixed z-[9999] bottom-5 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-5 w-[calc(100%-2.5rem)] md:w-auto bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-lg rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-md 
     transition-all duration-300 ease-in-out ${
       animate ? "translate-y-0 opacity-100" : "translate-y-32 opacity-0"
     }`}

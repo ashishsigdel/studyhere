@@ -171,7 +171,7 @@ const FloatingBugReport = () => {
   };
 
   return (
-    <div className="fixed bottom-3 sm:bottom-6 right-6 z-[9999]">
+    <div className="fixed bottom-3 sm:bottom-6 right-6 z-[9998]">
       {isFormOpen ? (
         <div className="bg-white dark:bg-[#2c2c2c] rounded-3xl shadow-xl border border-black/15 dark:border-white/15 w-[323px] overflow-hidden">
           <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
