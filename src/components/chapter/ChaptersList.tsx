@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import { myAxios } from "@/services/apiServices";
+import { useSelector } from "react-redux";
 
 type Props = {
   toggleForm: MouseEventHandler<HTMLButtonElement>;
@@ -32,6 +33,7 @@ export default function ChaptersList({
   fetchChapters,
 }: Props) {
   const pathname = usePathname();
+  const user = useSelector((state: any) => state.auth.user);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [editingChapter, setEditingChapter] = useState<number | null>(null);
   const [deleteModal, setDeleteModal] = useState<number | null>(null);
@@ -176,16 +178,18 @@ export default function ChaptersList({
         <div className="flex flex-col justify-between w-full">
           <div className="w-full justify-between flex items-center mb-4">
             <h2 className="text-2xl font-semibold">Chapters</h2>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={toggleForm}
-                className="px-2 py-2 sm:py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2"
-                aria-label="Add new item"
-              >
-                <FaPlus size={16} />
-                <span className="hidden sm:inline">Add Chapter</span>
-              </button>
-            </div>
+            {user && (
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={toggleForm}
+                  className="px-2 py-2 sm:py-1 border rounded-md border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                  aria-label="Add new item"
+                >
+                  <FaPlus size={16} />
+                  <span className="hidden sm:inline">Add Chapter</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -239,14 +243,15 @@ export default function ChaptersList({
                       {chapter.name}
                     </Link>
 
-                    {/* Dropdown Trigger */}
-                    <button
-                      className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                      onClick={(e) => toggleDropdown(chapter.id, e)}
-                      aria-label="Chapter actions"
-                    >
-                      <BsThreeDots className="text-gray-500 dark:text-gray-400" />
-                    </button>
+                    {user && (
+                      <button
+                        className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        onClick={(e) => toggleDropdown(chapter.id, e)}
+                        aria-label="Chapter actions"
+                      >
+                        <BsThreeDots className="text-gray-500 dark:text-gray-400" />
+                      </button>
+                    )}
 
                     {/* Dropdown Menu */}
                     {activeDropdown === chapter.id && (

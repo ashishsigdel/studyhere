@@ -5,8 +5,10 @@ import QuestionCard from "./QuestionCard";
 import useQuestions from "./useQuestions";
 import { useSelector } from "react-redux";
 import { Spinner } from "@/utils";
-import { FaBookOpen, FaWifi } from "react-icons/fa";
+import { FaBookOpen, FaLock, FaWifi } from "react-icons/fa";
 import { QuestionType } from "@/types/question";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 type Props = {
   loading: boolean;
@@ -48,7 +50,7 @@ export default function QuestionFields({
     {}
   );
   const [editorMode, setEditorMode] = useState<"none" | "add" | "edit">("none");
-
+  const pathname = usePathname();
   const handleAnswerAdd = async (id: number) => {
     // Clear any existing answer states first
     {
@@ -139,7 +141,7 @@ export default function QuestionFields({
   }, []);
 
   return (
-    <>
+    <div className="relative">
       {/* Empty States */}
       {loading && (
         <div className="p-8 flex justify-center">
@@ -185,6 +187,26 @@ export default function QuestionFields({
           generatingAnswer={generatingAnswer}
         />
       ))}
-    </>
+      {!userL && questions && questions.length > 0 && (
+        <div className="flex flex-col items-center justify-start pt-16 px-4 z-10">
+          <div className="w-full max-w-sm text-center">
+            <FaLock className="text-blue-500 mx-auto text-3xl mb-3" />
+
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              End of Preview, Login Required.
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              Please log in to see all available questions.
+            </p>
+            <Link
+              href={`/login?redirect=${encodeURIComponent(pathname)}`}
+              className="bg-[#c0ffb2] hover:bg-[#8dff76] text-[#073400] text-sm px-4 py-2 rounded-md w-full transition"
+            >
+              Login
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

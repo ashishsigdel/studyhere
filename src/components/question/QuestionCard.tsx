@@ -77,14 +77,16 @@ export default function QuestionCard({
             <div dangerouslySetInnerHTML={{ __html: question.question }} />
           </div>
         </div>
-        <div className="relative inline-block">
-          <div
-            onClick={() => handleOpenModel(question)}
-            className="p-1 hover:bg-gray-300 hover:dark:bg-gray-700 rounded-full cursor-pointer "
-          >
-            <HiDotsVertical />
+        {userL && (
+          <div className="relative inline-block">
+            <div
+              onClick={() => handleOpenModel(question)}
+              className="p-1 hover:bg-gray-300 hover:dark:bg-gray-700 rounded-full cursor-pointer "
+            >
+              <HiDotsVertical />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="w-full flex justify-end text-sm text-gray-600 dark:text-gray-300 gap-4">

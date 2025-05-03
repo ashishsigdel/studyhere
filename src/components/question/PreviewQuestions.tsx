@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 export default function PreviewQuestions() {
   const { handleFetchImage, loading, response, subject, chapters } =
     useUploadAi();
+
   const [stage, setStage] = useState<"uploaded" | "processing" | "extracting">(
     "uploaded"
   );
@@ -58,9 +59,9 @@ export default function PreviewQuestions() {
       subjectId: subject.id,
       chapterId: selectedChapters[index] || Number(question.chapterId),
       marks: question.marks ? question.marks : null,
-      year: response.year
-        ? response.year + response.exam_type && " " + response.exam_type
-        : null,
+      year: `${response.year ? response.year : ""}${
+        response.exam_type ? ` ${response.exam_type}` : ""
+      }`,
     }));
   };
 
@@ -71,6 +72,7 @@ export default function PreviewQuestions() {
     }
 
     const payload = preparePayload();
+    console.log(payload);
 
     // Validate all questions have chapter selected
     const hasMissingChapters = payload.some((q) => !q.chapterId);
