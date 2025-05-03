@@ -21,9 +21,9 @@ export default function Subjects() {
     <>
       {user && <FavSubjects />}
       <FeaturedSubjects showForm={showForm} setShowForm={setShowForm} />
-      <div className="mt-10">
+      {/* <div className="mt-10">
         <ChapterAds />
-      </div>
+      </div> */}
       {user && <RecentChapter />}
       {user && showForm && (
         <AddModal

@@ -10,7 +10,6 @@ export default function QuestionSidebar() {
   const [adLoaded, setAdLoaded] = useState(false);
   const { chapters, fetchChapters, id } = useChapters();
   const router = useRouter();
-  const params = useParams();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -62,14 +61,14 @@ export default function QuestionSidebar() {
   return (
     <div className="min-[900px]:min-h-[250px]">
       <SearchBar />
-      <ins
+      {/* <ins
         className="adsbygoogle"
         style={{ display: "block" }}
         data-ad-client="ca-pub-9557309412103379"
         data-ad-slot="8236029305"
         data-ad-format="auto"
         data-full-width-responsive="true"
-      />
+      /> */}
 
       {/* Navigation Links */}
       <div className="py-4">

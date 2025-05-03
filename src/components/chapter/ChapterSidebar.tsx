@@ -32,6 +32,8 @@ export default function ChapterSidebar() {
     }
   }, []);
 
+  return null;
+
   return (
     <div className="min-[900px]:min-h-[250px]">
       <ins
