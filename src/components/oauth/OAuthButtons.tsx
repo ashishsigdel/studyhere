@@ -36,14 +36,10 @@ export default function OAuthButtons({
       const endpoint = "/auth/user";
       const response = await myAxios.post(
         endpoint,
-        {
-          fullName: result.user.displayName,
-          email: result.user.email,
-          profilePic: result.user.photoURL,
-        },
+        {},
         {
           headers: {
-            "X-OAuth": `${idToken}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
