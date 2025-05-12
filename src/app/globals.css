@@ -58,3 +58,19 @@
     overflow-x: auto;
   }
 }
+
+.border-5 {
+  @apply border-black/5 dark:border-white/5;
+}
+
+.border-10 {
+  @apply border-black/10 dark:border-white/10;
+}
+
+.border-15 {
+  @apply border-black/15 dark:border-white/15;
+}
+
+.border-20 {
+  @apply border-black/20 dark:border-white/20;
+}

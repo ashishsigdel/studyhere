@@ -1,3 +1,4 @@
+import { Header } from "@/components/header";
 import Hero from "@/components/home/Hero";
 import { Subjects } from "@/components/subject";
 

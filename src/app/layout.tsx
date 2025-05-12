@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
 import { Cookies, ReportBug } from "@/components/floatmessages";
-import { Footer } from "@/components/footer";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
 import Script from "next/script";
@@ -16,19 +15,12 @@ export const metadata: Metadata = {
   description:
     "Join LearnHere to access expert learn materials, Q&A discussions, and learning resources.",
   keywords: [
-    "LearnHere",
-    "online learning",
-    "education",
+    "ioe past questions",
+    "ioe exam",
+    "ioe notes and syllabus",
     "learn resources",
     "student help",
-    "learn",
-    "here",
-    "ioeexam",
-    "ioe",
-    "exam",
-    "exam preparation",
-    "best learing",
-    "learning",
+    "study notes nepal",
   ],
   authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
   // manifest: "/manifest.json",
@@ -98,7 +90,7 @@ export default function RootLayout({
             <NetworkStatus />
             <ReportBug />
             <Cookies />
-            <Footer />
+            {/* <Footer /> */}
           </CustomThemeProvider>
         </body>
       </html>
