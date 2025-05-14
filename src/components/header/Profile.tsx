@@ -74,7 +74,7 @@ export default function Profile() {
             alt="Profile Pic"
             width={40}
             height={40}
-            className="w-[32px] h-[32px] rounded-full cursor-pointer border border-gray-300 dark:border-gray-600"
+            className="w-[32px] h-[32px] object-cover rounded-full cursor-pointer border border-gray-300 dark:border-gray-600"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           />
 

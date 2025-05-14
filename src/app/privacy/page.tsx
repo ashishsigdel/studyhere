@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer";
 import { PrivacyPolicy } from "@/components/privacy";
 import { Metadata } from "next";
 import React from "react";
@@ -8,5 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function page() {
-  return <PrivacyPolicy />;
+  return (
+    <>
+      <PrivacyPolicy />
+      <Footer />
+    </>
+  );
 }

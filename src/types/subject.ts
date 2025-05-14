@@ -5,5 +5,6 @@ export type SubjectType = {
   createdBy: number;
   views: number;
   createdAt: Date;
+  updatedAt: Date;
   isPublic: boolean;
 };

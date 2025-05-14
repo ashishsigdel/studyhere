@@ -1,4 +1,5 @@
 import { SubjectType } from "@/types/subject";
+import { formatNumbers } from "@/utils/formatNumber";
 import Link from "next/link";
 
 type Props = {
@@ -8,21 +9,29 @@ type Props = {
 export default function SubjectCard({ subject }: Props) {
   const now: any = new Date();
   const createdAt: any = new Date(subject.createdAt);
+  const updatedAt: any = new Date(subject.updatedAt);
   const daysOld = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
+  const daysSinceUpdate = Math.floor((now - updatedAt) / (1000 * 60 * 60 * 24));
 
   let badge = null;
-  if (subject.views > 100) {
+  if (subject.views > 500 && daysOld <= 30) {
     badge = {
       text: "🔥 Hot",
       color: "bg-red-100 dark:bg-red-700/50 text-red-800 dark:text-red-300",
     };
-  } else if (subject.views > 500) {
+  } else if (subject.views > 3000 && daysOld > 60 && daysSinceUpdate <= 7) {
+    badge = {
+      text: "📈 Comeback",
+      color:
+        "bg-purple-100 dark:bg-purple-700/50 text-purple-800 dark:text-purple-300",
+    };
+  } else if (subject.views > 1500 && daysOld <= 90) {
     badge = {
       text: "⭐ Popular",
       color:
         "bg-yellow-100 dark:bg-yellow-700/50 text-yellow-800 dark:text-yellow-300",
     };
-  } else if (daysOld <= 7) {
+  } else if (daysOld <= 7 && subject.views > 50) {
     badge = {
       text: "🕒 Recent",
       color:
@@ -32,7 +41,7 @@ export default function SubjectCard({ subject }: Props) {
 
   return (
     <Link href={`/subject/${subject.slug}`} key={subject.id}>
-      <div className="group relative overflow-hidden w-full h-32 rounded-xl bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent transition-all duration-300 ease-in-out hover:-translate-y-1 border border-gray-200 dark:border-[#505050]">
+      <div className="group relative overflow-hidden w-full h-32 rounded-xl bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent transition-all duration-300 ease-in-out hover:-translate-y-1">
         {/* Badge (top-right corner) */}
         {badge && (
           <span
@@ -86,9 +95,7 @@ export default function SubjectCard({ subject }: Props) {
                   d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                 />
               </svg>
-              {subject.views > 1000
-                ? `${(subject.views / 1000).toFixed(1)}k`
-                : subject.views}
+              {formatNumbers(subject.views)}
             </div>
           </div>
 
