@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { HoverButton } from "@/components/utils/Buttons";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
+import { formatNumbers } from "@/utils/formatNumber";
 
 type Props = {
   user: {
@@ -21,6 +22,7 @@ type Props = {
   };
   createdAt: Date;
   totalLikes: number;
+  totalViews: number;
   isLiked: boolean;
   answerId: number;
   questionId?: number;
@@ -32,6 +34,7 @@ export default function QuestionFooter({
   user,
   createdAt,
   totalLikes,
+  totalViews,
   isLiked,
   answerId,
   questionId,
@@ -103,12 +106,12 @@ export default function QuestionFooter({
                 <AiOutlineLike className="w-4.5 h-4.5" />
               )}
 
-              <span className="text-sm">{likesCount}</span>
+              <span className="text-sm">{formatNumbers(likesCount)}</span>
             </button>
 
             <div className="flex items-center gap-2 bg-white-light-variant dark:bg-dark-light-variant px-3 py-2 rounded-r-lg transition-colors">
               <AiOutlineEye className="w-4.5 h-4.5" />
-              <span className="text-sm">3.2k</span>
+              <span className="text-sm">{formatNumbers(totalViews)}</span>
             </div>
           </div>
           {handleClickOpenSidebar && (

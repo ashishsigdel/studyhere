@@ -23,6 +23,7 @@ type Props = {
   subject: SubjectType | null;
   loading: boolean;
   fetchChapters: Function;
+  handleImport: any;
 };
 
 export default function ChaptersList({
@@ -31,6 +32,7 @@ export default function ChaptersList({
   subject,
   loading,
   fetchChapters,
+  handleImport,
 }: Props) {
   const pathname = usePathname();
   const user = useSelector((state: any) => state.auth.user);
@@ -143,7 +145,7 @@ export default function ChaptersList({
   return (
     <div
       id="chapters"
-      className="min-h-[100vh] border-b border-black/20 dark:border-white/20 py-6 "
+      className="border-b border-black/20 dark:border-white/20 py-6 "
     >
       {deleteModal !== null && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -309,6 +311,12 @@ export default function ChaptersList({
         <div className="p-8 text-center text-gray-500 dark:text-gray-400">
           <FaBookOpen size={24} className="mx-auto mb-2" />
           <p>No chapters available. Add a new chapter to get started.</p>
+          <button
+            onClick={handleImport}
+            className="bg-[#c0ffb2] hover:bg-[#8dff76] text-[#073400] text-sm px-4 py-2 rounded-md transition mt-3 w-fit"
+          >
+            Import from Syllabus
+          </button>
         </div>
       )}
     </div>

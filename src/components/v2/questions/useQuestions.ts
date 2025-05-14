@@ -1,14 +1,24 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
-import { useParams, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { AnswerType, QuestionType } from "@/types/question";
 
 export default function useQuestions({ refresh }: { refresh?: () => void }) {
-  const params = useParams<{ chapterId: string }>();
+  const params = useParams<{ slug: string; chapterId: string }>();
+  const pathname = usePathname();
+
   const id = params.chapterId;
+  const slug = params.slug;
+  const router = useRouter();
+
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search");
@@ -123,6 +133,10 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     try {
       const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
       const data = response.data.data;
+
+      if (slug != data.chapter.subject.slug) {
+        router.replace(`/subject/${data.chapter.subject.slug}/${id}`);
+      }
       setQuestions(data.allQuestions);
       setFilteredQuestions(data.allQuestions);
       setChapter(data.chapter.name);

@@ -367,6 +367,7 @@ export default function Questions() {
                           user={answers[question.id]?.answer?.user}
                           createdAt={answers[question.id]?.answer.createdAt}
                           totalLikes={answers[question.id]?.answer.TotalLikes}
+                          totalViews={answers[question.id]?.answer.totalViews}
                           isLiked={answers[question.id]?.answer.isLiked}
                           answerId={answers[question.id]?.answer.id}
                           questionId={question.id}
@@ -481,6 +482,7 @@ export default function Questions() {
                           user={answer.user}
                           createdAt={answer.createdAt}
                           totalLikes={answer.TotalLikes}
+                          totalViews={answer.totalViews}
                           isLiked={answer.isLiked}
                           answerId={answer.id}
                         />

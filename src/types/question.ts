@@ -11,6 +11,7 @@ export type AnswerType = {
   id: number;
   answer: string;
   TotalLikes: number;
+  totalViews: number;
   isLiked: boolean;
   createdAt: Date;
   user: {

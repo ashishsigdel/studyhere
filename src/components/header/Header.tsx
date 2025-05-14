@@ -8,6 +8,7 @@ import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { IoSearchSharp } from "react-icons/io5";
+import { useTheme } from "next-themes";
 
 export default function Header() {
   const user = useSelector((state: any) => state.auth.user);
@@ -18,6 +19,7 @@ export default function Header() {
   const searchRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isSearchPage = pathname === "/search";
+  const { theme } = useTheme();
 
   // Handle scroll effect
   useEffect(() => {
@@ -65,10 +67,8 @@ export default function Header() {
 
   return (
     <header
-      className={`h-12 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
-        scrolled
-          ? "bg-white/90 dark:bg-[#1e2024]/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700"
-          : "bg-[#e8eaec] dark:bg-[#2c2f34] border-b border-gray-200 dark:border-gray-700 z-[999]"
+      className={`h-12 sticky top-0 transition-all duration-300 ease-in-out z-[999] bg-white/80 dark:bg-[#1e2024]/80 border-gray-200 dark:border-gray-700 border-b ${
+        scrolled ? "backdrop-blur-md shadow-sm " : ""
       }`}
     >
       <nav className="h-full max-w-[1400px] mx-auto px-4">
@@ -77,14 +77,18 @@ export default function Header() {
           <div className="flex items-center flex-1">
             <Link href="/" className="flex items-center gap-2 group">
               <Image
-                src="/icon192.png"
+                src={
+                  theme == "dark"
+                    ? "/learnhere_logo_dark.png"
+                    : "/learnhere_logo.png"
+                }
                 alt="LearnHere Logo"
-                width={32}
-                height={32}
-                className="rounded-full w-8 h-8 transition-transform duration-300"
+                width={100}
+                height={100}
+                className="rounded-full w-10 h-10 transition-transform duration-300"
               />
-              <h3 className="text-lg sm:text-xl font-semibold tracking-tight customfont-typoround">
-                <span className="text-[#4caf50]">Learn</span>Here
+              <h3 className="text-lg sm:text-xl font-semibold tracking-tight customfont-typoround text-[#737373] dark:text-[#f1f1f1]">
+                <span className="text-primary">Learn</span>Here
               </h3>
             </Link>
           </div>

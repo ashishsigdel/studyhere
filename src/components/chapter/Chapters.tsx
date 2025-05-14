@@ -28,6 +28,7 @@ export default function Chapters() {
     setChapter,
     toggleSaved,
     isFavorite,
+    handleImport,
   } = useChapters();
 
   useEffect(() => {
@@ -84,6 +85,7 @@ export default function Chapters() {
         subject={subject}
         toggleForm={toggleForm}
         fetchChapters={fetchChapters}
+        handleImport={handleImport}
       />
 
       <Syllabus />

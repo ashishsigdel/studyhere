@@ -71,6 +71,18 @@ export default function useChapters() {
     }
   };
 
+  const handleImport = async () => {
+    setLoading(true);
+    try {
+      await myAxios.post(`/chapter/import/${id}`);
+      fetchChapters();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleSaved = async () => {
     try {
       setIsFavorite(!isFavorite);
@@ -95,5 +107,6 @@ export default function useChapters() {
     id,
     toggleSaved,
     isFavorite,
+    handleImport,
   };
 }
