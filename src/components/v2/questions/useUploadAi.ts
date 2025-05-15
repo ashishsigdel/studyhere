@@ -1,5 +1,5 @@
 "use client";
-import { resetPhotos, setPhotos } from "@/redux/features/aiUpload";
+import { setPhotos } from "@/redux/features/aiUpload";
 import { myAxios } from "@/services/apiServices";
 import { SubjectType } from "@/types/subject";
 import { useParams, useRouter } from "next/navigation";
@@ -86,7 +86,6 @@ export default function useUploadAi() {
         router.back();
       } finally {
         setLoading(false);
-        dispatch(resetPhotos());
       }
     } else {
       toast.error("Unable to Perform.");
