@@ -1,23 +1,31 @@
 "use client";
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTheme } from "next-themes";
-import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 import OAuthButtons from "./OAuthButtons";
-import EmailForm from "./EmailForm";
+import Image from "next/image";
 
 export default function AuthForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const isRegister = searchParams.get("new") === "true";
   const redirect = searchParams.get("redirect") || "/";
-  const { theme } = useTheme();
 
   return (
     <div className="w-full min-h-[calc(100dvh-64px)] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
         <div className="p-6 sm:p-8">
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center mt-5 mb-10 gap-2">
+              <Image
+                src={"/icon512.png"}
+                alt="LearnHere Logo"
+                width={100}
+                height={100}
+                className="rounded-full w-10 h-10"
+              />
+              <h3 className="text-3xl customfont-typoround text-gray-700 dark:text-gray-200">
+                <span className="text-primary">Learn</span>Here
+              </h3>
+            </div>
             <div className="flex items-center my-6">
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white px-4">
@@ -25,7 +33,6 @@ export default function AuthForm() {
               </h2>
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
             </div>
-
             <p className="mt-2 text-gray-600 dark:text-gray-300">
               {isRegister
                 ? "Join us today and get started"
@@ -34,30 +41,6 @@ export default function AuthForm() {
           </div>
 
           <OAuthButtons isRegister={isRegister} redirect={redirect} />
-
-          {/* <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
-            <p className="px-3 text-sm text-gray-500 dark:text-gray-400">or</p>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
-          </div> */}
-
-          {/* <EmailForm isRegister={isRegister} redirect={redirect} /> */}
-
-          {/* <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {isRegister
-                ? "Already have an account?"
-                : "Don't have an account?"}
-              <button
-                onClick={() =>
-                  router.push(isRegister ? "/login" : "/login?new=true")
-                }
-                className="ml-1 font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-              >
-                {isRegister ? "Sign in" : "Sign up"}
-              </button>
-            </p>
-          </div> */}
         </div>
       </div>
     </div>

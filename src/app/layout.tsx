@@ -3,12 +3,10 @@ import "./globals.css";
 import "@/styles/prose.css";
 import CustomThemeProvider from "@/utils/ThemeProvider";
 import { Toaster } from "react-hot-toast";
-import { Header } from "@/components/header";
 import { NetworkStatus } from "@/components/utils";
 import { Cookies, ReportBug } from "@/components/floatmessages";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "LearnHere - Best Learning Platform",
@@ -23,7 +21,7 @@ export const metadata: Metadata = {
     "study notes nepal",
   ],
   authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
-  // manifest: "/manifest.json",
+  manifest: "/manifest.json",
   openGraph: {
     title: "LearnHere - Best Learning Platform",
     description:
@@ -32,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "LearnHere",
     images: [
       {
-        url: "https://learnhere.asigdel.com.np/og-image.png",
+        url: "https://learnhere.asigdel.com.np/og-image.webp",
         width: 1200,
         height: 630,
         alt: "LearnHere - Best Learning Platform",
@@ -45,7 +43,7 @@ export const metadata: Metadata = {
     site: "@learnhere", // Replace with your Twitter handle
     title: "LearnHere - Best Learning Platform",
     description: "Discover expert learning resources and Q&A discussions.",
-    images: ["https://learnhere.asigdel.com.np/og-image.png"],
+    images: ["https://learnhere.asigdel.com.np/og-image.webp"],
   },
 };
 
@@ -66,31 +64,15 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-        <head>
-          {/* Google AdSense verification meta tag */}
-          <meta
-            name="google-adsense-account"
-            content="ca-pub-9557309412103379"
-          />
-        </head>
-        <body className="bg-gray-100 dark:bg-[#323232] text-black dark:text-[#ffffff]">
-          {/* Google AdSense script */}
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9557309412103379"
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-
+        <head></head>
+        <body className="bg-gray-100 dark:bg-dark-bg text-[#202124] dark:text-[#ffffff]">
           <CustomThemeProvider>
             <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
-            <Header />
             {children}
             <Toaster position="bottom-center" reverseOrder={true} />
             <NetworkStatus />
             <ReportBug />
             <Cookies />
-            {/* <Footer /> */}
           </CustomThemeProvider>
         </body>
       </html>

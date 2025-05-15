@@ -85,3 +85,19 @@ export function HoverButton({
     </button>
   );
 }
+
+type ButtonSimpleType = {
+  title: string;
+  onClick?: () => void;
+};
+
+export function ButtonSimple({ title, onClick }: ButtonSimpleType) {
+  return (
+    <button
+      onClick={onClick}
+      className="mt-5 p-1 bg-black text-white dark:bg-white dark:text-black rounded-full px-7 py-2 w-fit"
+    >
+      {title}
+    </button>
+  );
+}

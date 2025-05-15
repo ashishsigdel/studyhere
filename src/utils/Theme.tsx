@@ -7,7 +7,7 @@ export default function Theme() {
 
   return (
     <button
-      className="ml-10"
+      className=""
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "dark" ? <FaSun size={20} /> : <FaMoon size={20} />}

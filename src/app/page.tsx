@@ -1,16 +1,13 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import Hero from "@/components/home/Hero";
+import Home from "@/components/v2/home/Home";
+import MainLayout from "@/components/layout/MainLayout";
 import { Subjects } from "@/components/subject";
 
-export default function Home() {
+export default function page() {
   return (
-    <div className="">
-      <Hero />
-      <div className="px-4 mx-auto max-w-[1400px]">
-        <Subjects />
-      </div>
-      <Footer />
-    </div>
+    <MainLayout>
+      <Home />
+    </MainLayout>
   );
 }

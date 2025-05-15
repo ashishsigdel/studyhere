@@ -22,24 +22,23 @@ export default function useChapters() {
 
   const fetchChapters = async () => {
     setLoading(true);
-    if (navigator.onLine) {
-      try {
-        const response = await myAxios.get(
-          `/chapter/${id}?userId=${user ? user.id : ""}`
-        );
-        const { chapters: fetchedChapters, subject: fetchedSubject } =
-          response.data.data;
 
-        setChapters(fetchedChapters);
-        setSubject(fetchedSubject);
-        setIsFavorite(fetchedSubject.isSaved);
-      } catch (err) {
-        toast.error("Failed to fetch chapters online");
-        console.log(err);
-      }
+    try {
+      const response = await myAxios.get(
+        `/chapter/${id}?userId=${user ? user.id : ""}`
+      );
+      const { chapters: fetchedChapters, subject: fetchedSubject } =
+        response.data.data;
+
+      setChapters(fetchedChapters);
+      setSubject(fetchedSubject);
+      setIsFavorite(fetchedSubject.isSaved);
+    } catch (err) {
+      toast.error("Failed to fetch chapters online");
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleSaveChapter = async () => {

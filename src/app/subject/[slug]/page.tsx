@@ -1,8 +1,5 @@
-import Sidebar from "@/components/ads/ChapterAds";
-import ChapterAds from "@/components/ads/ChapterAds";
 import { Chapters } from "@/components/chapter";
-import ChapterSidebar from "@/components/chapter/ChapterSidebar";
-import { Footer } from "@/components/footer";
+import MainLayout from "@/components/layout/MainLayout";
 import { Metadata } from "next";
 import React from "react";
 
@@ -14,20 +11,14 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <div className="mx-auto max-w-[1400px] px-4 container flex min-[900px]:flex-row flex-col-reverse gap-4 relative">
-        {/* Main content */}
-        <div className="w-full min-[900px]:w-4/5">
-          <Chapters />
-        </div>
-
-        {/* Sidebar column */}
-        <div className="w-full min-[900px]:w-1/5">
-          <div className="sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto">
-            <ChapterSidebar />
+      <MainLayout>
+        <div className="mx-auto max-w-[1400px] px-4 container flex min-[900px]:flex-row flex-col-reverse gap-4 relative">
+          {/* Main content */}
+          <div className="w-full">
+            <Chapters />
           </div>
         </div>
-      </div>
-      <Footer />
+      </MainLayout>
     </>
   );
 }

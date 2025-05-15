@@ -11,7 +11,6 @@ import Syllabus from "./Syllabus";
 import Resources from "./Resources";
 import useChapters from "./useChapters";
 import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
-import AdsterraAd from "./AdsterrraAd";
 
 export default function Chapters() {
   const {
