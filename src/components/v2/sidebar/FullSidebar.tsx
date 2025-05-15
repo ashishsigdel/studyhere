@@ -68,8 +68,9 @@ export default function FullSidebar({
                 alt="LearnHere Logo"
                 width={100}
                 height={100}
-                className="rounded-full w-8 h-8"
+                className="w-8 h-8 "
               />
+
               <h3 className="text-2xl customfont-typoround text-gray-700 dark:text-gray-200">
                 <span className="text-primary">Learn</span>Here
               </h3>

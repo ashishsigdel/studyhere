@@ -3,6 +3,7 @@ import React from "react";
 import { useSearchParams } from "next/navigation";
 import OAuthButtons from "./OAuthButtons";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AuthForm() {
   const searchParams = useSearchParams();
@@ -39,8 +40,17 @@ export default function AuthForm() {
                 : "Sign in to continue"}
             </p>
           </div>
-
           <OAuthButtons isRegister={isRegister} redirect={redirect} />
+          <p className="my-2 text-center text-xs text-gray-500 dark:text-gray-400">
+            By continuing, you agree to our{" "}
+            <Link
+              href="/privacy"
+              className="underline text-primary hover:text-primary-dark"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>

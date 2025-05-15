@@ -33,7 +33,7 @@ export default function NetworkStatus() {
   }, [wasOffline]);
 
   return (
-    <>
+    <div className={`${(showOnline || wasOffline) && "mt-5"}`}>
       {!isOnline && (
         <div className="fixed bottom-0 left-0 w-full h-5 bg-red-500 z-[999] flex items-center justify-center text-white text-xs">
           No Internet Connection
@@ -44,6 +44,6 @@ export default function NetworkStatus() {
           Internet is Back
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -146,7 +146,7 @@ export default function Questions() {
   }, [chapter]);
 
   return (
-    <div className="flex flex-row h-[calc(100vh-48px)] p-2 gap-x-1 relative">
+    <div className="flex flex-row h-[calc(100vh-60px)] p-2 gap-x-1 relative">
       {/* Questions Field */}
       <div
         ref={mainContentRef}
@@ -449,7 +449,7 @@ export default function Questions() {
               </div>
             </div>
             {question.question && (
-              <div className="px-3 py-2 border-b border-10">
+              <div className="px-3 py-2 border-b border-10 sticky top-[45px] bg-gray-100 dark:bg-dark-bg z-[9]">
                 <HtmlRenderer content={question?.question} />
               </div>
             )}

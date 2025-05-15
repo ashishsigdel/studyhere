@@ -1,4 +1,5 @@
 import { Footer } from "@/components/footer";
+import MainLayout from "@/components/layout/MainLayout";
 import { PrivacyPolicy } from "@/components/privacy";
 import { Metadata } from "next";
 import React from "react";
@@ -10,9 +11,8 @@ export const metadata: Metadata = {
 
 export default function page() {
   return (
-    <>
+    <MainLayout>
       <PrivacyPolicy />
-      <Footer />
-    </>
+    </MainLayout>
   );
 }

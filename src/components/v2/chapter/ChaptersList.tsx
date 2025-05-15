@@ -196,11 +196,14 @@ export default function ChaptersList({
         </div>
 
         {/* Chapters List */}
-        <div className="space-y-1 mt-2">
+        <div className="mt-2">
           {chapters.map((chapter, index) => (
             <div
               key={chapter.id}
-              className="flex gap-3 items-center p-3 rounded-lg hover:bg-white dark:hover:bg-[#2f2f2f] transition-colors group relative border-b border-black/10 dark:border-white/10"
+              className={`flex gap-3 items-center p-3 rounded-lg transition-colors group relative ${
+                index % 2 == 0 &&
+                "bg-white-variant/70 dark:bg-dark-light-variant"
+              }`}
             >
               <div className="flex items-center justify-center h-7 w-7 rounded-full border border-primary group-hover:bg-primary group-hover:text-white font-medium">
                 {index + 1}

@@ -50,7 +50,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="mt-6 flex w-full items-center justify-between border-t border-gray-200 pt-4 max-sm:flex-col max-sm:space-y-3">
+    <div className="mt-6 flex w-full items-center justify-between border-t border-15 pt-4 max-sm:flex-col max-sm:space-y-3">
       <span className="text-sm text-gray-600 dark:text-gray-400">
         Showing page {currentPage} of {totalPages} pages
       </span>

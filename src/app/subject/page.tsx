@@ -1,10 +1,10 @@
 import MainLayout from "@/components/layout/MainLayout";
-import Result from "@/components/v2/search/Result";
+import Subject from "@/components/v2/subject/Subject";
 
 export default function page() {
   return (
     <MainLayout>
-      <Result />
+      <Subject />
     </MainLayout>
   );
 }

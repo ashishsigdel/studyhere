@@ -10,7 +10,7 @@ import {
   FaTimes,
   FaWifi,
 } from "react-icons/fa";
-import { HtmlRenderer } from "../utils";
+import { HtmlRenderer } from "@/components/utils";
 
 type Props = {};
 type SyllabusType = {

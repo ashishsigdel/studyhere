@@ -1,11 +1,6 @@
 "use client";
-import { myAxios } from "@/services/apiServices";
-import { useParams, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import AddModal from "./AddModal";
-import { loadDataFromIndexedDB, saveDataToIndexedDB } from "@/utils/indexdb";
-import { FaBookmark, FaStar } from "react-icons/fa";
 import ChaptersList from "./ChaptersList";
 import Syllabus from "./Syllabus";
 import Resources from "./Resources";
@@ -47,18 +42,17 @@ export default function Chapters() {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="flex flex-col overflow-hidden max-w-7xl mx-auto w-full px-8 sm:px-10">
       {/* Header Section */}
       <div className="flex flex-col justify-between w-full border-b border-gray-200 dark:border-gray-700">
         <div className="w-full py-6 justify-between flex items-center">
-          <div>
-            <h2 className="text-3xl font-bold capitalize line-clamp-1">
-              {subject?.name}
-            </h2>
-          </div>
+          <h2 className="text-3xl font-bold capitalize line-clamp-1 customfont-inter">
+            {subject?.name}
+          </h2>
+
           <div className="flex items-center gap-1">
             <span className="hidden md:inline-block text-gray-500 dark:text-gray-400 font-medium">
-              {isFavorite ? "Shortcut added" : "Add Shortcut"}
+              {isFavorite ? "Pinned" : "Pin Subject"}
             </span>
             <button
               onClick={() => toggleSaved()}

@@ -109,7 +109,7 @@ export default function QuestionFooter({
               <span className="text-sm">{formatNumbers(likesCount)}</span>
             </button>
 
-            <div className="flex items-center gap-2 bg-white-light-variant dark:bg-dark-light-variant px-3 py-2 rounded-r-lg transition-colors">
+            <div className="flex items-center gap-2 bg-[#e4e4e4] dark:bg-[#464646] px-3 py-2 rounded-r-lg transition-colors">
               <AiOutlineEye className="w-4.5 h-4.5" />
               <span className="text-sm">{formatNumbers(totalViews)}</span>
             </div>

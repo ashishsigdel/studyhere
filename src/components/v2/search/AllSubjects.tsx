@@ -1,10 +1,10 @@
 "use client";
 import { Spinner } from "@/utils";
-import Pagination from "../utils/Pagination";
 import { FaBookOpen, FaWifi } from "react-icons/fa";
 import React from "react";
-import SubjectCard from "../subject/SubjectCard";
 import { SubjectType } from "@/types/subject";
+import SubjectCard from "../home/SubjectCard";
+import Pagination from "@/components/utils/Pagination";
 
 interface Props {
   subjects: SubjectType[] | [];
@@ -23,7 +23,7 @@ export const AllSubjects = ({
   handlePageChange,
 }: Props) => {
   return (
-    <div id="featured-subjects" className="mt-8 min-[900px]:mt-0">
+    <div id="search" className="mt-8 xl:mt-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 md:mb-8 gap-4">
         <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200">
           Search Result
@@ -55,7 +55,7 @@ export const AllSubjects = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 min-[480px]:grid-cols-2 min-[900px]:grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {subjects.length > 0 &&
           subjects.map((subject) => (
             <SubjectCard subject={subject} key={subject.id} />

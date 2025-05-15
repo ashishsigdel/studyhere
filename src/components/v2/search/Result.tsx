@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { SubjectType } from "@/types/subject";
+import { FaCross, FaTimes } from "react-icons/fa";
 
 export default function Result() {
   const router = useRouter();
@@ -118,9 +119,9 @@ export default function Result() {
   };
 
   return (
-    <div className="flex flex-col min-[900px]:flex-row min-[900px]:gap-6 p-4 max-w-7xl mx-auto">
+    <div className="flex flex-col min-h-[calc(100vh-64px)] xl:flex-row-reverse xl:gap-6 p-4 max-w-7xl mx-auto px-8 sm:px-10">
       {/* Mobile Filter Toggle */}
-      <div className="min-[900px]:hidden">
+      <div className="xl:hidden">
         <button
           onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
           className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg shadow-sm dark:border-gray-700"
@@ -132,8 +133,8 @@ export default function Result() {
 
       {/* Sidebar Filters */}
       <div
-        className={`w-full min-[900px]:w-60 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-5 h-fit sticky transition-all duration-300 mt-4 ${
-          mobileFiltersOpen ? "block" : "hidden min-[900px]:block"
+        className={`w-full relative xl:sticky xl:top-20 xl:w-60 bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-5 h-fit transition-all duration-300 mt-4 ${
+          mobileFiltersOpen ? "block" : "hidden xl:block"
         }`}
       >
         <div className="flex justify-between items-center mb-6">
@@ -143,34 +144,11 @@ export default function Result() {
           </h3>
           <button
             onClick={() => setMobileFiltersOpen(false)}
-            className="min-[900px]:hidden text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            className="xl:hidden p-2 hover:bg-white-variant hover:dark:bg-dark-variant transition-all duration-300 rounded-full"
           >
-            &times;
+            <FaTimes />
           </button>
         </div>
-
-        {/* Search Input */}
-        <div className="mb-4">
-          <h4 className="text-sm font-medium mb-3 flex items-center gap-2 dark:text-gray-300">
-            <FiFileText className="text-gray-500" />
-            Search
-          </h4>
-          <input
-            type="text"
-            placeholder="Search subjects..."
-            value={searchdata.q}
-            onChange={(e) =>
-              setSearchdata({
-                ...searchdata,
-                q: e.target.value,
-              })
-            }
-            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#3c3c3c] text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
-          />
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-500 my-5"></div>
 
         {/* Sort Options */}
         <div className="mb-6">

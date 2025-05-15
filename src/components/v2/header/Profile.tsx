@@ -81,9 +81,9 @@ export default function Profile() {
 
           {/* Dropdown Menu */}
           {dropdownOpen && (
-            <div className="absolute right-0 top-12 w-40 bg-[#e8eaec] dark:bg-[#2c2f34] border border-gray-300 dark:border-gray-600 shadow-md rounded-lg overflow-hidden p-1 z-[9999]">
+            <div className="absolute right-0 top-12 w-40 bg-white dark:bg-[#424242] border border-gray-300 dark:border-gray-600 shadow-md rounded-lg overflow-hidden p-1 z-[9999]">
               <button
-                className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-white dark:border-white/10"
+                className="block w-full text-left px-4 py-2 rounded-md text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-white/10"
                 onClick={() => router.push("/profile")}
               >
                 Profile

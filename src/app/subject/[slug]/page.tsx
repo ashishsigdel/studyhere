@@ -1,4 +1,4 @@
-import { Chapters } from "@/components/chapter";
+import { Chapters } from "@/components/v2/chapter";
 import MainLayout from "@/components/layout/MainLayout";
 import { Metadata } from "next";
 import React from "react";
@@ -10,15 +10,8 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <>
-      <MainLayout>
-        <div className="mx-auto max-w-[1400px] px-4 container flex min-[900px]:flex-row flex-col-reverse gap-4 relative">
-          {/* Main content */}
-          <div className="w-full">
-            <Chapters />
-          </div>
-        </div>
-      </MainLayout>
-    </>
+    <MainLayout>
+      <Chapters />
+    </MainLayout>
   );
 }
