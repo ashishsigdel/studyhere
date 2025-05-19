@@ -7,6 +7,7 @@ import { FeaturedSubjects } from "./FeaturedSubjects";
 import { FavSubjects } from "./FavSubjects";
 import { ButtonSimple } from "@/components/utils/Buttons";
 import { useRouter } from "next/navigation";
+import { SuggestionSubjects } from "./SuggestionSubjects";
 
 export default function Home() {
   const user = useSelector((state: any) => state.auth.user);
@@ -42,6 +43,7 @@ export default function Home() {
       </div>
       <RecentChapter />
       <FavSubjects />
+      <SuggestionSubjects />
       <FeaturedSubjects />
       <div className="mt-10 mb-20 flex flex-col items-center justify-center w-full text-center">
         <h3 className="font-bold text-[34px] customfont-inter">

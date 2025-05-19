@@ -6,14 +6,20 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 export default function useSubjects() {
-  const [subject, setSubject] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    faculties: [],
+    semester: "",
+    isPrivate: false,
+  });
+
   const user = useSelector((state: any) => state.auth.user);
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const router = useRouter();
 
   const handleSaveSubject = async () => {
-    if (!subject) {
+    if (!formData.name) {
       toast.error("Subject required!");
       return;
     }
@@ -21,13 +27,16 @@ export default function useSubjects() {
     setLoadingAdd(true);
     try {
       if (navigator.onLine) {
-        const response = await myAxios.post("/subject/create", {
-          name: subject,
-        });
+        const response = await myAxios.post("/subject/create", formData);
 
         toast.success("Subject created");
         router.push(`/subject/${response.data.data.slug}`);
-        setSubject("");
+        setFormData({
+          name: "",
+          faculties: [],
+          semester: "",
+          isPrivate: false,
+        });
         setShowForm(false);
       }
     } catch (error: any) {
@@ -37,8 +46,8 @@ export default function useSubjects() {
     }
   };
   return {
-    subject,
-    setSubject,
+    formData,
+    setFormData,
     showForm,
     setShowForm,
     loadingAdd,

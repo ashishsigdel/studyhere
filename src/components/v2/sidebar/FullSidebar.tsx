@@ -23,8 +23,8 @@ export default function FullSidebar({
   const user = useSelector((state: any) => state.auth.user);
   const pathname = usePathname();
   const {
-    subject,
-    setSubject,
+    formData,
+    setFormData,
     showForm,
     setShowForm,
     loadingAdd,
@@ -140,8 +140,8 @@ export default function FullSidebar({
           handleSaveSubject={handleSaveSubject}
           loading={loadingAdd}
           setShowForm={setShowForm}
-          subject={subject}
-          setSubject={setSubject}
+          formData={formData}
+          setFormData={setFormData}
         />
       )}
     </div>

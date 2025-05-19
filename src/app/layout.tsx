@@ -9,7 +9,7 @@ import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
 
 export const metadata: Metadata = {
-  title: "LearnHere - Best Learning Platform",
+  title: "LearnHere",
   description:
     "Join LearnHere to access expert learn materials, Q&A discussions, and learning resources.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
   manifest: "/manifest.json",
   openGraph: {
-    title: "LearnHere - Best Learning Platform",
+    title: "LearnHere",
     description:
       "Explore high-quality learn guides, Q&A, and expert resources.",
     url: "https://learnhere.asigdel.com.np",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         url: "https://learnhere.asigdel.com.np/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "LearnHere - Best Learning Platform",
+        alt: "LearnHere",
       },
     ],
     type: "website",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@learnhere", // Replace with your Twitter handle
-    title: "LearnHere - Best Learning Platform",
+    title: "LearnHere",
     description: "Discover expert learning resources and Q&A discussions.",
     images: ["https://learnhere.asigdel.com.np/og-image.webp"],
   },
