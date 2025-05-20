@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ashish-ui/pagination": "^0.0.5",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@reduxjs/toolkit": "^2.7.0",
     "axios": "^1.7.9",

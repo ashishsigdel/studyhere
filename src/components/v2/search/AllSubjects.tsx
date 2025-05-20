@@ -4,7 +4,7 @@ import { FaBookOpen, FaWifi } from "react-icons/fa";
 import React from "react";
 import { SubjectType } from "@/types/subject";
 import SubjectCard from "../home/SubjectCard";
-import Pagination from "@/components/utils/Pagination";
+import { Pagination } from "@ashish-ui/pagination";
 
 interface Props {
   subjects: SubjectType[] | [];
@@ -68,12 +68,12 @@ export const AllSubjects = ({
           <Pagination
             currentPage={pagination.currentPage}
             totalPages={pagination.totalPages}
-            handlePageChange={handlePageChange}
-            color="text-primary"
-            activeBg="bg-primary"
-            activeText="text-white"
-            hoverBg="hover:bg-primary"
-            hoverText="hover:text-white"
+            onPageChange={handlePageChange}
+            textColor="text-primary"
+            bgColor="bg-white-variant dark:bg-dark-light-variant"
+            hoverBgClass="hover:bg-primary dark:hover:bg-primary"
+            hoverTextClass="hover:text-white"
+            activeBgColor="bg-primary"
           />
         </div>
       )}
