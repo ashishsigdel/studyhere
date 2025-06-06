@@ -21,6 +21,7 @@ import AddModal from "./AddModal";
 import EditModal from "./EditModal";
 import SearchBar from "./SearchBar";
 import toast from "react-hot-toast";
+import RichTEditor from "@/components/utils/RichTEditor";
 
 export default function Questions() {
   const router = useRouter();
@@ -314,7 +315,7 @@ export default function Questions() {
                   </div>
                   {openEditors[question.id] ? (
                     <div className="mt-3">
-                      <JoditForm
+                      <RichTEditor
                         text={answerStates[question.id] || ""}
                         setText={(text: string) =>
                           setAnswerStates((prev: any) => ({
@@ -322,7 +323,7 @@ export default function Questions() {
                             [question.id]: text,
                           }))
                         }
-                        placeholder={"Enter answer"}
+                        height="600px"
                       />
                     </div>
                   ) : loadingAnswer && !answers[question.id] ? (

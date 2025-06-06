@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import TabItem from "@/components/utils/TabIcon";
 import { FaCloudUploadAlt, FaSpinner, FaTimes } from "react-icons/fa";
 import useUploadAi from "./useUploadAi";
+import RichTEditor from "@/components/utils/RichTEditor";
 
 type Props = {
   newQuestion: any;
@@ -47,12 +47,12 @@ export default function AddModal({
 
         {modeManual ? (
           <>
-            <JoditForm
+            <RichTEditor
               text={newQuestion.question}
               setText={(newContent: string) =>
                 setNewQuestion({ ...newQuestion, question: newContent })
               }
-              placeholder="Enter new question"
+              height="350px"
             />
 
             <input

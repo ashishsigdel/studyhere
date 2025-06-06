@@ -1,55 +1,20 @@
 "use client";
-import JoditEditor from "jodit-react";
 import { useTheme } from "next-themes";
-import React, { useMemo, useRef } from "react";
+import React from "react";
+import RichTextEditor from "richt-editor";
 
-export default function JoditForm({
-  text,
-  setText,
-  placeholder,
-}: {
+type Props = {
   text: string;
   setText: any;
-  placeholder?: string;
-}) {
+};
+
+export default function RichTEditor({ text, setText }: Props) {
   const { theme } = useTheme();
-  const editor = useRef(null);
-  const isDarkMode = theme === "dark";
-
-  const config = useMemo(
-    () => ({
-      iframe: true,
-      theme: isDarkMode ? "dark" : "",
-      readonly: false,
-      placeholder: placeholder || "Start Typing...",
-      minHeight: 300,
-      maxHeight: 600,
-      statusbar: false,
-      style: {
-        backgroundColor: isDarkMode ? "#3c3c3c" : "#f3f4f6",
-        color: isDarkMode ? "#ffffff" : "#000000",
-        fontSize: "18px",
-      },
-      disablePlugins: "about",
-    }),
-    [placeholder, theme]
-  );
-
   return (
-    <div
-      className={`w-full rounded-lg mb-5 border ${
-        isDarkMode
-          ? "bg-slate-800  border-white/5"
-          : "bg-gray-200 border-black/10"
-      }`}
-    >
-      <JoditEditor
-        ref={editor}
-        value={text}
-        config={config}
-        onBlur={(newContent) => setText(newContent)}
-        onChange={() => {}}
-      />
-    </div>
+    <RichTextEditor
+      content={text}
+      setContent={setText}
+      theme={theme === "dark" ? "dark" : "light"}
+    />
   );
 }

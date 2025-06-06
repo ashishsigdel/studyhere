@@ -1,10 +1,10 @@
 import React from "react";
-import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import { MdClose } from "react-icons/md";
 import toast from "react-hot-toast";
 import { myAxios } from "@/services/apiServices";
 import { FaSpinner } from "react-icons/fa";
+import RichTEditor from "@/components/utils/RichTEditor";
 
 type Props = {
   editQuestion: any;
@@ -36,11 +36,12 @@ export default function EditModal({
           </button>
         </div>
 
-        <JoditForm
+        <RichTEditor
           text={editQuestion.question}
           setText={(newContent: string) =>
             setEditQuestion({ ...editQuestion, question: newContent })
           }
+          height="350px"
         />
 
         <>
