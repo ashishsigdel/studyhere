@@ -15,11 +15,18 @@ export default function Home() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
+    try {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
   }, []);
 
-  if (!user) {
+  if (!user?.fullName) {
     return (
       <div className="px-8 sm:px-10 mt-10 mx-auto max-w-7xl">
         <Hero />
@@ -37,11 +44,14 @@ export default function Home() {
     );
   }
 
+  // Get first name safely
+  const firstName = user.fullName.split(" ")[0] || "User";
+
   return (
     <div className="px-8 sm:px-10 mt-10 mx-auto max-w-7xl">
       <div className="border-b border-10 pb-10">
         <h3 className="font-bold text-[34px] customfont-inter">
-          Welcome, {user.fullName.split(" ")[0]}!
+          Welcome, {firstName}!
         </h3>
         <p className="text-base text-gray-600 dark:text-gray-400">
           Ready to pick up where you left off, or start something new.
