@@ -1,13 +1,21 @@
 "use client";
-import { useSelector } from "react-redux";
-import RecentChapter from "../home/RecentChapter";
+
 import { FavSubjects } from "../home/FavSubjects";
 import { FeaturedSubjects } from "../home/FeaturedSubjects";
 import { ButtonSimple } from "@/components/utils/Buttons";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Subject() {
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
+
   const router = useRouter();
 
   if (!user) {

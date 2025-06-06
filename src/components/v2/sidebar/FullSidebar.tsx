@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { HiMiniBars3CenterLeft } from "react-icons/hi2";
-import { useSelector } from "react-redux";
 import { Menu } from "./menus";
 import { usePathname } from "next/navigation";
 import useSubjects from "./useSubjects";
 import AddModal from "./AddModal";
+import { User } from "@/types/user";
 
 type Props = {
   sidebarWidth: "min" | "full";
@@ -20,7 +20,13 @@ export default function FullSidebar({
   toggleSidebar,
   style,
 }: Props) {
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
+
   const pathname = usePathname();
   const {
     formData,

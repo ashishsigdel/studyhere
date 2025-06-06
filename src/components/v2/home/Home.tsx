@@ -1,6 +1,5 @@
 "use client";
 
-import { useSelector } from "react-redux";
 import Hero from "./Hero";
 import RecentChapter from "./RecentChapter";
 import { FeaturedSubjects } from "./FeaturedSubjects";
@@ -8,10 +7,17 @@ import { FavSubjects } from "./FavSubjects";
 import { ButtonSimple } from "@/components/utils/Buttons";
 import { useRouter } from "next/navigation";
 import { SuggestionSubjects } from "./SuggestionSubjects";
+import { useEffect, useState } from "react";
+import { User } from "@/types/user";
 
 export default function Home() {
-  const user = useSelector((state: any) => state.auth.user);
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   if (!user) {
     return (

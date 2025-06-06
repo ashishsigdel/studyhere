@@ -1,15 +1,15 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
 import { SubjectType } from "@/types/subject";
+import { User } from "@/types/user";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 export default function useChapters() {
   const params = useParams<{ slug: string }>();
   const id = params.slug;
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
 
   const [chapters, setChapters] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -19,6 +19,11 @@ export default function useChapters() {
 
   const [showForm, setShowForm] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   const fetchChapters = async () => {
     setLoading(true);

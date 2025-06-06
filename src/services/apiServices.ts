@@ -35,6 +35,7 @@ const refreshAccessToken = async () => {
     const currentUrl = encodeURIComponent(pathname + searchParams);
 
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
     // Use store.dispatch instead of useDispatch hook
     store.dispatch(removeAuth());
     window.location.href = `/login?redirect=${currentUrl}`;

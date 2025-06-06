@@ -1,9 +1,9 @@
 "use client";
 import { myAxios } from "@/services/apiServices";
+import { User } from "@/types/user";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 export default function useSubjects() {
   const [formData, setFormData] = useState({
@@ -12,8 +12,13 @@ export default function useSubjects() {
     semester: "",
     isPrivate: false,
   });
+  const [user, setUser] = useState<User | null>(null);
 
-  const user = useSelector((state: any) => state.auth.user);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
+
   const [showForm, setShowForm] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const router = useRouter();

@@ -7,6 +7,7 @@ import { NetworkStatus } from "@/components/utils";
 import { Cookies, ReportBug } from "@/components/floatmessages";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/providers";
+import ClientWrapper from "@/components/layout/ClientWrapper";
 
 export const metadata: Metadata = {
   title: "LearnHere",
@@ -63,17 +64,22 @@ export default function RootLayout({
 }) {
   return (
     <StoreProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head></head>
-        <body className="bg-gray-100 dark:bg-dark-bg text-[#202124] dark:text-[#ffffff]">
-          <CustomThemeProvider>
-            <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
-            {children}
-            <Toaster position="bottom-center" reverseOrder={true} />
-            <NetworkStatus />
-            <ReportBug />
-            <Cookies />
-          </CustomThemeProvider>
+        <body
+          className="bg-gray-100 dark:bg-dark-bg text-[#202124] dark:text-[#ffffff]"
+          suppressHydrationWarning
+        >
+          <ClientWrapper>
+            <CustomThemeProvider>
+              <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
+              {children}
+              <Toaster position="bottom-center" reverseOrder={true} />
+              <NetworkStatus />
+              <ReportBug />
+              <Cookies />
+            </CustomThemeProvider>
+          </ClientWrapper>
         </body>
       </html>
     </StoreProvider>

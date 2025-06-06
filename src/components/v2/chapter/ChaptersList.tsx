@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import { myAxios } from "@/services/apiServices";
-import { useSelector } from "react-redux";
+import { User } from "@/types/user";
 
 type Props = {
   toggleForm: MouseEventHandler<HTMLButtonElement>;
@@ -35,13 +35,19 @@ export default function ChaptersList({
   handleImport,
 }: Props) {
   const pathname = usePathname();
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [editingChapter, setEditingChapter] = useState<number | null>(null);
   const [deleteModal, setDeleteModal] = useState<number | null>(null);
   const [editedName, setEditedName] = useState("");
   const dropdownRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const editInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {

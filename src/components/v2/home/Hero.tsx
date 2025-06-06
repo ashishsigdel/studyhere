@@ -4,12 +4,17 @@ import Image from "next/image";
 import heroImageLight from "@/assets/pictures/hero-light.png";
 import heroImageDark from "@/assets/pictures/hero-dark.png";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
 
 export default function Hero() {
   const [greeting, setGreeting] = useState("");
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
   const router = useRouter();
 
   useEffect(() => {

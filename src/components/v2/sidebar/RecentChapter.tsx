@@ -1,14 +1,14 @@
 "use client";
+import { User } from "@/types/user";
 import { loadDataFromIndexedDB } from "@/utils/indexdb";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 export default function RecentChapter() {
   const [recentChapters, setRecentChapters] = useState<
     { name: string; url: string; subject: string }[]
   >([]);
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
 
   const fetchSubjects = async () => {
     try {
@@ -30,6 +30,8 @@ export default function RecentChapter() {
 
   useEffect(() => {
     fetchSubjects();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
   }, []);
 
   if (!user) {

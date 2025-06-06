@@ -17,7 +17,7 @@ export default function AuthForm() {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mt-5 mb-10 gap-2">
               <Image
-                src={"/icon512.png"}
+                src={"/icon-512.png"}
                 alt="LearnHere Logo"
                 width={100}
                 height={100}

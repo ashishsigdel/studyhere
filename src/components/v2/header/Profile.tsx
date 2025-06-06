@@ -4,17 +4,24 @@ import { myAxios } from "@/services/apiServices";
 import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { removeAuth } from "@/redux/features/authSlice";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
 
 export default function Profile() {
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -23,6 +30,7 @@ export default function Profile() {
       console.log(error);
     } finally {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
       dispatch(removeAuth());
       toast.success("Logged Out successfully!");
     }

@@ -1,7 +1,8 @@
 "use client";
+import { User } from "@/types/user";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import { RiAiGenerate2 } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 type Props = {
   openEditors: { [key: number]: boolean };
@@ -35,7 +36,12 @@ export default function Buttons({
   handleAnswerEdit,
   handleAnswerAdd,
 }: Props) {
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
   const isAdmin = user?.role === "admin";
   const isAuthor = answers[question.id]?.answer?.user?.id === user?.id;
 

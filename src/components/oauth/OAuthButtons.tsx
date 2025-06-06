@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/redux/features/authSlice";
+import axios from "axios";
+import { baseUrl } from "@/services/apiServices";
 
 interface OAuthButtonsProps {
   isRegister: boolean;
@@ -30,12 +32,12 @@ export default function OAuthButtons({
   const handleOAuthLogin = async (provider: any) => {
     try {
       const auth = getAuth(app);
+
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      const endpoint = "/auth/user";
-      const response = await myAxios.post(
-        endpoint,
+      const response = await axios.post(
+        `${baseUrl}/auth/user`,
         {},
         {
           headers: {
@@ -45,6 +47,7 @@ export default function OAuthButtons({
       );
 
       localStorage.setItem("accessToken", response.data.data.accessToken);
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
       dispatch(setAuth(response.data.data.user));
       toast.success(
         isRegister ? "Account created successfully!" : "Logged in successfully!"

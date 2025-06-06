@@ -2,10 +2,10 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
 import Profile from "./Profile";
 import Theme from "@/utils/Theme";
 import Link from "next/link";
+import { User } from "@/types/user";
 
 interface Props {
   style: string;
@@ -14,10 +14,15 @@ interface Props {
 export default function Header({ style }: Props) {
   const searchParams = useSearchParams();
   const [scrolled, setScrolled] = useState(false);
-  const user = useSelector((state: any) => state.auth.user);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {

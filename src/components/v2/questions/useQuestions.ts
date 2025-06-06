@@ -8,8 +8,8 @@ import {
 } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { AnswerType, QuestionType } from "@/types/question";
+import { User } from "@/types/user";
 
 export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const params = useParams<{ slug: string; chapterId: string }>();
@@ -52,7 +52,12 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const [answers, setAnswers] = useState<
     Record<number, { answer: AnswerType; otherAnswersCount: number }>
   >({});
-  const user = useSelector((state: any) => state.auth.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(user);
+  }, []);
 
   const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(
     {}
@@ -168,6 +173,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
     setLoadingAdd(true);
     try {
+      if (!user) return;
       await myAxios.post(`/question/create/${id}`, {
         question: newQuestion.question,
         year: newQuestion.year,
@@ -238,6 +244,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   };
 
   const handleAnswerEdit = async (id: number) => {
+    if (!user) return;
     {
       setAnswerStates((prev) => ({
         ...prev,
@@ -276,6 +283,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
     setSaving(true);
     try {
+      if (!user) return;
       if (editorMode === "add") {
         await myAxios.post(`/answer/add/${id}`, { answer: answerStates[id] });
       } else if (user.role === "admin") {

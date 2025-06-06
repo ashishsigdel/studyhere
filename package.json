@@ -35,7 +35,7 @@
     "react-turnstile": "^1.1.4",
     "redux-persist": "^6.0.0",
     "reflect-metadata": "^0.2.2",
-    "richt-editor": "^1.0.3",
+    "richt-editor": "^1.0.5",
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "styled-components": "^6.1.14",
