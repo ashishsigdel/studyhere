@@ -5,7 +5,7 @@ const FooterBottom = () => {
         <div className="w-full flex flex-wrap">
           <div className="flex items-center justify-between w-full px-[12px] flex-col gap-y-1">
             <div className="text-[13px] tracking-[1px] text-center font-medium ">
-              LearnHere &copy; {new Date().getFullYear()} - all rights reserved.
+              StudyHere &copy; {new Date().getFullYear()} - all rights reserved.
             </div>
             <div className="text-[13px] tracking-[1px] text-center font-medium">
               Develop by{" "}

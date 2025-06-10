@@ -9,19 +9,18 @@ import { removeAuth } from "@/redux/features/authSlice";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/user";
 
-export default function Profile() {
-  const [user, setUser] = useState<User | null>(null);
-
+export default function Profile({
+  user,
+  setUser,
+}: {
+  user: User;
+  setUser: (user: User | null) => void;
+}) {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -31,7 +30,9 @@ export default function Profile() {
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
+      setUser(null);
       dispatch(removeAuth());
+      router.refresh();
       toast.success("Logged Out successfully!");
     }
   };

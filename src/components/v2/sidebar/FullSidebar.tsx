@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import useSubjects from "./useSubjects";
 import AddModal from "./AddModal";
 import { User } from "@/types/user";
+import { useTheme } from "next-themes";
 
 type Props = {
   sidebarWidth: "min" | "full";
@@ -36,6 +37,7 @@ export default function FullSidebar({
     loadingAdd,
     handleSaveSubject,
   } = useSubjects();
+  const { theme } = useTheme();
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -70,15 +72,15 @@ export default function FullSidebar({
             </button>
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src={"/icon-512.png"}
-                alt="LearnHere Logo"
+                src={theme === "dark" ? "/logo_dark.png" : "/logo.png"}
+                alt="studyHere Logo"
                 width={100}
                 height={100}
-                className="w-8 h-8 "
+                className="w-12 h-12 "
               />
 
-              <h3 className="text-2xl customfont-typoround text-gray-700 dark:text-gray-200">
-                <span className="text-primary">Learn</span>Here
+              <h3 className="text-2xl customfont-typoround text-[#1e1e1e] dark:text-gray-200">
+                <span className="text-primary">Study</span>Here
               </h3>
             </Link>
           </div>

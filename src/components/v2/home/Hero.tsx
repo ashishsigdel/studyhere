@@ -3,30 +3,12 @@
 import Image from "next/image";
 import heroImageLight from "@/assets/pictures/hero-light.png";
 import heroImageDark from "@/assets/pictures/hero-dark.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User } from "@/types/user";
 
 export default function Hero() {
   const [greeting, setGreeting] = useState("");
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
-  }, []);
   const router = useRouter();
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good Morning! ☕️");
-    else if (hour < 18) setGreeting("Good Afternoon! ☀️");
-    else setGreeting("Good Evening! 🌙");
-  }, []);
-
-  if (user) {
-    return null;
-  }
 
   return (
     <section className="w-full relative overflow-hidden flex items-center mx-auto max-w-7xl py-6">
@@ -39,19 +21,19 @@ export default function Hero() {
             </span>
             Welcome to
             <br />
-            <span className="text-primary">LearnHere...</span>
+            <span className="text-primary">StudyHere...</span>
           </h1>
 
           <div className="block md:hidden w-full md:w-1/2 relative">
             <Image
               src={heroImageLight}
-              alt="Learnhere Illustration"
+              alt="Studyhere Illustration"
               className="w-full h-auto object-cover rounded-xl block dark:hidden"
               priority
             />
             <Image
               src={heroImageDark}
-              alt="Learnhere Illustration"
+              alt="Studyhere Illustration"
               className="w-full h-auto object-cover rounded-xl hidden dark:block"
               priority
             />
@@ -111,13 +93,13 @@ export default function Hero() {
         <div className="hidden md:block w-full md:w-1/2 relative">
           <Image
             src={heroImageLight}
-            alt="Learnhere Illustration"
+            alt="studyhere Illustration"
             className="w-full h-auto object-cover rounded-xl block dark:hidden"
             priority
           />
           <Image
             src={heroImageDark}
-            alt="Learnhere Illustration"
+            alt="studyhere Illustration"
             className="w-full h-auto object-cover rounded-xl hidden dark:block"
             priority
           />

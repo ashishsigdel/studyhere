@@ -10,41 +10,41 @@ import { StoreProvider } from "@/providers";
 import ClientWrapper from "@/components/layout/ClientWrapper";
 
 export const metadata: Metadata = {
-  title: "LearnHere",
+  title: "Study Here",
   description:
-    "Join LearnHere to access expert learn materials, Q&A discussions, and learning resources.",
+    "Join studyHere to access expert study materials, Q&A discussions, and studying resources.",
   keywords: [
     "ioe past questions",
     "ioe exam",
     "ioe notes and syllabus",
-    "learn resources",
+    "study resources",
     "student help",
     "study notes nepal",
   ],
-  authors: [{ name: "LearnHere", url: "https://learnhere.asigdel.com.np" }],
+  authors: [{ name: "StudyHere", url: "https://studyhere.asigdel.com.np" }],
   manifest: "/manifest.json",
   openGraph: {
-    title: "LearnHere",
+    title: "StudyHere",
     description:
-      "Explore high-quality learn guides, Q&A, and expert resources.",
-    url: "https://learnhere.asigdel.com.np",
-    siteName: "LearnHere",
+      "Explore high-quality study guides, Q&A, and expert resources.",
+    url: "https://studyhere.asigdel.com.np",
+    siteName: "StudyHere",
     images: [
       {
-        url: "https://learnhere.asigdel.com.np/og-image.webp",
+        url: "https://studyhere.asigdel.com.np/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "LearnHere",
+        alt: "studyHere",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    site: "@learnhere", // Replace with your Twitter handle
-    title: "LearnHere",
-    description: "Discover expert learning resources and Q&A discussions.",
-    images: ["https://learnhere.asigdel.com.np/og-image.webp"],
+    site: "@studyhere", // Replace with your Twitter handle
+    title: "StudyHere",
+    description: "Discover expert studying resources and Q&A discussions.",
+    images: ["https://studyhere.asigdel.com.np/og-image.webp"],
   },
 };
 
@@ -74,7 +74,14 @@ export default function RootLayout({
             <CustomThemeProvider>
               <NextTopLoader showSpinner={false} color="#68ac5d" height={2} />
               {children}
-              <Toaster position="bottom-center" reverseOrder={true} />
+              <Toaster
+                position="bottom-center"
+                reverseOrder={true}
+                toastOptions={{
+                  className:
+                    "bg-white dark:bg-dark-bg text-[#202124] dark:text-[#ffffff] border border-black/5 dark:border-white/5",
+                }}
+              />
               <NetworkStatus />
               <ReportBug />
               <Cookies />

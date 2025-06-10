@@ -41,13 +41,13 @@ export const response = {
     },
     {
       question:
-        "<p>List down the algorithms inspired by biological phenomena and social behaviors. Explain the learning process in Genetic Algorithm with suitable block diagram.</p>",
+        "<p>List down the algorithms inspired by biological phenomena and social behaviors. Explain the studying process in Genetic Algorithm with suitable block diagram.</p>",
       marks: "2+6",
       chapterId: null,
     },
     {
       question:
-        "<p>Using Hebbian learning algorithm construct a neural network that behaves as an AND gate. Is hebbian learning supervised method? Justify.</p>",
+        "<p>Using Hebbian studying algorithm construct a neural network that behaves as an AND gate. Is hebbian studying supervised method? Justify.</p>",
       marks: "6+3",
       chapterId: null,
     },
@@ -89,7 +89,7 @@ export const chapters = [
   },
   {
     id: 47,
-    name: "Machine Learning",
+    name: "Machine studying",
   },
   {
     id: 48,

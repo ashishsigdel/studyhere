@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: "https://learnhere.asigdel.com.np",
+  siteUrl: "https://studyhere.asigdel.com.np",
   generateRobotsTxt: true,
   transform: async (config, path) => {
     return {

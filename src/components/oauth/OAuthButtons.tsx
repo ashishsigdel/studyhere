@@ -8,13 +8,13 @@ import {
 } from "firebase/auth";
 import { app } from "@/config/firebase";
 import toast from "react-hot-toast";
-import { myAxios } from "@/services/apiServices";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/redux/features/authSlice";
 import axios from "axios";
 import { baseUrl } from "@/services/apiServices";
+import { setMessage } from "@/redux/features/popupMessageSlice";
 
 interface OAuthButtonsProps {
   isRegister: boolean;
@@ -52,10 +52,21 @@ export default function OAuthButtons({
       toast.success(
         isRegister ? "Account created successfully!" : "Logged in successfully!"
       );
+
       router.push(redirect);
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.response?.data.message || "Something went wrong!");
+
+      dispatch(
+        setMessage({
+          message:
+            error?.response?.data.message ||
+            error.message ||
+            "Something went wrong!",
+          type: "error",
+          showOn: "oauth",
+        })
+      );
     }
   };
 

@@ -17,6 +17,7 @@ export default function Home() {
   useEffect(() => {
     try {
       const userData = localStorage.getItem("user");
+
       if (userData) {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
@@ -26,7 +27,7 @@ export default function Home() {
     }
   }, []);
 
-  if (!user?.fullName) {
+  if (!user) {
     return (
       <div className="px-8 sm:px-10 mt-10 mx-auto max-w-7xl">
         <Hero />

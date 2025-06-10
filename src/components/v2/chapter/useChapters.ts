@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 export default function useChapters() {
   const params = useParams<{ slug: string }>();
   const id = params.slug;
-  const [user, setUser] = useState<User | null>(null);
 
   const [chapters, setChapters] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -20,9 +19,19 @@ export default function useChapters() {
   const [showForm, setShowForm] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
+    try {
+      const userData = localStorage.getItem("user");
+
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
   }, []);
 
   const fetchChapters = async () => {

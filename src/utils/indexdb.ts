@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-const DB_NAME = "learnhere_db";
+const DB_NAME = "studyhere_db";
 
 // Initialize IndexedDB
 const initDB = async () => {

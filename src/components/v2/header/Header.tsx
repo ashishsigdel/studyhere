@@ -20,8 +20,16 @@ export default function Header({ style }: Props) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
+    try {
+      const userData = localStorage.getItem("user");
+
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
   }, []);
 
   useEffect(() => {
@@ -86,7 +94,7 @@ export default function Header({ style }: Props) {
           </div>
         </form>
         {user ? (
-          <Profile />
+          <Profile user={user} setUser={setUser} />
         ) : (
           <Link
             href={`/login?redirect=${encodeURIComponent(pathname)}`}
