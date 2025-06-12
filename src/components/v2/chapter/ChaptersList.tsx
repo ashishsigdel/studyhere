@@ -35,7 +35,6 @@ export default function ChaptersList({
   handleImport,
 }: Props) {
   const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
 
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [editingChapter, setEditingChapter] = useState<number | null>(null);
@@ -44,9 +43,19 @@ export default function ChaptersList({
   const dropdownRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const editInputRef = useRef<HTMLInputElement>(null);
 
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
+    try {
+      const userData = localStorage.getItem("user");
+
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
   }, []);
 
   // Close dropdown when clicking outside

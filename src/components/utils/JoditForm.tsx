@@ -25,6 +25,7 @@ export default function JoditForm({ text, setText }: Props) {
       content={text}
       setContent={setText}
       theme={theme === "dark" ? "dark" : "light"}
+      showFooter={false}
     />
   );
 }

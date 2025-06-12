@@ -38,9 +38,7 @@ export default function useChapters() {
     setLoading(true);
 
     try {
-      const response = await myAxios.get(
-        `/chapter/${id}?userId=${user ? user.id : ""}`
-      );
+      const response = await myAxios.get(`/chapter/${id}`);
       const { chapters: fetchedChapters, subject: fetchedSubject } =
         response.data.data;
 

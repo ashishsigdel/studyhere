@@ -32,6 +32,7 @@ export default function RichTEditor({
         content={text}
         setContent={setText}
         theme={theme === "dark" ? "dark" : "light"}
+        showFooter={false}
       />
     </div>
   );
