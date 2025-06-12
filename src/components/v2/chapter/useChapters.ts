@@ -1,25 +1,35 @@
 "use client";
+import { setMessage } from "@/redux/features/popupMessageSlice";
 import { myAxios } from "@/services/apiServices";
 import { SubjectType } from "@/types/subject";
 import { User } from "@/types/user";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 export default function useChapters() {
   const params = useParams<{ slug: string }>();
   const id = params.slug;
+  const dispatch = useDispatch();
 
   const [chapters, setChapters] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [chapter, setChapter] = useState("");
+  const [type, setType] = useState<"q&a" | "note">("q&a");
   const [subject, setSubject] = useState<SubjectType | null>(null);
 
   const [showForm, setShowForm] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const [showSettings, setShowSettings] = useState(false);
+
   const [user, setUser] = useState<User | null>(null);
+
+  const [visibility, setVisibility] = useState<
+    "public" | "private" | "view-only"
+  >("public");
 
   useEffect(() => {
     try {
@@ -45,11 +55,38 @@ export default function useChapters() {
       setChapters(fetchedChapters);
       setSubject(fetchedSubject);
       setIsFavorite(fetchedSubject.isSaved);
-    } catch (err) {
-      toast.error("Failed to fetch chapters online");
-      console.log(err);
+      setVisibility(fetchedSubject.visibility);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to fetch chapters.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateVisibility = async (
+    visibility: "public" | "private" | "view-only"
+  ) => {
+    try {
+      await myAxios.put(`/subject/update-visibility/${id}`, { visibility });
+      setVisibility(visibility);
+      dispatch(
+        setMessage({
+          message: "Visibility updated",
+          type: "success",
+          showOn: "chapter-settings",
+        })
+      );
+    } catch (error: any) {
+      dispatch(
+        setMessage({
+          message:
+            error?.response?.data.message ||
+            error.message ||
+            "Something went wrong!",
+          type: "error",
+          showOn: "chapter-settings",
+        })
+      );
     }
   };
 
@@ -64,6 +101,7 @@ export default function useChapters() {
         if (navigator.onLine) {
           const response = await myAxios.post(`/chapter/create/${id}`, {
             name: chapter,
+            type,
           });
 
           const newChapters = [...chapters, response.data.data];
@@ -119,5 +157,11 @@ export default function useChapters() {
     toggleSaved,
     isFavorite,
     handleImport,
+    type,
+    setType,
+    showSettings,
+    setShowSettings,
+    visibility,
+    updateVisibility,
   };
 }

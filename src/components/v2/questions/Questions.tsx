@@ -11,7 +11,7 @@ import useAnswers from "./useAnswers";
 import { FooterBottom } from "@/components/footer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { usePathname, useRouter } from "next/navigation";
-import { FaLock, FaPlus } from "react-icons/fa";
+import { FaLock, FaPlus, FaTimes } from "react-icons/fa";
 import { HoverButton } from "@/components/utils/Buttons";
 import { AiOutlineCompress } from "react-icons/ai";
 import Buttons from "./Buttons";
@@ -22,6 +22,10 @@ import EditModal from "./EditModal";
 import SearchBar from "./SearchBar";
 import toast from "react-hot-toast";
 import RichTEditor from "@/components/utils/RichTEditor";
+import Note from "./Note";
+import { IoSearchSharp } from "react-icons/io5";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Spinner } from "@/utils";
 
 export default function Questions() {
   const router = useRouter();
@@ -45,6 +49,8 @@ export default function Questions() {
     answers,
     loadingAnswer,
     chapter,
+    note,
+    type,
     openEditors,
     saveAnswer,
     saving,
@@ -73,9 +79,26 @@ export default function Questions() {
     filteredQuestions,
     prevChapter,
     nextChapter,
+    loading: loadingQuestions,
   } = useQuestions({ refresh: refreshPage });
-  const { question, allAnswers, loading, setAnswers, fetchAnswers } =
-    useAnswers();
+
+  const {
+    question,
+    allAnswers,
+    loading,
+    setAnswers,
+    fetchAnswers,
+    fetchNote,
+    note: sideBarNote,
+    noteList,
+    notePagination,
+    setNotePagination,
+    noteSearchOpen,
+    setNoteSearchOpen,
+    noteSearchQuery,
+    setNoteSearchQuery,
+    loadingNote,
+  } = useAnswers();
 
   const {
     mainContentRef,
@@ -146,6 +169,14 @@ export default function Questions() {
     }
   }, [chapter]);
 
+  if (loadingQuestions) {
+    return (
+      <div className="flex justify-center items-center min-h-screen w-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-t-blue-500 border-b-blue-600 border-l-blue-300 border-r-blue-300"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-row h-[calc(100vh-60px)] p-2 gap-x-1 relative">
       {/* Questions Field */}
@@ -178,16 +209,18 @@ export default function Questions() {
               className="truncate text-sm max-w-[150px] sm:max-w-[200px] md:max-w-[300px] block"
               title="Questions"
             >
-              Questions
+              {type === "q&a" ? "Questions" : "Note"}
             </span>
             <div className="mx-2 h-full border border-10" />
-            <HoverButton
-              Icon={<FaPlus size={16} />}
-              direction="bottom"
-              hoverText="Add Question"
-              backGround
-              onClick={() => setShowForm(!showForm)}
-            />
+            {type === "q&a" && (
+              <HoverButton
+                Icon={<FaPlus size={16} />}
+                direction="bottom"
+                hoverText="Add Question"
+                backGround
+                onClick={() => setShowForm(!showForm)}
+              />
+            )}
           </div>
           <SearchBar />
           <div className="flex items-center gap-2 py-1">
@@ -208,7 +241,10 @@ export default function Questions() {
           </div>
         </div>
         <div className="px-3 flex flex-col min-h-[calc(100vh-20px)]">
-          {questions &&
+          {type !== "q&a" && <Note note={note} refresh={fetchQuestions} />}
+
+          {type === "q&a" &&
+            questions &&
             questions.length > 0 &&
             (search ? filteredQuestions : questions).map((question, index) => (
               <div key={index} className="border-b border-10 py-3.5">
@@ -251,7 +287,7 @@ export default function Questions() {
                           >
                             Edit
                           </button>
-                          <button
+                          {/* <button
                             className="block border-b border-5 w-full text-left px-4 py-1.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-white-variant dark:hover:bg-dark-variant/30"
                             onClick={(e) => {
                               handleToggleFlag(question.id);
@@ -259,7 +295,7 @@ export default function Questions() {
                             }}
                           >
                             Mark as Flag
-                          </button>
+                          </button> */}
                           <button
                             className="block w-full text-left px-4 py-1.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-white-variant dark:hover:bg-dark-variant/30"
                             onClick={() => handleDelete(question.id)}
@@ -425,21 +461,93 @@ export default function Questions() {
         style={{ width: sidebarWidth }}
       >
         {sidebarWidth <= 50 ? (
-          <div className="h-auto w-full flex justify-center py-12">
+          <div className="h-auto w-full flex justify-center py-16">
             <div className="rotate-90 whitespace-nowrap flex items-center gap-1">
               <MdQuestionAnswer size={18} className="rotate-[-90deg]" />
-              <span className="">Answers</span>
+              <span className="">Custom Content</span>
             </div>
           </div>
         ) : (
           <>
-            <div className="px-3 py-2.5 bg-white-variant dark:bg-dark-variant border-b border-10 flex items-center justify-between gap-2 sticky top-0 z-10 text-gray-700 dark:text-gray-100">
+            <div className="px-3 py-2 bg-white-variant dark:bg-dark-variant border-b border-10 flex items-center justify-between gap-2 sticky top-0 z-10 text-gray-700 dark:text-gray-100">
               <div className="flex items-center gap-2">
                 <MdQuestionAnswer size={18} className="flex-shrink-0" />
-                <span className="">Answers</span>
+                <span className="">Content</span>
               </div>
 
               <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <div className="pl-3 pr-1 py-1 bg-black/5 dark:bg-white/5 rounded-md flex items-center gap-2">
+                      <button
+                        onClick={() => setNoteSearchOpen(true)}
+                        className="pr-2 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit flex items-center gap-2 transition-colors"
+                      >
+                        <IoSearchSharp size={14} />
+                        Open Note
+                      </button>
+                      {noteSearchOpen && (
+                        <FaTimes
+                          size={14}
+                          onClick={() => setNoteSearchOpen(false)}
+                        />
+                      )}
+                    </div>
+                    {noteSearchOpen && (
+                      <div className="absolute right-0 top-[calc(100%+4px)] w-80 bg-white dark:bg-dark-variant border border-black/5 dark:border-white/5 rounded-lg overflow-hidden z-[999]">
+                        <div className="p-2 border-b border-black/5 dark:border-white/5">
+                          <div className="relative">
+                            <input
+                              value={noteSearchQuery}
+                              onChange={(e) =>
+                                setNoteSearchQuery(e.target.value)
+                              }
+                              type="text"
+                              placeholder="Search notes..."
+                              className="w-full px-8 py-2 bg-white-light-variant dark:bg-dark-light-variant rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            />
+                            <IoSearchSharp
+                              size={16}
+                              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="max-h-[300px] overflow-y-auto">
+                          <InfiniteScroll
+                            dataLength={questions.length}
+                            next={() => {
+                              setNotePagination({
+                                ...notePagination,
+                                page: notePagination.page + 1,
+                              });
+                            }}
+                            hasMore={notePagination.total > notePagination.page}
+                            loader={loadingNote ? <Spinner /> : null}
+                          >
+                            {noteList.map((note: any, index: number) => (
+                              <button
+                                key={note.id}
+                                onClick={() => {
+                                  setNoteSearchOpen(false);
+                                  fetchNote(note.id);
+                                }}
+                                className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-2 group transition-colors"
+                              >
+                                <span className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
+                                  {index + 1}.
+                                </span>
+                                <div className="flex-1 text-sm text-gray-700 dark:text-gray-200">
+                                  {note.name} ({note.subjectname.name})
+                                </div>
+                              </button>
+                            ))}
+                          </InfiniteScroll>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <HoverButton
                   Icon={<AiOutlineCompress size={16} />}
                   direction="left"
@@ -461,7 +569,6 @@ export default function Questions() {
                 allAnswers.length > 0 &&
                 allAnswers.map((answer: any, index) => (
                   <div key={answer.id} className="relative">
-                    {/* Answer separator - only show between answers */}
                     {index > 0 && (
                       <div className="flex items-center mb-10">
                         <div className="flex-grow border-t border-dashed border-gray-300 dark:border-gray-700"></div>
@@ -491,6 +598,14 @@ export default function Questions() {
                     </div>
                   </div>
                 ))}
+              {sideBarNote && (
+                <div className="py-2">
+                  <div className="py-1 mb-2 border-b border-10 sticky top-[45px] bg-gray-100 dark:bg-dark-bg z-[9]">
+                    Note
+                  </div>
+                  <HtmlRenderer content={sideBarNote} />
+                </div>
+              )}
             </div>
           </>
         )}

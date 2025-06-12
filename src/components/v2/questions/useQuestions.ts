@@ -13,7 +13,6 @@ import { User } from "@/types/user";
 
 export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const params = useParams<{ slug: string; chapterId: string }>();
-  const pathname = usePathname();
 
   const id = params.chapterId;
   const slug = params.slug;
@@ -41,6 +40,9 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [chapter, setChapter] = useState("");
+  const [type, setType] = useState<"q&a" | "note">("q&a");
+  const [note, setNote] = useState("");
+
   const [subject, setSubject] = useState("");
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -135,6 +137,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
   const fetchQuestions = async () => {
     setLoading(true);
+
     try {
       const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
       const data = response.data.data;
@@ -142,19 +145,23 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
       if (slug != data.chapter.subject.slug) {
         router.replace(`/subject/${data.chapter.subject.slug}/${id}`);
       }
-      setQuestions(data.allQuestions);
-      setFilteredQuestions(data.allQuestions);
       setChapter(data.chapter.name);
+
+      setType(data.chapter.type);
       setSubject(data.chapter.subject.name);
       setPrevChapter(data.prevChapter);
       setNextChapter(data.nextChapter);
+      if (data.chapter.type === "q&a") {
+        setQuestions(data.allQuestions);
+        setFilteredQuestions(data.allQuestions);
+      } else {
+        setNote(data?.note?.content);
+      }
     } catch (err: any) {
-      toast.error(
-        err.response.data.message || "Failed to fetch chapters online"
-      );
+      toast.error(err?.response?.data?.message || "Failed to fetch chapters.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleSaveQuestion = async () => {
@@ -344,6 +351,8 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
   return {
     chapter,
+    type,
+    note,
     subject,
     search,
     loading,

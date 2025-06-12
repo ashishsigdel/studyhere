@@ -2,6 +2,7 @@ import React from "react";
 import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import { FaSpinner } from "react-icons/fa";
+import TabItem from "@/components/utils/TabIcon";
 
 type Props = {
   chapter: string;
@@ -9,6 +10,8 @@ type Props = {
   handleSaveChapter: any;
   loading: boolean;
   setShowForm: any;
+  type: "q&a" | "note";
+  setType: any;
 };
 
 export default function AddModal({
@@ -17,6 +20,8 @@ export default function AddModal({
   handleSaveChapter,
   setShowForm,
   loading,
+  type,
+  setType,
 }: Props) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-3 overflow-y-scroll z-[999]">
@@ -25,6 +30,9 @@ export default function AddModal({
           <h2 className="text-xl">Add New Chapter</h2>
         </div>
 
+        <label htmlFor="chapter" className="text-sm font-medium mb-2">
+          Chapter Name
+        </label>
         <input
           type="text"
           value={chapter}
@@ -33,6 +41,25 @@ export default function AddModal({
           placeholder="Chapter Name"
         />
 
+        <label htmlFor="type" className="text-sm font-medium mb-2">
+          Type
+        </label>
+        <div className="flex gap-1 w-full">
+          <TabItem
+            label="Question & Answer"
+            padding="2"
+            icon={<></>}
+            active={type === "q&a"}
+            onClick={() => setType("q&a")}
+          />
+          <TabItem
+            label="Notes"
+            padding="2"
+            icon={<></>}
+            active={type === "note"}
+            onClick={() => setType("note")}
+          />
+        </div>
         <div className="flex justify-end gap-4 mt-5">
           <button
             onClick={() => setShowForm(false)}

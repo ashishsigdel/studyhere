@@ -5,7 +5,15 @@ import ChaptersList from "./ChaptersList";
 import Syllabus from "./Syllabus";
 import Resources from "./Resources";
 import useChapters from "./useChapters";
-import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
+import {
+  IoBookmark,
+  IoBookmarkOutline,
+  IoClose,
+  IoSettings,
+} from "react-icons/io5";
+import TabItem from "@/components/utils/TabIcon";
+import { FaEye, FaGlobe, FaLock } from "react-icons/fa";
+import PopupMessage from "@/components/utils/PopupMessage";
 
 export default function Chapters() {
   const {
@@ -23,6 +31,12 @@ export default function Chapters() {
     toggleSaved,
     isFavorite,
     handleImport,
+    type,
+    setType,
+    showSettings,
+    setShowSettings,
+    visibility,
+    updateVisibility,
   } = useChapters();
 
   useEffect(() => {
@@ -68,6 +82,58 @@ export default function Chapters() {
                 />
               )}
             </button>
+            <div className="relative">
+              <button
+                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+                aria-label="Settings"
+                onClick={() => setShowSettings(!showSettings)}
+              >
+                <IoSettings
+                  size={20}
+                  className="text-gray-400 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors duration-200"
+                />
+              </button>
+              {showSettings && (
+                <div className="absolute top-10 right-0 bg-white-light-variant dark:bg-dark-light-variant rounded-lg shadow-lg px-2 py-2 min-w-48 z-50">
+                  <div className="flex items-center justify-between gap-2 pb-1 border-b border-black/5 dark:border-white/5">
+                    <h3 className="text-sm font-medium">Settings</h3>
+                    <button
+                      className="p-1 rounded-full dark:hover:bg-white/5 hover:bg-black/5 transition-colors duration-200"
+                      onClick={() => setShowSettings(false)}
+                    >
+                      <IoClose size={16} />
+                    </button>
+                  </div>
+
+                  <div className="flex gap-1 w-full mt-2">
+                    <TabItem
+                      label="Public"
+                      padding="1.5"
+                      icon={<FaGlobe />}
+                      active={visibility === "public"}
+                      onClick={() => updateVisibility("public")}
+                    />
+                    <TabItem
+                      label="View Only"
+                      padding="1.5"
+                      icon={<FaEye />}
+                      active={visibility === "view-only"}
+                      onClick={() => updateVisibility("view-only")}
+                    />
+                    <TabItem
+                      label="Private"
+                      padding="1.5"
+                      icon={<FaLock />}
+                      active={visibility === "private"}
+                      onClick={() => updateVisibility("private")}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <PopupMessage messageShowOn="chapter-settings" size="sm" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -82,7 +148,7 @@ export default function Chapters() {
       />
 
       <Syllabus />
-      <Resources />
+      {/* <Resources /> */}
 
       {/* Add Chapter Modal */}
       {showForm && (
@@ -92,6 +158,8 @@ export default function Chapters() {
           setShowForm={setShowForm}
           chapter={chapter}
           setChapter={setChapter}
+          type={type}
+          setType={setType}
         />
       )}
     </div>

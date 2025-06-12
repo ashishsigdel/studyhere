@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
+      "studyhere.asigdel.com.np",
+    ],
   },
   // Ensure clean XML output for sitemap
   headers: async () => {

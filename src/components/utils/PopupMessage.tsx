@@ -6,9 +6,13 @@ import { removeMessage } from "@/redux/features/popupMessageSlice";
 
 interface PopupMessageProps {
   messageShowOn: string | null;
+  size?: "sm" | "md" | "lg";
 }
 
-const PopupMessage: React.FC<PopupMessageProps> = ({ messageShowOn }) => {
+const PopupMessage: React.FC<PopupMessageProps> = ({
+  messageShowOn,
+  size = "lg",
+}) => {
   const dispatch = useDispatch();
   const { message, type, showOn } = useSelector(
     (state: RootState) => state.popupMessage
@@ -48,9 +52,11 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ messageShowOn }) => {
   // Render the popup message with appropriate styles based on type
   return (
     <div
-      className={`w-full px-4 py-[15px] rounded z-50 mb-4 text-sm ${getTypeClass(
-        localType
-      )}`}
+      className={`w-full px-${
+        size === "sm" ? "2" : size === "md" ? "4" : "6"
+      } py-${size === "sm" ? "1" : size === "md" ? "2" : "3"} rounded z-50 mb-${
+        size === "sm" ? "2" : size === "md" ? "4" : "6"
+      } text-sm ${getTypeClass(localType)}`}
     >
       {localMessage}
     </div>

@@ -26,9 +26,4 @@ export const Menu: MenuItem[] = [
     url: "/subject",
     icon: IoIosBook,
   },
-  {
-    name: "Questions",
-    url: "/flag-questions",
-    icon: FiFlag,
-  },
 ];
