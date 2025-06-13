@@ -11,7 +11,7 @@ import useAnswers from "./useAnswers";
 import { FooterBottom } from "@/components/footer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { usePathname, useRouter } from "next/navigation";
-import { FaLock, FaPlus, FaTimes } from "react-icons/fa";
+import { FaEye, FaGlobe, FaLock, FaPlus, FaTimes } from "react-icons/fa";
 import { HoverButton } from "@/components/utils/Buttons";
 import { AiOutlineCompress } from "react-icons/ai";
 import Buttons from "./Buttons";
@@ -26,6 +26,7 @@ import Note from "./Note";
 import { IoSearchSharp } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@/utils";
+import PopupMessage from "@/components/utils/PopupMessage";
 
 export default function Questions() {
   const router = useRouter();
@@ -80,6 +81,8 @@ export default function Questions() {
     prevChapter,
     nextChapter,
     loading: loadingQuestions,
+    notFoundResponse,
+    privateRespons,
   } = useQuestions({ refresh: refreshPage });
 
   const {
@@ -169,6 +172,24 @@ export default function Questions() {
     }
   }, [chapter]);
 
+  if (notFoundResponse) {
+    return (
+      <NoData
+        title="404"
+        description="The page you are looking for does not exist."
+      />
+    );
+  }
+
+  if (privateRespons) {
+    return (
+      <NoData
+        title="Private Page."
+        description="You are not authorized to access this page."
+      />
+    );
+  }
+
   if (loadingQuestions) {
     return (
       <div className="flex justify-center items-center min-h-screen w-full">
@@ -241,7 +262,9 @@ export default function Questions() {
           </div>
         </div>
         <div className="px-3 flex flex-col min-h-[calc(100vh-20px)]">
-          {type !== "q&a" && <Note note={note} refresh={fetchQuestions} />}
+          {type !== "q&a" && (
+            <Note note={note} chapter={chapter} refresh={fetchQuestions} />
+          )}
 
           {type === "q&a" &&
             questions &&
@@ -513,7 +536,7 @@ export default function Questions() {
                           </div>
                         </div>
 
-                        <div className="max-h-[300px] overflow-y-auto">
+                        <div className="max-h-[300px] overflow-y-auto pr-2">
                           <InfiniteScroll
                             dataLength={questions.length}
                             next={() => {
@@ -532,13 +555,33 @@ export default function Questions() {
                                   setNoteSearchOpen(false);
                                   fetchNote(note.id);
                                 }}
-                                className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-2 group transition-colors"
+                                className="w-full px-3 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 group transition-colors duration-150 rounded-md"
                               >
-                                <span className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm min-w-[20px]">
                                   {index + 1}.
                                 </span>
-                                <div className="flex-1 text-sm text-gray-700 dark:text-gray-200">
-                                  {note.name} ({note.subjectname.name})
+
+                                <div className="flex-1 flex items-center justify-between overflow-hidden">
+                                  <div className="truncate">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                      {note.name}
+                                    </span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                                      ({note.subjectname.name})
+                                    </span>
+                                  </div>
+
+                                  <div className="ml-2 flex-shrink-0 text-gray-400 dark:text-gray-500">
+                                    {note.subjectname.visibility ===
+                                    "public" ? (
+                                      <FaGlobe size={14} />
+                                    ) : note.subjectname.visibility ===
+                                      "private" ? (
+                                      <FaLock size={14} />
+                                    ) : (
+                                      <FaEye size={14} />
+                                    )}
+                                  </div>
                                 </div>
                               </button>
                             ))}
@@ -600,12 +643,12 @@ export default function Questions() {
                 ))}
               {sideBarNote && (
                 <div className="py-2">
-                  <div className="py-1 mb-2 border-b border-10 sticky top-[45px] bg-gray-100 dark:bg-dark-bg z-[9]">
-                    Note
-                  </div>
                   <HtmlRenderer content={sideBarNote} />
                 </div>
               )}
+              <div className="my-3">
+                <PopupMessage messageShowOn={"note-sidebar"} />
+              </div>
             </div>
           </>
         )}

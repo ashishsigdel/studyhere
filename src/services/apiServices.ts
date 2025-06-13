@@ -49,25 +49,46 @@ myAxios.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // this url will not be checked for refresh token
     const byPassUrls = ["/auth/user", "/auth/refresh-token"];
+    const originalRequest = error.config;
 
-    if (error.config && byPassUrls.includes(error.config.url)) {
+    // Skip refresh for these endpoints
+    if (originalRequest && byPassUrls.includes(originalRequest.url)) {
       throw error;
     }
 
-    if (error.response && error.response.status === 401) {
-      const newAccessToken = await refreshAccessToken();
+    const res = error.response;
 
-      // If token refresh failed, just throw the error
+    // 🔁 Handle 401: token expired
+    if (res && res.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // custom retry flag
+
+      const newAccessToken = await refreshAccessToken();
       if (!newAccessToken) {
         throw error;
       }
 
-      const originalRequest = error.config;
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return myAxios(originalRequest);
     }
+
+    // 🟡 Handle soft-auth expired token (X-Access-Token-Expired)
+    if (
+      res &&
+      res.headers["x-access-token-expired"] === "true" &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true; // prevent infinite loop
+
+      const newAccessToken = await refreshAccessToken();
+      if (!newAccessToken) {
+        throw error;
+      }
+
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+      return myAxios(originalRequest);
+    }
+
     throw error;
   }
 );

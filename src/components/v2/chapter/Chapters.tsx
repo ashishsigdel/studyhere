@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import AddModal from "./AddModal";
 import ChaptersList from "./ChaptersList";
 import Syllabus from "./Syllabus";
-import Resources from "./Resources";
 import useChapters from "./useChapters";
 import {
   IoBookmark,
@@ -14,6 +13,7 @@ import {
 import TabItem from "@/components/utils/TabIcon";
 import { FaEye, FaGlobe, FaLock } from "react-icons/fa";
 import PopupMessage from "@/components/utils/PopupMessage";
+import NoData from "@/components/utils/NoData";
 
 export default function Chapters() {
   const {
@@ -37,6 +37,8 @@ export default function Chapters() {
     setShowSettings,
     visibility,
     updateVisibility,
+    notFoundResponse,
+    privateRespons,
   } = useChapters();
 
   useEffect(() => {
@@ -55,12 +57,28 @@ export default function Chapters() {
     setShowForm(!showForm);
   };
 
+  if (notFoundResponse) {
+    return (
+      <NoData
+        title="404"
+        description="The page you are looking for does not exist."
+      />
+    );
+  } else if (privateRespons) {
+    return (
+      <NoData
+        title="Private Page."
+        description="You are not authorized to access this page."
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col overflow-hidden max-w-7xl mx-auto w-full px-8 sm:px-10">
       {/* Header Section */}
       <div className="flex flex-col justify-between w-full border-b border-gray-200 dark:border-gray-700">
         <div className="w-full py-6 justify-between flex items-center">
-          <h2 className="text-3xl font-bold capitalize line-clamp-1 customfont-inter">
+          <h2 className="text-3xl font-bold capitalize line-clamp-1 customfont-inter flex items-center gap-2">
             {subject?.name}
           </h2>
 

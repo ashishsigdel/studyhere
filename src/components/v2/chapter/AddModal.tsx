@@ -3,6 +3,7 @@ import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import { FaSpinner } from "react-icons/fa";
 import TabItem from "@/components/utils/TabIcon";
+import PopupMessage from "@/components/utils/PopupMessage";
 
 type Props = {
   chapter: string;
@@ -59,6 +60,9 @@ export default function AddModal({
             active={type === "note"}
             onClick={() => setType("note")}
           />
+        </div>
+        <div className="my-3">
+          <PopupMessage messageShowOn={"chapter-add-modal"} />
         </div>
         <div className="flex justify-end gap-4 mt-5">
           <button

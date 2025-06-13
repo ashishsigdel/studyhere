@@ -16,6 +16,7 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import { myAxios } from "@/services/apiServices";
 import { User } from "@/types/user";
+import toast from "react-hot-toast";
 
 type Props = {
   toggleForm: MouseEventHandler<HTMLButtonElement>;
@@ -143,7 +144,7 @@ export default function ChaptersList({
       fetchChapters();
       cancelEditing();
     } catch (error: any) {
-      console.log(error.response.data.message || "Something went wrong!");
+      toast.error(error.response.data.message || "Something went wrong!");
     }
   };
   const deleteChapter = async (chapterId: number) => {

@@ -1,6 +1,7 @@
 import { SubjectType } from "@/types/subject";
 import { formatNumbers } from "@/utils/formatNumber";
 import Link from "next/link";
+import { FaEye, FaGlobe } from "react-icons/fa";
 
 type Props = {
   subject: SubjectType;
@@ -24,7 +25,7 @@ export default function SubjectCard({ subject }: Props) {
             <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-white capitalize line-clamp-2 flex-1">
               {subject.name}
             </h3>
-            {!subject.isPublic && (
+            {subject.visibility === "private" ? (
               <svg
                 className="w-4 h-4 text-gray-400 dark:text-gray-300 flex-shrink-0 mt-1"
                 fill="currentColor"
@@ -36,6 +37,20 @@ export default function SubjectCard({ subject }: Props) {
                   clipRule="evenodd"
                 />
               </svg>
+            ) : subject.visibility === "view-only" ? (
+              <svg
+                className="w-4 h-4 text-gray-400 dark:text-gray-300 flex-shrink-0 mt-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 100-10 5 5 0 000 10zm0-2a3 3 0 110-6 3 3 0 010 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              ""
             )}
           </div>
 

@@ -11,9 +11,10 @@ import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 type Props = {
   note: string;
   refresh: () => void;
+  chapter: string | undefined;
 };
 
-export default function Note({ note, refresh }: Props) {
+export default function Note({ note, refresh, chapter }: Props) {
   const params = useParams<{ slug: string; chapterId: string }>();
   const [openForm, setOpenForm] = useState<null | "html">(null);
   const [content, setContent] = useState(note || "");
@@ -113,7 +114,7 @@ export default function Note({ note, refresh }: Props) {
   return (
     <div className="text-gray-600 dark:text-gray-300">
       <div className="flex justify-between items-center mb-3 py-3 border-b border-black/5 dark:border-white/5">
-        <h3 className="text-lg font-medium">Note</h3>
+        <h3 className="text-xl font-medium text-white">Note: {chapter}</h3>
         <button
           onClick={() => setOpenForm("html")}
           className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit"

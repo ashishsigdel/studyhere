@@ -31,6 +31,9 @@ export default function useChapters() {
     "public" | "private" | "view-only"
   >("public");
 
+  const [notFoundResponse, setNotFoundResponse] = useState(false);
+  const [privateRespons, setPrivateRespons] = useState(false);
+
   useEffect(() => {
     try {
       const userData = localStorage.getItem("user");
@@ -57,7 +60,11 @@ export default function useChapters() {
       setIsFavorite(fetchedSubject.isSaved);
       setVisibility(fetchedSubject.visibility);
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to fetch chapters.");
+      if (err?.response?.status === 404) {
+        setNotFoundResponse(true);
+      } else if (err?.response?.status === 403) {
+        setPrivateRespons(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -111,7 +118,16 @@ export default function useChapters() {
           setChapter("");
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.message || "Something went wrong");
+        dispatch(
+          setMessage({
+            message:
+              error?.response?.data.message ||
+              error.message ||
+              "Something went wrong!",
+            type: "error",
+            showOn: "chapter-add-modal",
+          })
+        );
       } finally {
         setLoadingAdd(false);
       }
@@ -163,5 +179,7 @@ export default function useChapters() {
     setShowSettings,
     visibility,
     updateVisibility,
+    notFoundResponse,
+    privateRespons,
   };
 }

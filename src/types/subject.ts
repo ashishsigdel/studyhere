@@ -8,5 +8,5 @@ export type SubjectType = {
   views: number;
   createdAt: Date;
   updatedAt: Date;
-  isPublic: boolean;
+  visibility: "public" | "private" | "view-only";
 };

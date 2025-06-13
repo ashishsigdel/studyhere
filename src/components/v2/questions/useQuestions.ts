@@ -56,6 +56,9 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   >({});
   const [user, setUser] = useState<User | null>(null);
 
+  const [notFoundResponse, setNotFoundResponse] = useState(false);
+  const [privateRespons, setPrivateRespons] = useState(false);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     setUser(user);
@@ -142,13 +145,13 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
       const response = await myAxios.get(`/question/${id}?page=1&limit=40`);
       const data = response.data.data;
 
-      if (slug != data.chapter.subject.slug) {
-        router.replace(`/subject/${data.chapter.subject.slug}/${id}`);
+      if (slug !== data.subject.slug) {
+        router.replace(`/subject/${data.subject.slug}/${id}`);
       }
       setChapter(data.chapter.name);
 
       setType(data.chapter.type);
-      setSubject(data.chapter.subject.name);
+      setSubject(data.subject.name);
       setPrevChapter(data.prevChapter);
       setNextChapter(data.nextChapter);
       if (data.chapter.type === "q&a") {
@@ -158,7 +161,11 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
         setNote(data?.note?.content);
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to fetch chapters.");
+      if (err?.response?.status === 404) {
+        setNotFoundResponse(true);
+      } else if (err?.response?.status === 403) {
+        setPrivateRespons(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -395,5 +402,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     handleToggleFlag,
     prevChapter,
     nextChapter,
+    notFoundResponse,
+    privateRespons,
   };
 }

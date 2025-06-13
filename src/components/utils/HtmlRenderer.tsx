@@ -9,7 +9,7 @@ interface Props {
 }
 export default function HtmlRenderer({ content, style }: Props) {
   const { theme } = useTheme();
-  if (content.includes("</p>")) {
+  if (content && (content.includes("</p>") || content.includes("</"))) {
     return (
       <div className="prose dark:prose-invert max-w-full overflow-x-auto whitespace-normal">
         <div
