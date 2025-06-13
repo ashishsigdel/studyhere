@@ -27,6 +27,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@/utils";
 import PopupMessage from "@/components/utils/PopupMessage";
+import ChapterModal from "./ChapterModal";
 
 export default function Questions() {
   const router = useRouter();
@@ -75,7 +76,9 @@ export default function Questions() {
     setNewQuestion,
     handleSaveQuestion,
     handleDelete,
-    handleToggleFlag,
+    handleOpenChapterModal,
+    showChapterModal,
+    allChapters,
     search,
     filteredQuestions,
     prevChapter,
@@ -83,6 +86,7 @@ export default function Questions() {
     loading: loadingQuestions,
     notFoundResponse,
     privateRespons,
+    handleToggleChapter,
   } = useQuestions({ refresh: refreshPage });
 
   const {
@@ -263,7 +267,12 @@ export default function Questions() {
         </div>
         <div className="px-3 flex flex-col min-h-[calc(100vh-20px)]">
           {type !== "q&a" && (
-            <Note note={note} chapter={chapter} refresh={fetchQuestions} />
+            <Note
+              note={note}
+              user={user}
+              chapter={chapter}
+              refresh={fetchQuestions}
+            />
           )}
 
           {type === "q&a" &&
@@ -310,15 +319,15 @@ export default function Questions() {
                           >
                             Edit
                           </button>
-                          {/* <button
+                          <button
                             className="block border-b border-5 w-full text-left px-4 py-1.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-white-variant dark:hover:bg-dark-variant/30"
                             onClick={(e) => {
-                              handleToggleFlag(question.id);
+                              handleOpenChapterModal(question.id);
                               toggleDropdown(question.id, e);
                             }}
                           >
-                            Mark as Flag
-                          </button> */}
+                            Change Chapter
+                          </button>
                           <button
                             className="block w-full text-left px-4 py-1.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-white-variant dark:hover:bg-dark-variant/30"
                             onClick={() => handleDelete(question.id)}
@@ -670,6 +679,12 @@ export default function Questions() {
           setShowForm={setShowForm}
           handleSaveQuestion={handleSaveQuestion}
           loadingAdd={loadingAdd}
+        />
+      )}
+      {showChapterModal && (
+        <ChapterModal
+          allChapters={allChapters}
+          handleToggleChapter={handleToggleChapter}
         />
       )}
     </div>

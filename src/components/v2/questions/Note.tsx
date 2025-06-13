@@ -3,21 +3,29 @@ import NoData from "@/components/utils/NoData";
 import RichTEditor from "@/components/utils/RichTEditor";
 import TabItem from "@/components/utils/TabIcon";
 import { myAxios } from "@/services/apiServices";
+import { User } from "@/types/user";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 
 type Props = {
-  note: string;
+  note: {
+    id: number;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    createdBy: number;
+  } | null;
   refresh: () => void;
   chapter: string | undefined;
+  user: User | null;
 };
 
-export default function Note({ note, refresh, chapter }: Props) {
+export default function Note({ note, refresh, chapter, user }: Props) {
   const params = useParams<{ slug: string; chapterId: string }>();
   const [openForm, setOpenForm] = useState<null | "html">(null);
-  const [content, setContent] = useState(note || "");
+  const [content, setContent] = useState(note?.content || "");
   const [isLoading, setIsLoading] = useState(false);
   const [inputType, setInputType] = useState<"html" | "markdown">("html");
   const id = params.chapterId;
@@ -76,7 +84,7 @@ export default function Note({ note, refresh, chapter }: Props) {
         </div>
         {inputType === "html" ? (
           <RichTEditor
-            text={content}
+            text={note?.content || ""}
             setText={(newContent: string) => setContent(newContent)}
             height="500px"
           />
@@ -84,7 +92,7 @@ export default function Note({ note, refresh, chapter }: Props) {
           <textarea
             className="w-full min-h-[200px] bg-light-white dark:bg-dark-black p-3 border border-gray-300 dark:border-gray-700 rounded resize-y text-sm"
             placeholder="Write here..."
-            value={content}
+            value={note?.content || ""}
             onChange={(e) => setContent(e.target.value)}
             rows={30}
           />
@@ -114,13 +122,17 @@ export default function Note({ note, refresh, chapter }: Props) {
   return (
     <div className="text-gray-600 dark:text-gray-300">
       <div className="flex justify-between items-center mb-3 py-3 border-b border-black/5 dark:border-white/5">
-        <h3 className="text-xl font-medium text-white">Note: {chapter}</h3>
-        <button
-          onClick={() => setOpenForm("html")}
-          className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit"
-        >
-          <FaEdit size={16} />
-        </button>
+        <h3 className="text-xl font-medium text-black dark:text-white">
+          Note: {chapter}
+        </h3>
+        {note?.createdBy === user?.id && (
+          <button
+            onClick={() => setOpenForm("html")}
+            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit"
+          >
+            <FaEdit size={16} />
+          </button>
+        )}
       </div>
       <HtmlRenderer content={content} />
     </div>

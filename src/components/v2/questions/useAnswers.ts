@@ -93,8 +93,10 @@ export default function useAnswers() {
   };
 
   useEffect(() => {
-    fetchNoteList();
-  }, [debouncedSearchQuery, notePagination.page, noteSearchOpen]);
+    if (noteSearchOpen) {
+      fetchNoteList();
+    }
+  }, [debouncedSearchQuery, noteSearchOpen]);
 
   return {
     question,

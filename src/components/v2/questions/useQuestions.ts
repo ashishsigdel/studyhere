@@ -41,9 +41,16 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [chapter, setChapter] = useState("");
   const [type, setType] = useState<"q&a" | "note">("q&a");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState<{
+    id: number;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    createdBy: number;
+  } | null>(null);
 
   const [subject, setSubject] = useState("");
+  const [subjectId, setSubjectId] = useState<number | null>(null);
   const [openedAnswer, setOpenedAnswer] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -58,6 +65,16 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
   const [notFoundResponse, setNotFoundResponse] = useState(false);
   const [privateRespons, setPrivateRespons] = useState(false);
+  const [showChapterModal, setShowChapterModal] = useState(false);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(
+    null
+  );
+  const [allChapters, setAllChapters] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -152,13 +169,14 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
 
       setType(data.chapter.type);
       setSubject(data.subject.name);
+      setSubjectId(data.subject.id);
       setPrevChapter(data.prevChapter);
       setNextChapter(data.nextChapter);
       if (data.chapter.type === "q&a") {
         setQuestions(data.allQuestions);
         setFilteredQuestions(data.allQuestions);
       } else {
-        setNote(data?.note?.content);
+        setNote(data?.note);
       }
     } catch (err: any) {
       if (err?.response?.status === 404) {
@@ -338,12 +356,34 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     }
   };
 
-  const handleToggleFlag = async (id: number) => {
+  const handleToggleChapter = async (id: number, cancel: boolean = false) => {
+    if (!cancel) {
+      try {
+        await myAxios.put(`/question/update-chapter/${selectedQuestionId}`, {
+          chapterId: id,
+        });
+        setShowChapterModal(false);
+        toast.success("Chapter moved.");
+        setShowChapterModal(false);
+        setSelectedQuestionId(null);
+
+        fetchQuestions();
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || "Something went wrong!");
+      } finally {
+      }
+    } else {
+      setShowChapterModal(false);
+      setSelectedQuestionId(null);
+    }
+  };
+
+  const handleOpenChapterModal = async (id: number) => {
+    setShowChapterModal(true);
+    setSelectedQuestionId(id);
     try {
-      // await myAxios.delete(`/question/delete/${id}`);
-      setShowModal(false);
-      toast.success("Flag Added.");
-      fetchQuestions();
+      const response = await myAxios.get(`/chapter/all/${subjectId}`);
+      setAllChapters(response.data.data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
@@ -399,10 +439,13 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     answerStates,
     setAnswerStates,
     handleDelete,
-    handleToggleFlag,
+    handleToggleChapter,
     prevChapter,
     nextChapter,
     notFoundResponse,
     privateRespons,
+    handleOpenChapterModal,
+    showChapterModal,
+    allChapters,
   };
 }
