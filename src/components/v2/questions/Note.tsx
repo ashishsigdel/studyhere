@@ -5,9 +5,11 @@ import TabItem from "@/components/utils/TabIcon";
 import { myAxios } from "@/services/apiServices";
 import { User } from "@/types/user";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { decode } from "he";
+import { MdKeyboardCommandKey } from "react-icons/md";
 
 type Props = {
   note: {
@@ -20,21 +22,56 @@ type Props = {
   refresh: () => void;
   chapter: string | undefined;
   user: User | null;
+  noteContent: string;
+  setNoteContent: (content: string) => void;
 };
 
-export default function Note({ note, refresh, chapter, user }: Props) {
+export default function Note({
+  note,
+  refresh,
+  chapter,
+  user,
+  noteContent,
+  setNoteContent,
+}: Props) {
   const params = useParams<{ slug: string; chapterId: string }>();
   const [openForm, setOpenForm] = useState<null | "html">(null);
-  const [content, setContent] = useState(note?.content || "");
   const [isLoading, setIsLoading] = useState(false);
-  const [inputType, setInputType] = useState<"html" | "markdown">("html");
+  const [inputType, setInputType] = useState<"html" | "markdown" | "preview">(
+    "markdown"
+  );
+  const [previousTab, setPreviousTab] = useState<"html" | "markdown">(
+    "markdown"
+  );
   const id = params.chapterId;
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+
+        if (openForm === "html") {
+          if (inputType === "preview") {
+            setInputType(previousTab);
+          } else {
+            setPreviousTab(inputType);
+            setInputType("preview");
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openForm, inputType, previousTab]);
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       await myAxios.post(`/question/createnote/${id}`, {
-        content,
+        content: noteContent,
       });
       refresh();
     } catch (error: any) {
@@ -52,16 +89,28 @@ export default function Note({ note, refresh, chapter, user }: Props) {
           <div className="flex gap-2 items-center">
             <div className="flex gap-1 rounded-xl border border-black/10 p-1 dark:border-white/10 bg-white dark:bg-[#424242]">
               <TabItem
-                label="HTML"
+                label="Markdown"
+                icon={<></>}
+                active={inputType === "markdown"}
+                onClick={() => setInputType("markdown")}
+              />
+              <TabItem
+                label="Visual Editor"
                 icon={<></>}
                 active={inputType === "html"}
                 onClick={() => setInputType("html")}
               />
               <TabItem
-                label="Markdown"
+                label={
+                  <>
+                    Preview (
+                    {window.navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl"}{" "}
+                    + Enter)
+                  </>
+                }
                 icon={<></>}
-                active={inputType === "markdown"}
-                onClick={() => setInputType("markdown")}
+                active={inputType === "preview"}
+                onClick={() => setInputType("preview")}
               />
             </div>
           </div>
@@ -84,18 +133,20 @@ export default function Note({ note, refresh, chapter, user }: Props) {
         </div>
         {inputType === "html" ? (
           <RichTEditor
-            text={note?.content || ""}
-            setText={(newContent: string) => setContent(newContent)}
+            text={noteContent || ""}
+            setText={(newContent: string) => setNoteContent(newContent)}
             height="500px"
           />
-        ) : (
+        ) : inputType === "markdown" ? (
           <textarea
             className="w-full min-h-[200px] bg-light-white dark:bg-dark-black p-3 border border-gray-300 dark:border-gray-700 rounded resize-y text-sm"
             placeholder="Write here..."
-            value={note?.content || ""}
-            onChange={(e) => setContent(e.target.value)}
+            value={decode(noteContent || "")}
+            onChange={(e) => setNoteContent(e.target.value)}
             rows={30}
           />
+        ) : (
+          <HtmlRenderer content={decode(noteContent)} />
         )}
       </div>
     );
@@ -134,7 +185,7 @@ export default function Note({ note, refresh, chapter, user }: Props) {
           </button>
         )}
       </div>
-      <HtmlRenderer content={content} />
+      <HtmlRenderer content={decode(noteContent)} />
     </div>
   );
 }

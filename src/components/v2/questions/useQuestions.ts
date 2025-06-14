@@ -48,6 +48,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     updatedAt: string;
     createdBy: number;
   } | null>(null);
+  const [noteContent, setNoteContent] = useState("");
 
   const [subject, setSubject] = useState("");
   const [subjectId, setSubjectId] = useState<number | null>(null);
@@ -177,6 +178,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
         setFilteredQuestions(data.allQuestions);
       } else {
         setNote(data?.note);
+        setNoteContent(data?.note?.content);
       }
     } catch (err: any) {
       if (err?.response?.status === 404) {
@@ -447,5 +449,7 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
     handleOpenChapterModal,
     showChapterModal,
     allChapters,
+    noteContent,
+    setNoteContent,
   };
 }

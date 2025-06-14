@@ -87,6 +87,8 @@ export default function Questions() {
     notFoundResponse,
     privateRespons,
     handleToggleChapter,
+    noteContent,
+    setNoteContent,
   } = useQuestions({ refresh: refreshPage });
 
   const {
@@ -272,6 +274,8 @@ export default function Questions() {
               user={user}
               chapter={chapter}
               refresh={fetchQuestions}
+              noteContent={noteContent}
+              setNoteContent={setNoteContent}
             />
           )}
 

@@ -1,5 +1,5 @@
 type Props = {
-  label: string;
+  label: string | React.ReactNode;
   icon: React.ReactNode;
   active: boolean;
   onClick?: any;
@@ -23,7 +23,7 @@ export default function TabItem({
       }`}
     >
       {icon}
-      <span>{label}</span>{" "}
+      {typeof label === "string" ? <span>{label}</span> : label}
     </div>
   );
 }
