@@ -33,6 +33,7 @@ export default function RichTEditor({
         setContent={setText}
         theme={theme === "dark" ? "dark" : "light"}
         showFooter={false}
+        imageUploadAPIUrl="https://api.ashishsigdel.com.np/api-utils/upload"
       />
     </div>
   );
