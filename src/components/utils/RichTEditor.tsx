@@ -7,7 +7,7 @@ const RichTextEditor = dynamic(() => import("richt-editor"), {
   ssr: false,
   loading: () => (
     <div
-      className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-full"
+      className="animate-pulse bg-gray-200 dark:bg-dark-variant rounded-md w-full"
       style={{ height: "500px" }}
     />
   ),
@@ -27,13 +27,13 @@ export default function RichTEditor({
   const { theme } = useTheme();
 
   return (
-    <div style={{ height: height, marginBottom: "20px" }}>
+    <div style={{ height: height, marginBottom: "20px", maxWidth: "100%" }}>
       <RichTextEditor
         content={text}
         setContent={setText}
         theme={theme === "dark" ? "dark" : "light"}
         showFooter={false}
-        imageUploadAPIUrl="https://api.ashishsigdel.com.np/api-utils/upload"
+        imageUploadAPIUrl={`${process.env.NEXT_PUBLIC_BASE_API_URL}/contact/for-image`}
       />
     </div>
   );

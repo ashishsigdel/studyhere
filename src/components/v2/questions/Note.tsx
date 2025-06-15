@@ -9,7 +9,6 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaEdit, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import { decode } from "he";
-import { MdKeyboardCommandKey } from "react-icons/md";
 
 type Props = {
   note: {
@@ -82,6 +81,50 @@ export default function Note({
     }
   };
 
+  const handleDrop = async (event: React.DragEvent<HTMLTextAreaElement>) => {
+    event.preventDefault();
+    const files = Array.from(event.dataTransfer.files);
+
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) {
+        toast.error("Only image files are supported.");
+        continue;
+      }
+
+      const placeholder = "![Uploading image...]\n";
+      const currentContent = decode(noteContent || "");
+      const newContent = currentContent + "\n" + placeholder;
+      setNoteContent(newContent);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await myAxios.post("/contact/for-image", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        const imageUrl = response.data.data.url;
+
+        if (!imageUrl) {
+          throw new Error("Image URL not returned.");
+        }
+
+        const placeholder = `![image](${imageUrl})\n`;
+        const currentContent = decode(noteContent || "");
+        const newContent = currentContent + "\n" + placeholder;
+        setNoteContent(newContent);
+      } catch (error) {
+        toast.error("Failed to upload image.");
+        setNoteContent(
+          decode(noteContent || "").replace("![Uploading image...]\n", "")
+        );
+      }
+    }
+  };
+
   if (openForm === "html") {
     return (
       <div className="w-full">
@@ -143,6 +186,8 @@ export default function Note({
             placeholder="Write here..."
             value={decode(noteContent || "")}
             onChange={(e) => setNoteContent(e.target.value)}
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
             rows={30}
           />
         ) : (

@@ -1,5 +1,4 @@
 import React from "react";
-import { JoditForm } from "@/components/utils";
 import Spinner from "@/utils/Spinner";
 import { FaSpinner } from "react-icons/fa";
 import TabItem from "@/components/utils/TabIcon";

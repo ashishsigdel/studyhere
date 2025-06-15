@@ -4,7 +4,7 @@ import useQuestions from "./useQuestions";
 import useResizeWheel from "./useResizeWheel";
 import { HiClipboardList, HiDotsVertical } from "react-icons/hi";
 import { MdQuestionAnswer } from "react-icons/md";
-import { HtmlRenderer, JoditForm } from "@/components/utils";
+import { HtmlRenderer } from "@/components/utils";
 import { SkeletonAnswer } from "@/components/utils/Skeleton";
 import QuestionFooter from "./QuestionFooter";
 import useAnswers from "./useAnswers";
@@ -205,7 +205,7 @@ export default function Questions() {
   }
 
   return (
-    <div className="flex flex-row h-[calc(100vh-60px)] p-2 gap-x-1 relative">
+    <div className="flex flex-row h-[calc(100vh-61px)] p-2 gap-x-1 relative">
       {/* Questions Field */}
       <div
         ref={mainContentRef}
