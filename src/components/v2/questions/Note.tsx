@@ -178,7 +178,7 @@ export default function Note({
           <RichTEditor
             text={noteContent || ""}
             setText={(newContent: string) => setNoteContent(newContent)}
-            height="500px"
+            height={`${window.innerHeight - 142}px`}
           />
         ) : inputType === "markdown" ? (
           <textarea
@@ -216,15 +216,15 @@ export default function Note({
   }
 
   return (
-    <div className="text-gray-600 dark:text-gray-300">
-      <div className="flex justify-between items-center mb-3 py-3 border-b border-black/5 dark:border-white/5">
+    <div className="">
+      <div className="flex justify-between items-center mb-3 py-3 border-b border-black/5 dark:border-white/5 relative">
         <h3 className="text-xl font-medium text-black dark:text-white">
           Note: {chapter}
         </h3>
         {note?.createdBy === user?.id && (
           <button
             onClick={() => setOpenForm("html")}
-            className="flex gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit"
+            className="flex sticky top-0 gap-2 items-center cursor-pointer bg-black dark:bg-white text-white dark:text-black px-3 py-1.5 rounded-md text-sm whitespace-nowrap flex-1 sm:flex-none justify-center w-fit"
           >
             <FaEdit size={16} />
           </button>

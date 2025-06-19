@@ -28,10 +28,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@/utils";
 import PopupMessage from "@/components/utils/PopupMessage";
 import ChapterModal from "./ChapterModal";
+import { HiHome } from "react-icons/hi2";
 
 export default function Questions() {
   const router = useRouter();
   const pathname = usePathname();
+  const height = window.innerHeight;
 
   const [refresh, setRefresh] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
@@ -205,7 +207,7 @@ export default function Questions() {
   }
 
   return (
-    <div className="flex flex-row h-[calc(100vh-61px)] p-2 gap-x-1 relative">
+    <div className="flex flex-row h-[calc(100vh)] p-2 gap-x-1 relative">
       {/* Questions Field */}
       <div
         ref={mainContentRef}
@@ -213,6 +215,20 @@ export default function Questions() {
       >
         <div className="px-3 py-1.5 bg-white-variant dark:bg-dark-variant border-b border-10 flex justify-between gap-x-2 sm:gap-x-4 sticky top-0 text-gray-700 dark:text-gray-100 z-[99]">
           <div className="flex items-center gap-1 sm:gap-2 py-1">
+            <Link href={"/"} className="flex items-center gap-1 sm:gap-2">
+              <HiHome size={18} />
+              {sidebarWidth < 300 && (
+                <button
+                  className={`truncate block text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white pl-2 capitalize text-sm md:text-base  `}
+                >
+                  Home
+                </button>
+              )}
+            </Link>
+            <RiArrowRightSLine
+              className="text-gray-400 dark:text-gray-500 flex-shrink-0"
+              size={20}
+            />
             <HiClipboardList size={18} />
             <button
               onClick={handleBack}
@@ -267,7 +283,7 @@ export default function Questions() {
             />
           </div>
         </div>
-        <div className="px-3 flex flex-col min-h-[calc(100vh-20px)]">
+        <div className="px-3 flex flex-col">
           {type !== "q&a" && (
             <Note
               note={note}
@@ -395,7 +411,7 @@ export default function Questions() {
                             [question.id]: text,
                           }))
                         }
-                        height="600px"
+                        height={`${height - 173}px`}
                       />
                     </div>
                   ) : loadingAnswer && !answers[question.id] ? (
@@ -476,7 +492,6 @@ export default function Questions() {
             </div>
           )}
         </div>
-        <FooterBottom />
       </div>
 
       {/* Resizer */}
