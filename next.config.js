@@ -5,6 +5,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "avatars.githubusercontent.com",
       "studyhere.asigdel.com.np",
+      "res.cloudinary.com",
     ],
   },
   // Ensure clean XML output for sitemap

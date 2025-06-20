@@ -1,7 +1,7 @@
 "use client";
 
 import MarkupRenderer from "@ashish-ui/markup-renderer";
-import { HtmlFormatter } from "@ashish-ui/richsee";
+import HtmlFormatter from "./HtmlFormatter";
 import { useTheme } from "next-themes";
 
 interface Props {
