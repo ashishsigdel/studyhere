@@ -2,7 +2,8 @@ import { removeAuth } from "@/redux/features/authSlice";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@/redux/store"; // Import the Redux store directly
 
-export const baseUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}`;
+// export const baseUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}`;
+export const baseUrl = `/api`;
 
 const myAxios: AxiosInstance = axios.create({
   baseURL: baseUrl,
@@ -15,7 +16,7 @@ const refreshAccessToken = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken") || "";
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/refresh-token`,
+      `/api/auth/refresh-token`,
       {},
       {
         headers: {

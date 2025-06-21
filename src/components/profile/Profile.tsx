@@ -32,6 +32,7 @@ export default function Profile() {
   const [imageFile, setImageFile] = useState(null);
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const [showUpload, setShowUpload] = useState(false);
 
   // Error states
   const [fullNameError, setFullNameError] = useState("");
@@ -93,6 +94,7 @@ export default function Profile() {
 
       // Create a local preview
       setProfilePic(URL.createObjectURL(file));
+      setShowUpload(true);
     }
   };
 
@@ -145,6 +147,7 @@ export default function Profile() {
 
       // Update local state with response data
       setProfile(response.data.data);
+      setShowUpload(false);
 
       // Clear image file state after successful upload
       setImageFile(null);
@@ -224,7 +227,7 @@ export default function Profile() {
       <div className="space-y-6">
         {/* Profile Picture Section */}
         <div className="bg-white dark:bg-[#424242] border border-black/10 dark:border-white/10 rounded-lg p-6">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center relative">
             <div className="relative group mb-4">
               <input
                 type="file"
@@ -260,6 +263,41 @@ export default function Profile() {
             <p className="text-gray-600 dark:text-gray-400 capitalize">
               {profile?.role || "Member"}
             </p>
+            {showUpload && (
+              <button
+                onClick={handleSubmit}
+                disabled={updating}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 absolute top-0 right-0"
+              >
+                {updating ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Saving...
+                  </span>
+                ) : (
+                  "Update"
+                )}
+              </button>
+            )}
           </div>
         </div>
 

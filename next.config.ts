@@ -1,3 +1,5 @@
+import { NextConfig } from "next";
+import path from "path";
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
@@ -12,55 +14,86 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   },
   runtimeCaching: [
     {
-      urlPattern: /^\/api\/.*$/, // Match Next.js API routes
+      urlPattern: /^\/api\/.*$/,
       handler: "NetworkFirst",
       options: {
         cacheName: "api-cache",
-        networkTimeoutSeconds: 5, // If the network takes too long, serve cache
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 }, // Cache for 1 day
+        networkTimeoutSeconds: 5,
+        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
         cacheableResponse: {
-          statuses: [200], // Cache only successful responses
+          statuses: [200],
         },
       },
     },
     {
-      urlPattern: /^https?:\/\/.*/, // Cache all static assets
+      urlPattern: /^https?:\/\/.*/,
       handler: "StaleWhileRevalidate",
       options: {
         cacheName: "static-resources",
-        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 }, // Cache for 7 days
+        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 },
       },
     },
     {
-      urlPattern: /\/.*/, // Cache all pages
+      urlPattern: /\/.*/,
       handler: "NetworkFirst",
       options: {
         cacheName: "pages-cache",
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 }, // Cache for 7 days
+        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 },
       },
     },
   ],
 });
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https", // Accepts only secure images
-        hostname: "**", // Wildcard to allow all hosts
+        protocol: "https",
+        hostname: "**",
       },
+    ],
+    domains: [
+      "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
+      "studyhere.asigdel.com.np",
+      "res.cloudinary.com",
     ],
   },
   typescript: {
-    ignoreBuildErrors: true, // This will ignore all TypeScript errors during build
+    ignoreBuildErrors: true,
   },
-  webpack(config: any) {
+  webpack(config) {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": require("path").resolve(__dirname, "src"),
+      "@": path.resolve(__dirname, "src"),
     };
     return config;
   },
+  async headers() {
+    return [
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/xml",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/:path*`,
+      },
+    ];
+  },
 };
 
-module.exports = withPWA(nextConfig);
+export default withPWA(nextConfig);
