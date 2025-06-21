@@ -244,7 +244,8 @@ export default function Profile() {
                   {!loading && (
                     <Image
                       src={profilePic || profile?.profilePic || defaultPic}
-                      fill
+                      width={300}
+                      height={300}
                       className="object-cover"
                       alt="User Image"
                     />

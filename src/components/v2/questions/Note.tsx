@@ -100,11 +100,15 @@ export default function Note({
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await myAxios.post("/contact/for-image", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await myAxios.post(
+          "/api/contact/for-image",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
         const imageUrl = response.data.data.url;
 

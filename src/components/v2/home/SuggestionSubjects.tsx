@@ -7,20 +7,12 @@ import { SubjectType } from "@/types/subject";
 import SubjectCard from "./SubjectCard";
 import { MdOutlineLocalFireDepartment } from "react-icons/md";
 import NoData from "@/components/utils/NoData";
-import { User } from "@/types/user";
 
 const STORE_NAME = "subjects";
 
 export const SuggestionSubjects: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState<SubjectType[]>([]);
-
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
-  }, []);
 
   const fetchSubjects = async () => {
     try {

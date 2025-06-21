@@ -32,7 +32,9 @@ export default function Profile({
       localStorage.removeItem("user");
       setUser(null);
       dispatch(removeAuth());
-      router.refresh();
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
       toast.success("Logged Out successfully!");
     }
   };

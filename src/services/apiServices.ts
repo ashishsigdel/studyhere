@@ -10,11 +10,13 @@ const myAxios: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 const refreshAccessToken = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken") || "";
+
     const response = await axios.post(
       `/api/auth/refresh-token`,
       {},
@@ -46,7 +48,17 @@ const refreshAccessToken = async () => {
 };
 
 myAxios.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    if (
+      response &&
+      response.headers &&
+      response.headers["x-refresh-access-token"] === "true" &&
+      response.headers["x-new-access-token"]
+    ) {
+      const newAccessToken = response.headers["x-new-access-token"];
+      localStorage.setItem("accessToken", newAccessToken);
+      return response;
+    }
     return response;
   },
   async (error) => {
@@ -73,13 +85,13 @@ myAxios.interceptors.response.use(
       return myAxios(originalRequest);
     }
 
-    // 🟡 Handle soft-auth expired token (X-Access-Token-Expired)
+    // 🟡 Handle soft-auth expired token (x-access-token-expired)
     if (
       res &&
       res.headers["x-access-token-expired"] === "true" &&
       !originalRequest._retry
     ) {
-      originalRequest._retry = true; // prevent infinite loop
+      originalRequest._retry = true;
 
       const newAccessToken = await refreshAccessToken();
       if (!newAccessToken) {

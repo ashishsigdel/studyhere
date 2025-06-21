@@ -13,17 +13,6 @@ const initDB = async () => {
       if (!db.objectStoreNames.contains("recentChapters")) {
         db.createObjectStore("recentChapters");
       }
-
-      if (!db.objectStoreNames.contains("chapters")) {
-        db.createObjectStore("chapters");
-      }
-
-      if (!db.objectStoreNames.contains("questions")) {
-        db.createObjectStore("questions");
-      }
-      if (!db.objectStoreNames.contains("pdfs")) {
-        db.createObjectStore("pdfs");
-      }
     },
   });
 };

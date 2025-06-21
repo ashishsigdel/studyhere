@@ -30,7 +30,7 @@ export default function RichTEditor({ text, setText, height }: Props) {
         setContent={setText}
         theme={theme === "dark" ? "dark" : "light"}
         showFooter={false}
-        imageUploadAPIUrl={`${process.env.NEXT_PUBLIC_BASE_API_URL}/contact/for-image`}
+        imageUploadAPIUrl={`/api/contact/for-image`}
       />
     </div>
   );

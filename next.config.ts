@@ -1,5 +1,6 @@
 import { NextConfig } from "next";
 import path from "path";
+
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
@@ -13,32 +14,32 @@ const withPWA = require("@ducanh2912/next-pwa").default({
     disableDevlogs: true,
   },
   runtimeCaching: [
+    // Removed API caching - APIs will not be cached anymore
     {
-      urlPattern: /^\/api\/.*$/,
-      handler: "NetworkFirst",
+      urlPattern: /\.(png|jpg|jpeg|svg|gif|webp|ico)$/,
+      handler: "CacheFirst",
       options: {
-        cacheName: "api-cache",
-        networkTimeoutSeconds: 5,
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
+        cacheName: "images-cache",
+        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 }, // 30 days
         cacheableResponse: {
           statuses: [200],
         },
       },
     },
     {
-      urlPattern: /^https?:\/\/.*/,
+      urlPattern: /\.(css|js)$/,
       handler: "StaleWhileRevalidate",
       options: {
         cacheName: "static-resources",
-        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 },
+        expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 }, // 7 days
       },
     },
     {
-      urlPattern: /\/.*/,
+      urlPattern: /^(?!.*\/api\/).*$/, // Exclude /api/ routes from caching
       handler: "NetworkFirst",
       options: {
         cacheName: "pages-cache",
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 },
+        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 }, // 7 days
       },
     },
   ],
@@ -46,17 +47,32 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 
 const nextConfig: NextConfig = {
   images: {
+    // Using remotePatterns (modern approach) - this allows all HTTPS domains
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "**", // This allows all HTTPS domains
       },
-    ],
-    domains: [
-      "lh3.googleusercontent.com",
-      "avatars.githubusercontent.com",
-      "studyhere.asigdel.com.np",
-      "res.cloudinary.com",
+      {
+        protocol: "http",
+        hostname: "localhost", // For local development
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "studyhere.asigdel.com.np",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
   typescript: {
@@ -81,6 +97,24 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "public, max-age=3600, must-revalidate",
+          },
+        ],
+      },
+      // Add no-cache headers for API routes
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
           },
         ],
       },

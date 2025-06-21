@@ -78,8 +78,16 @@ export default function useQuestions({ refresh }: { refresh?: () => void }) {
   >([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
+    try {
+      const userData = localStorage.getItem("user");
+
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
   }, []);
 
   const [answerStates, setAnswerStates] = useState<{ [key: number]: string }>(

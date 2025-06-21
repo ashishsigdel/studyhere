@@ -9,12 +9,6 @@ export default function RecentChapter() {
   const [recentChapters, setRecentChapters] = useState<
     { name: string; url: string; subject: string }[]
   >([]);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setUser(user);
-  }, []);
 
   const fetchSubjects = async () => {
     try {
@@ -37,10 +31,6 @@ export default function RecentChapter() {
   useEffect(() => {
     fetchSubjects();
   }, []);
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <>

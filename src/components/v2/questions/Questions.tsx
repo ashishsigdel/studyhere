@@ -8,7 +8,6 @@ import { HtmlRenderer } from "@/components/utils";
 import { SkeletonAnswer } from "@/components/utils/Skeleton";
 import QuestionFooter from "./QuestionFooter";
 import useAnswers from "./useAnswers";
-import { FooterBottom } from "@/components/footer";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { usePathname, useRouter } from "next/navigation";
 import { FaEye, FaGlobe, FaLock, FaPlus, FaTimes } from "react-icons/fa";
